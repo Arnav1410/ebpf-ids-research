@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include "xdp.skel.h"
+#include <net/if.h>
 
 static volatile bool exiting = false;
 
@@ -35,7 +36,7 @@ static struct bpf_progs_desc progs[] = {
 
 int main(int argc, char **argv)
 {
-    const char *interface = "ens3";
+    const char *interface = argc > 1 ? argv[1] : "ens3";
     unsigned int ifindex = if_nametoindex(interface);
 
     /* Set up libbpf errors and debug info callback */
