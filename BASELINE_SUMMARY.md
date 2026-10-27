@@ -235,3 +235,13 @@ exercise parser boundaries, readiness, flow lifecycle, concurrency, and sustaine
 performance. Keep retraining separate: `mlp_quant.py` overwrites
 `src/mlp_params.bpf.h` when run from `src`; preserve baseline weights and record
 the checkpoint, seed, and environment before conducting that experiment.
+
+## Accuracy and correctness evaluation
+
+The separate [evaluation milestone plan](EVALUATION_PLAN.md) documents the
+implemented audit, bit-accurate reference, frozen held-out training/evaluation,
+and private kernel test-run harness, with commands and observed results.
+This does not change the baseline runner's smoke-test scope. The separate
+privileged M4 stage/chain and packet-feature validation has now passed its
+defined checks. Local numeric-label metrics and these bounded kernel checks
+are not paper reproduction or proof of production intrusion-detection accuracy.
