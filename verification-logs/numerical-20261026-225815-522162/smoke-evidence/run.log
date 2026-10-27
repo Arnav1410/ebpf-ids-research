@@ -1,0 +1,39 @@
+[2026-10-26T22:42:28+0530] Baseline log directory: /tmp/nn-ebpf-baseline.dhp5S5
+[2026-10-26T22:42:28+0530] Kernel: 6.6.87.2-microsoft-standard-WSL2; repository: /home/arnav/research/ebpf-ids-research
+[command] make -C /home/arnav/research/ebpf-ids-research/src -q
+[command] /home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool version
+bpftool v7.3.0
+using libbpf v1.3
+features: libbfd
+[command] python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py preflight
+Lab names and routes available; existing resources will not be reused.
+[command] python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py preflight
+Lab names and routes available; existing resources will not be reused.
+[command] ip netns add ids-client
+[command] ip link add ids-server type veth peer name ids-client0
+[command] ip link set ids-client0 netns ids-client
+[command] ip addr add 33.33.33.1/24 dev ids-server
+[command] ip link set ids-server up
+[command] ip netns exec ids-client ip addr add 33.33.33.73/24 dev ids-client0
+[command] ip netns exec ids-client ip link set lo up
+[command] ip netns exec ids-client ip link set ids-client0 up
+[2026-10-26T22:42:28+0530] Reading /sys/kernel/tracing/trace_pipe into trace.log (do not run a competing trace reader).
+[2026-10-26T22:42:28+0530] Starting detector on ids-server; output: detector.log.
+[command] python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py ready /home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool /tmp/nn-ebpf-baseline.dhp5S5 13663 20
+XDP attached to ids-server; all six tail-call slots verified; initial slot=1.
+[2026-10-26T22:42:28+0530] Initializing neural-network parameters; output: updater.log.
+[command] python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py model /home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool /tmp/nn-ebpf-baseline.dhp5S5 /home/arnav/research/ebpf-ids-research/src/mlp_params.bpf.h
+Active model slot=0: all 5216 parameter bytes match the checked-in header.
+[2026-10-26T22:42:28+0530] Starting TCP listener on 33.33.33.1:5001; output: server.log.
+[command] ip netns exec ids-client python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py client 33.33.33.73 33.33.33.1 5001 20
+TCP greeting/FIN and response verified: 33.33.33.73 -> 33.33.33.1:5001.
+[command] python3 /tmp/nn-ebpf-baseline.dhp5S5/helper.py prediction /tmp/nn-ebpf-baseline.dhp5S5/trace.log 0 13663 20
+Final inference stage observed: avg feature extraction time: 2847, detection time: 3964, label: 1
+[2026-10-26T22:42:28+0530] Smoke test succeeded. This is not numerical/model correctness validation.
+[2026-10-26T22:42:28+0530] Cleaning up lab resources.
+Both model pins absent after cleanup.
+XDP attachment absent after loader exit.
+[command] ip link del ids-server
+[command] ip netns del ids-client
+[2026-10-26T22:42:29+0530] RESULT: PASS
+[2026-10-26T22:42:29+0530] Logs: /tmp/nn-ebpf-baseline.dhp5S5

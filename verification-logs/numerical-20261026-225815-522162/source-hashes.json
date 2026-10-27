@@ -1,0 +1,29 @@
+{
+  "baseline": {
+    "src/Makefile": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+    "src/common.h": "9348693840e3122f39b5342efc239452f6e2a58da9d022d8b15298cdd57e5bef",
+    "src/handler.bpf.h": "770af1fc84194a225618e289e6cee8fd7a1b26c710fa0d454fcb10706b6c575e",
+    "src/hot_updating.c": "9abb2a777e1b353ada9e59e54a2718a9675a17c819d9bebe0dd2c44071edd598",
+    "src/mlp.bpf.h": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+    "src/mlp.py": "7bd66eb7a22f3e19983959f5cf7c41fd2d6bb34eaa313bb5f1d651c23b47edb8",
+    "src/mlp_params.bpf.h": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+    "src/mlp_quant.py": "b53b71d14f49327ae94da8101d5572bbccbff94aa1ed7308ce10f92e7a583f34",
+    "src/mlp_train.py": "997b763ea5ed4180a94566190489172a6e4e10aa02b71fb05dd0224909ef5276",
+    "src/params.bpf.h": "385d745f00e7e3c015781b59b6bb3b0e462c31b3af6f24c288921d13f73df46a",
+    "src/xdp.bpf.c": "b8736d4f88b1818fa3cfe2e37473d12b00c034a5b22b4e1ab1ccad5c9f65c10a",
+    "src/xdp.c": "4ffd4aee38c2902a95ec3508fb277eb6063a7c15c95a2e1b9987d4c0d9186ffa",
+    "dataset/reproduction-xdp-data.npy": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+    "dataset/reproduction-xdp-label.npy": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924"
+  },
+  "validation": {
+    "validation/include/bpf/bpf_endian.h": "e8cd0ee88930376c2bc543d6ed00f9e92da2100eb7ad92a0a6b2ecb1cfc029df",
+    "validation/include/bpf/bpf_helpers.h": "0853fa583d4fa443f1c8a7599b19f795f2465b62f8518bb32855a207279746f1",
+    "validation/include/bpf/bpf_tracing.h": "7be74ea3595ed48543668eb1fa7d8dd6c5905575ee3bd2e5c006bc9932b34f47",
+    "validation/include/vmlinux.h": "d219c7d7e7094465c0b45bfe1c2f216524d0637a7adafa867037974f37c9e779",
+    "validation/native.c": "be6b1f7973cb7be0a4592d111316b83a53522b4f8b79892ca275f861e9604665",
+    "validation/native.py": "712a2af3c8faacf2b6d7999fa033a01f3e284ff36a2278f034cc624012f84135",
+    "validation/reference.py": "7015c3dffaea92fa7719d575f8077a3ef392f4a0e26f1de2489c5d923663f449",
+    "validation/run.py": "890d875b7da3be5620a65b5bb1b6656a5e52a0a160890cad7394745bab71a58d",
+    "validation/test_validation.py": "8e757dba28837ad6021ead4ce76c58391bd7eb519e8707a2a7b1f408632a6cd3"
+  }
+}

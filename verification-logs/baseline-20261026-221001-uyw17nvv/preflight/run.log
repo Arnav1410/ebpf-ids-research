@@ -1,0 +1,14 @@
+[2026-10-26T22:12:18+0530] Baseline log directory: /home/arnav/research/ebpf-ids-research/verification-logs/baseline-20261026-221001-uyw17nvv/preflight
+[2026-10-26T22:12:18+0530] Kernel: 6.6.87.2-microsoft-standard-WSL2; repository: /home/arnav/research/ebpf-ids-research
+[command] make -C /home/arnav/research/ebpf-ids-research/src -q
+[command] /home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool version
+bpftool v7.3.0
+using libbpf v1.3
+features: libbfd
+[command] python3 /home/arnav/research/ebpf-ids-research/verification-logs/baseline-20261026-221001-uyw17nvv/preflight/helper.py preflight
+Cannot open netlink socket: Operation not permitted
+ERROR: Command '('ip', '-j', 'link', 'show')' returned non-zero exit status 1.
+[2026-10-26T22:12:18+0530] ERROR: line 79: "$@" (exit 1)
+[2026-10-26T22:12:18+0530] Cleaning up lab resources.
+[2026-10-26T22:12:18+0530] RESULT: FAIL (exit 1)
+[2026-10-26T22:12:18+0530] Logs: /home/arnav/research/ebpf-ids-research/verification-logs/baseline-20261026-221001-uyw17nvv/preflight

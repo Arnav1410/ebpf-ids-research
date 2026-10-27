@@ -1,0 +1,13 @@
+In file included from /home/arnav/research/ebpf-ids-research/validation/native.c:7:
+In file included from /home/arnav/research/ebpf-ids-research/validation/../src/xdp.bpf.c:9:
+In file included from /home/arnav/research/ebpf-ids-research/validation/../src/handler.bpf.h:6:
+validation/../src/mlp.bpf.h:37:5: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+    for (int32_t i = 0; i < N; ++i)
+    ^
+validation/../src/mlp.bpf.h:16:5: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+    for (int32_t i = 0; i < M; ++i)
+    ^
+validation/../src/mlp.bpf.h:30:5: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+    for (int32_t i = 0; i < size; i++)
+    ^
+3 warnings generated.

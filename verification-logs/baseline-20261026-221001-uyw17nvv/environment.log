@@ -1,0 +1,98 @@
+2026-10-26T22:10:39+05:30
+/home/arnav/research/ebpf-ids-research
+18f855b1ea41500be31a4bd5e2507d17a75dee9b
+?? verification-logs/
+Linux Arnav-Priyadarshi-HP 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+uid=1000(arnav) gid=1000(arnav) groups=1000(arnav),65534(nogroup)
+Linux version 6.6.87.2-microsoft-standard-WSL2 (root@439a258ad544) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025
+PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.5 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+/usr/bin/clang-12
+/usr/bin/gcc
+/usr/bin/cc
+/usr/bin/make
+/usr/bin/pkg-config
+/usr/bin/python3
+/usr/sbin/ip
+/usr/bin/bash
+/usr/bin/stdbuf
+/usr/bin/flock
+/usr/bin/tee
+/usr/bin/mktemp
+/usr/bin/findmnt
+/usr/bin/ar
+/usr/bin/ld
+/usr/bin/objcopy
+Ubuntu clang version 12.0.1-19ubuntu3
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+GNU Make 4.3
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+0.29.2
+Python 3.10.12
+Option "-version" is unknown, try "ip -help".
+GNU bash, version 5.1.16(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Package libbpf was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libbpf.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libbpf' found
+dpkg-query: no packages found matching libbpf-dev
+dpkg-query: no packages found matching linux-tools-common
+clang-12 1:12.0.1-19ubuntu3 install ok installed
+gcc 4:11.2.0-1ubuntu1 install ok installed
+iproute2 5.15.0-1ubuntu2.2 install ok installed
+libelf-dev 0.186-1ubuntu0.1 install ok installed
+llvm-12 1:12.0.1-19ubuntu3 install ok installed
+make 4.3-4.1build1 install ok installed
+pkg-config 0.29.2-1ubuntu3 install ok installed
+zlib1g-dev 1:1.2.11.dfsg-2ubuntu9.2 install ok installed
+bpftool/libbpf/src/Makefile:11:LIBBPF_MAJOR_VERSION := 1
+bpftool/libbpf/src/Makefile:12:LIBBPF_MINOR_VERSION := 3
+bpftool/libbpf/src/Makefile:13:LIBBPF_PATCH_VERSION := 0
+bpftool/libbpf/src/Makefile:14:LIBBPF_VERSION := $(LIBBPF_MAJOR_VERSION).$(LIBBPF_MINOR_VERSION).$(LIBBPF_PATCH_VERSION)
+bpftool/libbpf/src/Makefile:15:LIBBPF_MAJMIN_VERSION := $(LIBBPF_MAJOR_VERSION).$(LIBBPF_MINOR_VERSION).0
+bpftool/libbpf/src/Makefile:62:		       $(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+bpftool/libbpf/src/Makefile:107:$(OBJDIR)/libbpf.so: $(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION)
+bpftool/libbpf/src/Makefile:110:$(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION): $(OBJDIR)/libbpf.so.$(LIBBPF_VERSION)
+bpftool/libbpf/src/Makefile:116:		  -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+libbpf/src/libbpf_version.h:6:#define LIBBPF_MAJOR_VERSION 1
+libbpf/src/libbpf_version.h:7:#define LIBBPF_MINOR_VERSION 3
+libbpf/src/Makefile:11:LIBBPF_MAJOR_VERSION := 1
+libbpf/src/Makefile:12:LIBBPF_MINOR_VERSION := 3
+libbpf/src/Makefile:13:LIBBPF_PATCH_VERSION := 0
+libbpf/src/Makefile:14:LIBBPF_VERSION := $(LIBBPF_MAJOR_VERSION).$(LIBBPF_MINOR_VERSION).$(LIBBPF_PATCH_VERSION)
+libbpf/src/Makefile:15:LIBBPF_MAJMIN_VERSION := $(LIBBPF_MAJOR_VERSION).$(LIBBPF_MINOR_VERSION).0
+libbpf/src/Makefile:62:		       $(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+libbpf/src/Makefile:107:$(OBJDIR)/libbpf.so: $(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION)
+libbpf/src/Makefile:110:$(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION): $(OBJDIR)/libbpf.so.$(LIBBPF_VERSION)
+libbpf/src/Makefile:116:		  -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \

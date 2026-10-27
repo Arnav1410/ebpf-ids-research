@@ -1,0 +1,39 @@
+test_01_parameter_layout (test_validation.Validation) ... ok
+test_02_saved_smoke_parameter_bytes (test_validation.Validation) ... ok
+test_03_normalization_sign_zero_and_truncation (test_validation.Validation) ... ok
+test_04_linear_arithmetic_shifts_and_sum_order (test_validation.Validation) ... ok
+test_05_multiply_widened_before_product (test_validation.Validation) ... ok
+test_06_relu_int32_boundaries (test_validation.Validation) ... ok
+test_07_normalization_safe_int32_endpoints (test_validation.Validation) ... ok
+test_08_int64_normalization_endpoints (test_validation.Validation) ... ok
+test_09_uint64_normalization_multiply_wrap (test_validation.Validation) ... ok
+test_10_positive_normalization_narrowing_changes_sign (test_validation.Validation) ... ok
+test_11_linear_int32_narrowing_changes_sign (test_validation.Validation) ... ok
+test_12_reference_reports_64_bit_sum_overflow (test_validation.Validation) ... ok
+test_13_ubsan_accumulator_overflow (test_validation.Validation) ... ok
+test_14_ubsan_int_min_negation (test_validation.Validation) ... ok
+test_15_zero_divisor_has_no_c_guard (test_validation.Validation) ... ok
+test_16_ubsan_flow_counter_overflow (test_validation.Validation) ... ok
+test_17_negative_scale_uses_unsigned_division (test_validation.Validation) ... ok
+test_18_all_layers_on_fixed_vectors (test_validation.Validation) ... ok
+test_19_seeded_layer_inputs (test_validation.Validation) ... ok
+test_20_all_dataset_rows_each_layer (test_validation.Validation) ... ok
+test_21_equal_logit_rule_and_actual_zero_network (test_validation.Validation) ... ok
+test_22_original_float_checkpoint (test_validation.Validation) ... skipped 'No original floating-point checkpoint available'
+test_23_six_features_golden_flow_and_actual_tail_call_stages (test_validation.Validation) ... ok
+test_24_rst_triggers_and_is_counted (test_validation.Validation) ... ok
+test_25_no_fin_rst_no_inference (test_validation.Validation) ... ok
+test_26_direction_source_gate_and_tuple_isolation (test_validation.Validation) ... ok
+test_27_same_timestamp_zero_iat (test_validation.Validation) ... ok
+test_28_fin_repetition_and_tuple_reuse_do_not_reset (test_validation.Validation) ... ok
+test_29_map_full_skips_new_flow (test_validation.Validation) ... ok
+test_30_truncation_and_non_tcp_frames_ignored (test_validation.Validation) ... ok
+test_31_ipv4_options_expose_fixed_offset_parser (test_validation.Validation) ... ok
+test_32_invalid_ip_length_produces_negative_feature (test_validation.Validation) ... ok
+test_33_q16_reference_width_casts (test_validation.Validation) ... ok
+test_34_real_header_iat_multiply_wrap (test_validation.Validation) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 4.979s
+
+OK (skipped=1)

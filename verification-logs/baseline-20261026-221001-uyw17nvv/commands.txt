@@ -1,0 +1,123 @@
+[2026-10-26T22:10:39.318229+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+date --iso-8601=seconds
+pwd
+git rev-parse HEAD
+git status --short
+uname -a
+id
+cat /proc/version
+cat /etc/os-release
+for tool in clang-12 clang gcc cc make pkg-config bpftool python3 ip bash stdbuf flock tee mktemp findmnt ar ld objcopy llvm-strip; do
+    command -v "$tool" || true
+done
+for tool in clang-12 clang gcc cc make pkg-config python3 ip bash; do
+    if command -v "$tool" >/dev/null 2>&1; then "$tool" --version 2>&1 || true; fi
+done
+if command -v bpftool >/dev/null 2>&1; then bpftool version; fi
+if [ -x .output/bpftool/bpftool ]; then .output/bpftool/bpftool version; fi
+pkg-config --modversion libelf zlib libbpf 2>&1 || true
+dpkg-query -W -f="\${Package} \${Version} \${Status}\n" clang-12 llvm-12 libelf-dev zlib1g-dev libbpf-dev linux-tools-common iproute2 make gcc pkg-config 2>&1 || true
+rg -n "LIBBPF_(MAJOR|MINOR|PATCH)_VERSION|BPFTOOL_VERSION|VERSION =" libbpf/src/Makefile libbpf/src/libbpf_version.h bpftool/src/Makefile.include bpftool/libbpf/src/Makefile
+'
+[2026-10-26T22:10:40.055995+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+for path in README README.md README.rst Makefile src/Makefile BASELINE_SUMMARY.md run-baseline.sh src/xdp.c src/xdp.bpf.c src/common.h src/handler.bpf.h src/params.bpf.h src/mlp.bpf.h src/mlp_params.bpf.h src/hot_updating.c src/mlp.py src/mlp_train.py src/mlp_quant.py bpftool/README.md libbpf/README.md; do
+    printf "\nFILE: %s\n" "$path"
+    if [ -f "$path" ]; then sha256sum "$path"; cat "$path"; else printf "ABSENT\n"; fi
+done
+'
+[2026-10-26T22:10:40.180572+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+printf "Virtualization/container identifiers\n"
+if command -v systemd-detect-virt >/dev/null 2>&1; then systemd-detect-virt || true; fi
+cat /proc/1/cgroup
+printf "Namespace identifiers\n"
+readlink /proc/self/ns/net /proc/1/ns/net /proc/self/ns/mnt /proc/1/ns/mnt
+printf "Capabilities and seccomp\n"
+rg "^(Cap|NoNewPrivs|Seccomp)" /proc/self/status
+printf "Link snapshot\n"
+ip -j -d link show
+printf "Address snapshot\n"
+ip -j address show
+printf "Route snapshot\n"
+ip -j -4 route show table all
+printf "Namespace list\n"
+ip netns list
+printf "SSH environment present: "
+if [ -n "${SSH_CONNECTION:-}${SSH_CLIENT:-}${SSH_TTY:-}" ]; then printf "yes\n"; else printf "no\n"; fi
+printf "Kernel BTF and filesystem targets\n"
+ls -ld /sys/kernel/btf/vmlinux /sys/fs/bpf /sys/kernel/tracing /sys/kernel/debug/tracing /run/netns /run/nn-ebpf-baseline.lock 2>&1
+findmnt -n -o TARGET,FSTYPE,OPTIONS --target /sys/fs/bpf
+findmnt -n -o TARGET,FSTYPE,OPTIONS --target /sys/kernel/tracing
+for path in /sys/kernel/tracing/trace_pipe /sys/kernel/debug/tracing/trace_pipe /sys/kernel/tracing/tracing_on /sys/kernel/debug/tracing/tracing_on /sys/fs/bpf/nn_idx /sys/fs/bpf/nn_parameters; do
+    if [ -e "$path" ]; then ls -l "$path"; else printf "ABSENT OR INACCESSIBLE: %s\n" "$path"; fi
+done
+printf "Relevant active processes\n"
+ps -eo pid,comm,args | awk '"'"'$2 == "xdp" || $2 == "hot_updating" || $2 == "sshd" || $2 == "cat" {print}'"'"'
+'
+[2026-10-26T22:11:02.408070+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+ip -Version
+pkg-config --modversion libelf
+pkg-config --modversion zlib
+clang-12 --print-targets
+ls -l /sys/kernel/btf/vmlinux
+sha256sum /sys/kernel/btf/vmlinux
+printf "Initial build directories\n"
+for path in .output src/.output; do if [ -e "$path" ]; then ls -ld "$path"; else printf "ABSENT: %s\n" "$path"; fi; done
+printf "Vendored dependency metadata\n"
+git submodule status --recursive
+'
+[2026-10-26T22:11:02.646879+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -n run-baseline.sh
+[2026-10-26T22:11:02.688570+05:30] cwd=/home/arnav/research/ebpf-ids-research
+./run-baseline.sh --help
+[2026-10-26T22:11:02.818506+05:30] cwd=/home/arnav/research/ebpf-ids-research
+make
+[2026-10-26T22:11:30.781600+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+cat bpftool/src/Makefile.include bpftool/src/Makefile.feature
+sed -n "175,330p" bpftool/src/Makefile
+sed -n "140,210p" libbpf/src/Makefile
+printf "Pinned-map and attach implementation\n"
+rg -n "bpf_program__attach_xdp|bpf_link__destroy|remove\(|nn_idx|nn_parameters|flow_map|progs SEC" src libbpf/src/libbpf.c
+printf "Repository gitlink entries\n"
+git ls-files --stage .gitmodules bpftool libbpf dataset-instance/intrusion/GoldenEye dataset-instance/intrusion/DVMA/brute-force | head -n 12
+'
+[2026-10-26T22:11:41.867096+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+.output/bpftool/bpftool version
+pkg-config --modversion .output/libbpf/libbpf.pc
+printf "Build warning/error matches\n"
+rg -n -i "warning:|error:|fatal:|failed| OFF|\\[.*OFF" verification-logs/baseline-20261026-221001-uyw17nvv/build-dependencies.log || true
+'
+[2026-10-26T22:11:42.074364+05:30] cwd=/home/arnav/research/ebpf-ids-research
+make -C src
+[2026-10-26T22:12:18.460181+05:30] cwd=/home/arnav/research/ebpf-ids-research
+./run-baseline.sh --check --log-dir /home/arnav/research/ebpf-ids-research/verification-logs/baseline-20261026-221001-uyw17nvv/preflight
+[2026-10-26T22:12:54.237021+05:30] cwd=/home/arnav/research/ebpf-ids-research
+bash -c '
+printf "Tracked-file integrity\n"
+git diff --exit-code
+printf "Staged-file integrity\n"
+git diff --cached --exit-code
+printf "Working-tree status\n"
+git status --short
+printf "Build diagnostic lines\n"
+if rg -n -i "warning:|error:|fatal:" verification-logs/baseline-20261026-221001-uyw17nvv/build-dependencies.log verification-logs/baseline-20261026-221001-uyw17nvv/build-detector.log; then :; else printf "No compiler warning/error/fatal lines in either build log.\n"; fi
+printf "BPF ELF sections (offline inspection only)\n"
+readelf --wide --sections src/.output/xdp.bpf.o
+printf "BPF ELF symbols (offline inspection only)\n"
+readelf --wide --symbols src/.output/xdp.bpf.o
+printf "Generated skeleton map/program names\n"
+rg -n "s->map_cnt|s->prog_cnt|s->maps\\[[0-9]+\\].name|s->progs\\[[0-9]+\\].name" src/.output/xdp.skel.h
+printf "Built artifacts\n"
+file .output/bpftool/bpftool .output/libbpf/libbpf.a src/.output/vmlinux.h src/.output/xdp.bpf.o src/.output/xdp.skel.h src/.output/xdp.o src/.output/xdp src/.output/hot_updating
+printf "Built artifact SHA256\n"
+sha256sum .output/bpftool/bpftool .output/libbpf/libbpf.a src/.output/vmlinux.h src/.output/xdp.bpf.o src/.output/xdp.skel.h src/.output/xdp.o src/.output/xdp src/.output/hot_updating
+printf "Preflight retained files\n"
+ls -la verification-logs/baseline-20261026-221001-uyw17nvv/preflight
+printf "Additional build dependency package versions\n"
+dpkg-query -W -f="\${Package} \${Version} \${Status}\n" libcap-dev binutils-dev libc6-dev zlib1g-dev libelf-dev 2>&1 || true
+'

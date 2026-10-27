@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-10-27T00:04:43.896739+05:30",
+  "approval": "User explicitly approved kernel-only test run",
+  "command": [
+    "sudo",
+    "-n",
+    "/usr/bin/python3",
+    "/home/arnav/research/ebpf-ids-research/validation/kernel_parity/run.py",
+    "--execute",
+    "/home/arnav/research/ebpf-ids-research/verification-logs/kernel-parity-20261026-235825-083044"
+  ],
+  "exit_code": 1,
+  "output": "sudo: a password is required\n",
+  "status": "BLOCKED: sudo authentication required",
+  "kernel_execution": "NOT RUN",
+  "verifier_acceptance": "NOT RUN",
+  "fixture_comparisons": "NOT RUN",
+  "cleanup": "No runtime BPF resources created; no kernel cleanup needed",
+  "prepared_artifact_hash_checks": 21,
+  "prepared_source_integrity": "PASS",
+  "tracked_files_unchanged": true
+}

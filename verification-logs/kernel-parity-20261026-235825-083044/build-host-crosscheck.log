@@ -1,0 +1,10 @@
+/home/arnav/research/ebpf-ids-research/validation/native.c:103:6: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+void native_normalize(int64_t *x, int32_t *y, int64_t *mu, int64_t *sigma, int n)
+     ^
+/home/arnav/research/ebpf-ids-research/validation/native.c:105:6: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+void native_linear(int32_t *w, int32_t *x, int32_t *y, int m, int n)
+     ^
+/home/arnav/research/ebpf-ids-research/validation/native.c:107:6: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+void native_relu(int32_t *x, int n) { relu(x, n); }
+     ^
+3 warnings generated.

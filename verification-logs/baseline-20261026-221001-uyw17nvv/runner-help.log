@@ -1,0 +1,34 @@
+Usage: sudo ./run-baseline.sh [--log-dir NEW_DIRECTORY] [--timeout SECONDS]
+       ./run-baseline.sh --check [--log-dir NEW_DIRECTORY]
+
+Run only in an isolated Linux VM. Requires current binaries from `make -C src`,
+plus iproute2, Python 3, GNU coreutils, util-linux, mounted bpffs and tracefs.
+The detector must already accept an interface argument (this checkout does).
+
+Creates ids-client, ids-server and ids-client0, using 33.33.33.1/24 and
+33.33.33.73/24 to match the checked-in source-IP filter. Refuses existing names,
+model pins and overlapping non-default routes. Does not touch other interfaces.
+Loads XDP, checks all six tail-call slots, runs hot_updating, compares the active
+model bytes with mlp_params.bpf.h, then sends one TCP greeting/FIN on port 5001.
+Success requires a timing/prediction line from the final inference stage.
+Stage-name checks accept full BTF names and the kernel's 15-character names.
+
+Automatically stops its children, removes its network and checks model-pin/XDP
+cleanup on success, failure and Ctrl+C. Residual pins are removed only if their
+recorded map IDs still match. The original loader itself uses global pin paths:
+do not run another loader/updater concurrently. Also, do not run another reader
+of the shared trace_pipe. Records are consumed, but tracing is not reconfigured.
+No automatic generic-XDP fallback if this kernel rejects the original loader.
+
+--check       Check prerequisites without loading BPF or changing networking.
+              Non-root checks cannot validate root-only BPF/trace permissions.
+--log-dir DIR Create a NEW directory for run.log, detector.log, updater.log,
+              trace.log and JSON evidence. Default: /tmp/nn-ebpf-baseline.XXXXXX.
+--timeout N   Per-stage deadline in seconds, 1..300 (default: 20).
+--help        Show this help. No root required.
+
+Logs are retained, including on failure; under sudo their ownership is returned
+to the invoking user. Exit 0 means smoke success (or --check passed), not model
+accuracy, feature/fixed-point correctness, flow-map hygiene or concurrency safety.
+Those need separate experiments. Training is intentionally not automated because
+mlp_quant.py overwrites the checked-in parameter header.

@@ -1,0 +1,102 @@
+{
+  "initial_index": 1,
+  "program": {
+    "id": 339,
+    "type": "xdp",
+    "name": "xdp_prog",
+    "tag": "c0aaacc874babb37",
+    "gpl_compatible": true,
+    "loaded_at": 1793034748,
+    "uid": 0,
+    "bytes_xlated": 1680,
+    "jited": true,
+    "bytes_jited": 1228,
+    "bytes_memlock": 4096,
+    "map_ids": [
+      36,
+      35,
+      37,
+      40
+    ],
+    "btf_id": 32
+  },
+  "maps": {
+    "flow_map": {
+      "id": 36,
+      "type": "hash",
+      "name": "flow_map",
+      "flags": 0,
+      "bytes_key": 16,
+      "bytes_value": 344,
+      "max_entries": 8192,
+      "bytes_memlock": 3479680,
+      "frozen": 0,
+      "btf_id": 32
+    },
+    "nn_idx": {
+      "id": 35,
+      "type": "array",
+      "name": "nn_idx",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 4,
+      "max_entries": 1,
+      "bytes_memlock": 392,
+      "frozen": 0,
+      "btf_id": 32
+    },
+    "progs": {
+      "id": 37,
+      "type": "prog_array",
+      "name": "progs",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 4,
+      "max_entries": 1024,
+      "bytes_memlock": 8576,
+      "owner_prog_type": "xdp",
+      "owner_jited": true,
+      "frozen": 0,
+      "btf_id": 32
+    },
+    "xdp_bpf.rodata": {
+      "id": 40,
+      "type": "array",
+      "name": "xdp_bpf.rodata",
+      "flags": 128,
+      "bytes_key": 4,
+      "bytes_value": 67,
+      "max_entries": 1,
+      "bytes_memlock": 456,
+      "frozen": 1,
+      "btf_id": 32
+    },
+    "nn_parameters": {
+      "id": 38,
+      "type": "array",
+      "name": "nn_parameters",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 5216,
+      "max_entries": 2,
+      "bytes_memlock": 10816,
+      "frozen": 0,
+      "btf_id": 32
+    }
+  },
+  "network": [
+    {
+      "xdp": [
+        {
+          "devname": "ids-server",
+          "ifindex": 4,
+          "mode": "driver",
+          "id": 339
+        }
+      ],
+      "tc": [],
+      "flow_dissector": [],
+      "netfilter": []
+    }
+  ]
+}

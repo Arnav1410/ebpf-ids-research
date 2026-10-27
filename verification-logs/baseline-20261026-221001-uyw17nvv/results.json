@@ -1,0 +1,62 @@
+{
+  "commit": "18f855b1ea41500be31a4bd5e2507d17a75dee9b",
+  "date_timezone": "2026-10-26 Asia/Kolkata",
+  "dependency_build": {
+    "status": "PASS",
+    "exit_code": 0,
+    "log": "build-dependencies.log"
+  },
+  "detector_build": {
+    "status": "PASS",
+    "exit_code": 0,
+    "log": "build-detector.log"
+  },
+  "script_syntax": {
+    "status": "PASS",
+    "exit_code": 0
+  },
+  "build_freshness": {
+    "status": "PASS",
+    "evidence": "preflight progressed beyond make -C src -q"
+  },
+  "unprivileged_preflight": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "reason": "ip -j link show: Cannot open netlink socket: Operation not permitted"
+  },
+  "ssh_and_production_isolation": {
+    "status": "NOT RUN",
+    "reason": "Live interfaces/routes cannot be inspected; suitable runtime isolation cannot be established"
+  },
+  "kernel_verifier": {
+    "status": "NOT RUN"
+  },
+  "xdp_attachment": {
+    "status": "NOT RUN"
+  },
+  "model_parameter_loading": {
+    "status": "NOT RUN"
+  },
+  "tail_call_execution": {
+    "status": "NOT RUN"
+  },
+  "controlled_tcp_exchange": {
+    "status": "NOT RUN"
+  },
+  "prediction_output": {
+    "status": "NOT RUN"
+  },
+  "runtime_cleanup_verification": {
+    "status": "NOT RUN"
+  },
+  "preflight_cleanup": {
+    "status": "PASS",
+    "scope": "Removed generated helper; no lab resources existed in this invocation"
+  },
+  "tracked_file_integrity": {
+    "status": "PASS"
+  },
+  "privileged_commands_executed": false,
+  "source_changes": false,
+  "commits_or_pushes": false
+}

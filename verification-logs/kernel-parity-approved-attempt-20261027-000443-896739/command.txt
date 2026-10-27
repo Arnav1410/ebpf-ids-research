@@ -1,0 +1,1 @@
+sudo -n /usr/bin/python3 /home/arnav/research/ebpf-ids-research/validation/kernel_parity/run.py --execute /home/arnav/research/ebpf-ids-research/verification-logs/kernel-parity-20261026-235825-083044

@@ -1,0 +1,86 @@
+OUTPUT=/home/arnav/research/ebpf-ids-research/.output/bpftool/ make -C /home/arnav/research/ebpf-ids-research/bpftool/src
+make[1]: Entering directory '/home/arnav/research/ebpf-ids-research/bpftool/src'
+...                        libbfd: [ [32mon[m  ]
+...               clang-bpf-co-re: [ [31mOFF[m ]
+...                          llvm: [ [31mOFF[m ]
+...                        libcap: [ [32mon[m  ]
+  MKDIR    /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/
+make[2]: Entering directory '/home/arnav/research/ebpf-ids-research/bpftool/libbpf/src'
+  MKDIR    /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/bpf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/btf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/libbpf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/libbpf_errno.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/netlink.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/nlattr.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/str_error.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/libbpf_probes.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/bpf_prog_linfo.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/btf_dump.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/hashmap.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/ringbuf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/strset.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/linker.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/gen_loader.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/relo_core.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/usdt.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/staticobjs/zip.o
+  AR       /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/libbpf.a
+  INSTALL  bpf.h libbpf.h btf.h libbpf_common.h libbpf_legacy.h bpf_helpers.h bpf_helper_defs.h bpf_tracing.h bpf_endian.h bpf_core_read.h skel_internal.h libbpf_version.h usdt.bpf.h
+make[2]: Leaving directory '/home/arnav/research/ebpf-ids-research/bpftool/libbpf/src'
+  MKDIR    /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/include/bpf
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/include/bpf/hashmap.h
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/include/bpf/nlattr.h
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/include/bpf/relo_core.h
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/bpftool/libbpf/include/bpf/libbpf_internal.h
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/btf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/btf_dumper.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/cfg.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/cgroup.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/common.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/feature.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/gen.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/iter.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/jit_disasm.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/json_writer.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/link.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/main.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/map.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/map_perf_ring.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/net.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/netlink_dumper.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/perf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/pids.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/prog.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/struct_ops.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/tracelog.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/xlated_dumper.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/bpftool/disasm.o
+  LINK     /home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool
+make[1]: Leaving directory '/home/arnav/research/ebpf-ids-research/bpftool/src'
+BUILD_STATIC_ONLY=y OBJDIR=/home/arnav/research/ebpf-ids-research/.output/libbpf DESTDIR=/home/arnav/research/ebpf-ids-research/.output/libbpf make -C /home/arnav/research/ebpf-ids-research/libbpf/src install
+make[1]: Entering directory '/home/arnav/research/ebpf-ids-research/libbpf/src'
+  MKDIR    /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/bpf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/btf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/libbpf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/libbpf_errno.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/netlink.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/nlattr.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/str_error.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/libbpf_probes.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/bpf_prog_linfo.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/btf_dump.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/hashmap.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/ringbuf.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/strset.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/linker.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/gen_loader.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/relo_core.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/usdt.o
+  CC       /home/arnav/research/ebpf-ids-research/.output/libbpf/staticobjs/zip.o
+  AR       /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a
+  INSTALL  bpf.h libbpf.h btf.h libbpf_common.h libbpf_legacy.h bpf_helpers.h bpf_helper_defs.h bpf_tracing.h bpf_endian.h bpf_core_read.h skel_internal.h libbpf_version.h usdt.bpf.h
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.pc
+  INSTALL  /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a 
+make[1]: Leaving directory '/home/arnav/research/ebpf-ids-research/libbpf/src'

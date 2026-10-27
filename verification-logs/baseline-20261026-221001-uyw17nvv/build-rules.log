@@ -1,0 +1,467 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+ifneq ($(OUTPUT),)
+$(if $(shell [ -d "$(OUTPUT)" -a -x "$(OUTPUT)" ] && echo 1),, \
+  $(error output directory "$(OUTPUT)" does not exist))
+endif
+
+LLVM_VERSION ?=
+CLANG        ?= clang$(LLVM_VERSION)
+LLVM_CONFIG  ?= llvm-config$(LLVM_VERSION)
+LLVM_STRIP   ?= llvm-strip$(LLVM_VERSION)
+
+ifneq ($(LLVM),)
+  $(if $(findstring default,$(origin AR)),$(eval AR := llvm-ar$(LLVM_VERSION)))
+  $(if $(findstring default,$(origin CC)),$(eval CC := clang$(LLVM_VERSION)))
+  $(if $(findstring default,$(origin LD)),$(eval LD := ld.lld$(LLVM_VERSION)))
+  HOSTAR ?= llvm-ar
+  HOSTCC ?= clang
+  HOSTLD ?= ld.lld
+else
+  $(if $(findstring default,$(origin AR)),$(eval AR = $(CROSS_COMPILE)$(AR)))
+  $(if $(findstring default,$(origin CC)),$(eval CC = $(CROSS_COMPILE)$(CC)))
+  $(if $(findstring default,$(origin LD)),$(eval LD = $(CROSS_COMPILE)$(LD)))
+  HOSTAR ?= ar
+  HOSTCC ?= gcc
+  HOSTLD ?= ld
+endif
+
+EXTRA_WARNINGS := \
+	-Wbad-function-cast \
+	-Wdeclaration-after-statement \
+	-Wformat-security \
+	-Wformat-y2k \
+	-Winit-self \
+	-Wmissing-declarations \
+	-Wmissing-prototypes \
+	-Wold-style-definition \
+	-Wpacked \
+	-Wredundant-decls \
+	-Wshadow \
+	-Wstrict-prototypes \
+	-Wswitch-default \
+	-Wundef \
+	-Wwrite-strings \
+
+ifeq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+  ifneq ($(V),1)
+
+    define def_quiet_msg
+      $(eval QUIET_$(1) = @printf '  %-9s%s\n' $(1) $$@;)
+    endef
+    $(foreach action,CC CLANG LINK MKDIR GEN,$(call def_quiet_msg,$(action)))
+
+    define def_quiet_msg_subdir
+      $(eval QUIET_$(1) = @printf '  %-9s%s\n' $(1) $$1;)
+    endef
+    $(foreach action,CLEAN INSTALL UNINST,$(call def_quiet_msg_subdir,$(action)))
+
+    define descend
+      @printf '  DESCEND  %s\n' $(1); mkdir -p $(OUTPUT)$(1) && \
+        $(MAKE) --no-print-directory -C $(1) $(2)
+    endef
+
+  endif
+endif
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+pound := \#
+
+CFLAGS_BACKUP := $(CFLAGS)
+CFLAGS := $(EXTRA_CFLAGS)
+ifneq ($(LLVM),)
+  CFLAGS += -Wno-unused-command-line-argument
+endif
+
+ifeq ($(V),1)
+  LOG=$(warning $(1))
+  LOG_RES = (echo $(1) && >&2 echo result: $(1))
+  define detect
+    $(warning $(1) && $(call LOG_RES,1) || $(call LOG_RES,0))
+    $(shell $(1) && $(call LOG_RES,1) || $(call LOG_RES,0))
+  endef
+else
+  LOG=
+  LOG_RES = (echo $(1))
+  define detect
+    $(shell $(1) 2>&1 && $(call LOG_RES,1) || $(call LOG_RES,0))
+  endef
+  QUIET_STDERR := 2>/dev/null
+endif
+
+### feature-clang-bpf-co-re
+
+CLANG_BPF_CO_RE_PROBE_CMD = \
+  printf '%s\n' 'struct s { int i; } __attribute__((preserve_access_index)); struct s foo;' | \
+    $(CLANG) -g -target bpf -S -o - -x c - $(QUIET_STDERR) | grep -q BTF_KIND_VAR
+
+ifneq ($(findstring clang-bpf-co-re,$(FEATURE_TESTS)),)
+$(call LOG,Probing: feature-clang-bpf-co-re)
+feature-clang-bpf-co-re := \
+  $(findstring 1,$(call detect,$(CLANG_BPF_CO_RE_PROBE_CMD)))
+endif # clang-bpf-co-re
+
+### feature-libbfd
+
+ifneq ($(findstring libbfd,$(FEATURE_TESTS)),)
+LIBBFD_PROBE := '$(pound)include <bfd.h>\n'
+LIBBFD_PROBE += 'int main(void) {'
+LIBBFD_PROBE += '	bfd_demangle(0, 0, 0);'
+LIBBFD_PROBE += '	return 0;'
+LIBBFD_PROBE += '}'
+LIBBFD_PROBE_CMD = printf '%b\n' $(LIBBFD_PROBE) | \
+  $(CC) $(CFLAGS) -Wall -Werror -x c - $(1) -o /dev/null >/dev/null
+
+define libbfd_build
+  $(call detect,$(LIBBFD_PROBE_CMD))
+endef
+
+$(call LOG,Probing: feature-libbfd)
+feature-libbfd := \
+  $(findstring 1,$(call libbfd_build,-lbfd -ldl))
+ifneq ($(feature-libbfd),1)
+  $(call LOG,Probing: feature-libbfd-liberty)
+  feature-libbfd-liberty := \
+    $(findstring 1,$(call libbfd_build,-lbfd -ldl -liberty))
+  ifneq ($(feature-libbfd-liberty),1)
+    $(call LOG,Probing: feature-libbfd-liberty-z)
+    feature-libbfd-liberty-z := \
+      $(findstring 1,$(call libbfd_build,-lbfd -ldl -liberty -lz))
+  endif
+endif
+HAS_LIBBFD := $(findstring 1, \
+  $(feature-libbfd)$(feature-libbfd-liberty)$(feature-libbfd-liberty-z))
+endif # libbfd
+
+### feature-disassembler-four-args
+
+ifneq ($(findstring disassembler-four-args,$(FEATURE_TESTS)),)
+DISASSEMBLER_PROBE := '$(pound)include <dis-asm.h>\n'
+DISASSEMBLER_PROBE += 'int main(void) {'
+DISASSEMBLER_PROBE += '	disassembler((enum bfd_architecture)0, 0, 0, NULL);'
+DISASSEMBLER_PROBE += '	return 0;'
+DISASSEMBLER_PROBE += '}'
+
+DISASSEMBLER_PROBE_CMD = printf '%b\n' $(1) | \
+  $(CC) $(CFLAGS) -Wall -Werror -x c - -lbfd -lopcodes -S -o - >/dev/null
+define disassembler_build
+  $(call detect,$(DISASSEMBLER_PROBE_CMD))
+endef
+
+$(call LOG,Probing: feature-disassembler-four-args)
+feature-disassembler-four-args := \
+    $(findstring 1, $(call disassembler_build,$(DISASSEMBLER_PROBE)))
+endif # disassembler-four-args
+
+### feature-disassembler-init-styled
+
+ifneq ($(findstring disassembler-init-styled,$(FEATURE_TESTS)),)
+DISASSEMBLER_STYLED_PROBE := '$(pound)include <dis-asm.h>\n'
+DISASSEMBLER_STYLED_PROBE += 'int main(void) {'
+DISASSEMBLER_STYLED_PROBE += '	init_disassemble_info(NULL, 0, NULL, NULL);'
+DISASSEMBLER_STYLED_PROBE += '	return 0;'
+DISASSEMBLER_STYLED_PROBE += '}'
+
+$(call LOG,Probing: feature-disassembler-styled)
+feature-disassembler-init-styled := \
+    $(findstring 1, $(call disassembler_build,$(DISASSEMBLER_STYLED_PROBE)))
+endif # disassembler-init-styled
+
+### feature-libcap
+
+ifneq ($(findstring libcap,$(FEATURE_TESTS)),)
+LIBCAP_PROBE := '$(pound)include <sys/capability.h>\n'
+LIBCAP_PROBE += 'int main(void) {'
+LIBCAP_PROBE += '	cap_free(0);'
+LIBCAP_PROBE += '	return 0;'
+LIBCAP_PROBE += '}'
+LIBCAP_PROBE_CMD = printf '%b\n' $(LIBCAP_PROBE) | \
+  $(CC) $(CFLAGS) -Wall -Werror -x c - -lcap -S -o - >/dev/null
+
+define libcap_build
+  $(call detect,$(LIBCAP_PROBE_CMD))
+endef
+
+$(call LOG,Probing: feature-libcap)
+feature-libcap := $(findstring 1, $(call libcap_build))
+endif # libcap
+
+### feature-llvm
+
+ifneq ($(findstring llvm,$(FEATURE_TESTS)),)
+LLVM_PROBE := '$(pound)include <llvm-c/Core.h>\n'
+LLVM_PROBE += '$(pound)include <llvm-c/TargetMachine.h>\n'
+LLVM_PROBE += 'int main(void) {'
+LLVM_PROBE += '	char *triple = LLVMNormalizeTargetTriple("");'
+LLVM_PROBE += '	LLVMDisposeMessage(triple);'
+LLVM_PROBE += '	return 0;'
+LLVM_PROBE += '}'
+
+# We need some adjustments for the flags.
+# - $(CFLAGS) was set to parent $(EXTRA_CFLAGS) at the beginning of this file.
+# - $(EXTRA_LDFLAGS) from parent Makefile should be kept as well.
+# - Libraries to use depend on whether we have a static or shared version of
+#   LLVM, pass the llvm-config flag and adjust the list of libraries
+#   accordingly.
+FEATURE_LLVM_CFLAGS := $(CFLAGS) $(shell $(LLVM_CONFIG) --cflags 2>/dev/null)
+FEATURE_LLVM_LIBS := $(shell $(LLVM_CONFIG) --libs target 2>/dev/null)
+ifeq ($(shell $(LLVM_CONFIG) --shared-mode 2>/dev/null),static)
+  FEATURE_LLVM_LIBS += $(shell $(LLVM_CONFIG) --system-libs target 2>/dev/null)
+  FEATURE_LLVM_LIBS += -lstdc++
+endif
+FEATURE_LDFLAGS := $(EXTRA_LDFLAGS) $(shell $(LLVM_CONFIG) --ldflags 2>/dev/null)
+
+LLVM_PROBE_CMD = printf '%b\n' $(LLVM_PROBE) | \
+  $(CC) $(FEATURE_LLVM_CFLAGS) $(FEATURE_LDFLAGS) \
+    -Wall -Werror -x c - $(FEATURE_LLVM_LIBS) \
+    -o /dev/null >/dev/null
+
+define llvm_build
+  $(call detect,$(LLVM_PROBE_CMD))
+endef
+
+$(call LOG,Probing: feature-llvm)
+feature-llvm := $(findstring 1, $(call llvm_build))
+endif # llvm
+
+### Print detection results
+
+define print_status
+  ifeq ($(1), 1)
+    MSG = $(shell printf '...%30s: [ \033[32mon\033[m  ]' $(2))
+  else
+    MSG = $(shell printf '...%30s: [ \033[31mOFF\033[m ]' $(2))
+  endif
+endef
+feature_print_status = $(eval $(print_status)) $(info $(MSG))
+
+$(call feature_print_status,$(HAS_LIBBFD),libbfd)
+
+$(foreach feature,$(filter-out libbfd%,$(FEATURE_DISPLAY)), \
+  $(call feature_print_status,$(feature-$(feature)),$(feature)))
+
+CFLAGS := $(CFLAGS_BACKUP)
+undefine LOG LOG_RES
+HOST_CFLAGS = $(subst -I$(LIBBPF_INCLUDE),-I$(LIBBPF_BOOTSTRAP_INCLUDE),\
+		$(subst $(CLANG_CROSS_FLAGS),,$(CFLAGS)))
+
+BPFTOOL_BOOTSTRAP := $(BOOTSTRAP_OUTPUT)bpftool
+
+BOOTSTRAP_OBJS = $(addprefix $(BOOTSTRAP_OUTPUT),main.o common.o json_writer.o gen.o btf.o xlated_dumper.o btf_dumper.o disasm.o)
+$(BOOTSTRAP_OBJS): $(LIBBPF_BOOTSTRAP)
+
+OBJS = $(patsubst %.c,$(OUTPUT)%.o,$(SRCS)) $(OUTPUT)disasm.o
+$(OBJS): $(LIBBPF) $(LIBBPF_INTERNAL_HDRS)
+
+VMLINUX_BTF_PATHS ?= $(if $(O),$(O)/vmlinux)				\
+		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)	\
+		     ../../../vmlinux					\
+		     /sys/kernel/btf/vmlinux				\
+		     /boot/vmlinux-$(shell uname -r)
+VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+
+bootstrap: $(BPFTOOL_BOOTSTRAP)
+
+ifneq ($(VMLINUX_BTF)$(VMLINUX_H),)
+ifeq ($(feature-clang-bpf-co-re),1)
+
+BUILD_BPF_SKELS := 1
+
+$(OUTPUT)vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL_BOOTSTRAP)
+ifeq ($(VMLINUX_H),)
+	$(QUIET_GEN)$(BPFTOOL_BOOTSTRAP) btf dump file $< format c > $@
+else
+	$(Q)cp "$(VMLINUX_H)" $@
+endif
+
+$(OUTPUT)%.bpf.o: skeleton/%.bpf.c $(OUTPUT)vmlinux.h $(LIBBPF_BOOTSTRAP)
+	$(QUIET_CLANG)$(CLANG) \
+		-I$(or $(OUTPUT),.) \
+		-I$(srctree)/include/uapi/ \
+		-I$(LIBBPF_BOOTSTRAP_INCLUDE) \
+		-g -O2 -Wall -fno-stack-protector \
+		--target=bpf -c $< -o $@
+	$(Q)$(LLVM_STRIP) -g $@
+
+$(OUTPUT)%.skel.h: $(OUTPUT)%.bpf.o $(BPFTOOL_BOOTSTRAP)
+	$(QUIET_GEN)$(BPFTOOL_BOOTSTRAP) gen skeleton $< > $@
+
+$(OUTPUT)prog.o: $(OUTPUT)profiler.skel.h
+
+$(OUTPUT)pids.o: $(OUTPUT)pid_iter.skel.h
+
+endif
+endif
+
+CFLAGS += $(if $(BUILD_BPF_SKELS),,-DBPFTOOL_WITHOUT_SKELETONS)
+
+$(BOOTSTRAP_OUTPUT)disasm.o: $(srctree)/src/kernel/bpf/disasm.c
+	$(QUIET_CC)$(HOSTCC) $(HOST_CFLAGS) -c -MMD $< -o $@
+
+$(OUTPUT)disasm.o: $(srctree)/src/kernel/bpf/disasm.c
+	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD $< -o $@
+
+$(BPFTOOL_BOOTSTRAP): $(BOOTSTRAP_OBJS) $(LIBBPF_BOOTSTRAP)
+	$(QUIET_LINK)$(HOSTCC) $(HOST_CFLAGS) $(LDFLAGS) $(BOOTSTRAP_OBJS) $(LIBS_BOOTSTRAP) -o $@
+
+$(OUTPUT)bpftool: $(OBJS) $(LIBBPF)
+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+
+$(BOOTSTRAP_OUTPUT)%.o: %.c $(LIBBPF_BOOTSTRAP_INTERNAL_HDRS) | $(BOOTSTRAP_OUTPUT)
+	$(QUIET_CC)$(HOSTCC) $(HOST_CFLAGS) -c -MMD $< -o $@
+
+$(OUTPUT)%.o: %.c
+	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD $< -o $@
+
+feature-detect-clean:
+	$(call QUIET_CLEAN, feature-detect)
+	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
+
+clean: $(LIBBPF)-clean $(LIBBPF_BOOTSTRAP)-clean
+	$(call QUIET_CLEAN, bpftool)
+	$(Q)$(RM) -- $(OUTPUT)bpftool $(OUTPUT)*.o $(OUTPUT)*.d
+	$(Q)$(RM) -- $(OUTPUT)*.skel.h $(OUTPUT)vmlinux.h
+	$(Q)$(RM) -r -- $(LIBBPF_OUTPUT) $(BOOTSTRAP_OUTPUT)
+	$(call QUIET_CLEAN, core-gen)
+	$(Q)$(RM) -- $(OUTPUT)FEATURE-DUMP.bpftool
+	$(Q)$(RM) -r -- $(OUTPUT)feature/
+
+install-bin: $(OUTPUT)bpftool
+	$(call QUIET_INSTALL, bpftool)
+	$(Q)$(INSTALL) -m 0755 -d $(DESTDIR)$(prefix)/sbin
+	$(Q)$(INSTALL) $(OUTPUT)bpftool $(DESTDIR)$(prefix)/sbin/bpftool
+
+install: install-bin
+	$(Q)$(INSTALL) -m 0755 -d $(DESTDIR)$(bash_compdir)
+	$(Q)$(INSTALL) -m 0644 $(srctree)/bash-completion/bpftool $(DESTDIR)$(bash_compdir)
+
+uninstall:
+	$(call QUIET_UNINST, bpftool)
+	$(Q)$(RM) -- $(DESTDIR)$(prefix)/sbin/bpftool
+	$(Q)$(RM) -- $(DESTDIR)$(bash_compdir)/bpftool
+
+doc:
+	$(call descend,$(srctree)/docs)
+
+doc-clean:
+	$(call descend,$(srctree)/docs,clean)
+
+doc-install:
+	$(call descend,$(srctree)/docs,install)
+
+doc-uninstall:
+	$(call descend,$(srctree)/docs,uninstall)
+
+FORCE:
+
+.SECONDARY:
+.PHONY: all FORCE bootstrap clean install-bin install uninstall
+.PHONY: doc doc-clean doc-install doc-uninstall
+.DEFAULT_GOAL := all
+
+# Delete partially updated (corrupted) files on error
+.DELETE_ON_ERROR:
+		$(INSTALL) -d -m 755 '$(DESTDIR)$2';	\
+	fi;
+	$(Q)$(INSTALL) $(if $3,-m $3,) $1 '$(DESTDIR)$2'
+endef
+
+# Preserve symlinks at installation.
+define do_s_install
+	$(call msg,INSTALL,$1)
+	$(Q)if [ ! -d '$(DESTDIR)$2' ]; then		\
+		$(INSTALL) -d -m 755 '$(DESTDIR)$2';	\
+	fi;
+	$(Q)cp -fR $1 '$(DESTDIR)$2'
+endef
+
+install: all install_headers install_pkgconfig
+	$(call do_s_install,$(STATIC_LIBS) $(SHARED_LIBS),$(LIBDIR))
+
+install_headers:
+	$(call do_install,$(HEADERS),$(INCLUDEDIR)/bpf,644)
+
+# UAPI headers can be installed by a different package so they're not installed
+# in by install rule.
+install_uapi_headers:
+	$(call do_install,$(UAPI_HEADERS),$(UAPIDIR)/linux,644)
+
+install_pkgconfig: $(PC_FILE)
+	$(call do_install,$(PC_FILE),$(LIBDIR)/pkgconfig,644)
+
+clean:
+	$(call msg,CLEAN)
+	$(Q)rm -rf *.o *.a *.so *.so.* *.pc $(SHARED_OBJDIR) $(STATIC_OBJDIR)
+
+.PHONY: cscope tags force
+cscope:
+	$(call msg,CSCOPE)
+	$(Q)ls *.c *.h > cscope.files
+	$(Q)cscope -b -q -f cscope.out
+
+tags:
+	$(call msg,CTAGS)
+	$(Q)rm -f TAGS tags
+	$(Q)ls *.c *.h | xargs $(TAGS_PROG) -a
+
+force:
+Pinned-map and attach implementation
+src/hot_updating.c:16:    const char *nn_parameters_path = "/sys/fs/bpf/nn_parameters";
+src/hot_updating.c:17:    const char *nn_idx_path = "/sys/fs/bpf/nn_idx";
+src/hot_updating.c:19:    int nn_parameters_fd = bpf_obj_get(nn_parameters_path);
+src/hot_updating.c:20:    int nn_idx_fd = bpf_obj_get(nn_idx_path);
+src/hot_updating.c:23:    int nn_idx = 0;
+src/hot_updating.c:25:    int err = bpf_map_lookup_elem(nn_idx_fd, &zero_idx, &nn_idx);
+src/hot_updating.c:27:    printf("NN index: %d\n", nn_idx);
+src/hot_updating.c:29:    int new_nn_idx = (nn_idx + 1) % 2;
+src/hot_updating.c:32:    // err = bpf_map_lookup_elem(nn_parameters_fd, &new_nn_idx, &net);
+src/hot_updating.c:46:    printf("new NN index: %d\n", new_nn_idx);
+src/hot_updating.c:48:    err = bpf_map_update_elem(nn_parameters_fd, &new_nn_idx, &net, BPF_ANY);
+src/hot_updating.c:51:    err = bpf_map_update_elem(nn_idx_fd, &zero_idx, &new_nn_idx, BPF_ANY);
+src/params.bpf.h:20:} nn_parameters SEC(".maps");
+src/params.bpf.h:29:} nn_idx SEC(".maps");
+src/common.h:18:    s32 nn_idx;
+src/common.h:39:} flow_map SEC(".maps");
+src/xdp.c:105:    int32_t nn_idx = 0;
+src/xdp.c:106:    int32_t nn_idx_value = 1;
+src/xdp.c:108:    err = bpf_map__update_elem(skel->maps.nn_idx, &nn_idx, sizeof(int32_t), &nn_idx_value, sizeof(int32_t), BPF_ANY);
+src/xdp.c:115:    struct bpf_link *link = bpf_program__attach_xdp(skel->progs.xdp_prog, ifindex);
+src/xdp.c:118:        fprintf(stderr, "Error: bpf_program__attach_xdp failed\n");
+src/xdp.c:135:    remove("/sys/fs/bpf/nn_parameters");
+src/xdp.c:136:    remove("/sys/fs/bpf/nn_idx");
+src/handler.bpf.h:27:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, f);
+src/handler.bpf.h:35:        bpf_map_update_elem(&flow_map, f, &attr, BPF_NOEXIST);
+src/handler.bpf.h:36:        attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, f);
+src/xdp.bpf.c:20:} progs SEC(".maps");
+src/xdp.bpf.c:101:            int32_t *idx_ptr = bpf_map_lookup_elem(&nn_idx, &idx);
+src/xdp.bpf.c:102:            struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:106:                attr_ptr->nn_idx = *idx_ptr;
+src/xdp.bpf.c:125:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:141:    //            attr_ptr->nn_idx);
+src/xdp.bpf.c:145:    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+src/xdp.bpf.c:182:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:186:    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+src/xdp.bpf.c:215:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:244:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:248:    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+src/xdp.bpf.c:276:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:305:    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+src/xdp.bpf.c:309:    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+libbpf/src/libbpf.c:9839: * link, when destructed through bpf_link__destroy() call won't attempt to
+libbpf/src/libbpf.c:9852:int bpf_link__destroy(struct bpf_link *link)
+libbpf/src/libbpf.c:9908:		bpf_link__destroy(link);
+libbpf/src/libbpf.c:11898:struct bpf_link *bpf_program__attach_xdp(const struct bpf_program *prog, int ifindex)
+libbpf/src/libbpf.c:13112:		bpf_link__destroy(*link);
+Repository gitlink entries
+100644 3ae0a48deef597f7207664fb6c1c83386cb21f40 0	.gitmodules
+100644 05e03be4c4a5fdfa0c56bfec293474fc02cbb47a 0	bpftool/.gitattributes
+100644 6d24cf6aa8d8ca7dd0cf398b28b671beb360722b 0	bpftool/.github/workflows/build.yaml
+100644 9e6283064c6d826ebaf4eaf5fa70c17f07c1ca78 0	bpftool/.github/workflows/docker.yaml
+100644 82203137cd09ac23ebd3c2e2ad5f2ec748cb4216 0	bpftool/.github/workflows/lint-commits.yaml
+100644 68d1c0c2af77236a5b9b4cc0d8f9b67879532179 0	bpftool/.github/workflows/lint-shell.yaml
+100644 69c00a490baf4e3120d13734a09b622a4337695f 0	bpftool/.github/workflows/release.yaml
+100644 5190295a0ea77f6e55206ab324d0dfb33f02f442 0	bpftool/.github/workflows/static-build.yaml
+100644 1706b4a8fc8bf121f9fda22afa9f514f66e5575b 0	bpftool/.gitmodules
+100644 ec5e4be249bfb69656ed65a19afbcdc58657ff27 0	bpftool/BPF-CHECKPOINT-COMMIT
+100644 130cfa6ba8f97a6f30d9d395cb6fb69743d354de 0	bpftool/CHECKPOINT-COMMIT
+100644 730319c634cdc6e816922d7e0c35c77553f7ffb3 0	bpftool/Dockerfile

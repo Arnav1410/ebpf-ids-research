@@ -1,0 +1,42 @@
+Virtualization/container identifiers
+wsl
+0::/
+Namespace identifiers
+net:[4026532333]
+net:[4026532333]
+mnt:[4026532296]
+mnt:[4026532296]
+Capabilities and seccomp
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000000000000000
+CapAmb:	0000000000000000
+NoNewPrivs:	1
+Seccomp:	2
+Seccomp_filters:	1
+Link snapshot
+Cannot open netlink socket: Operation not permitted
+Address snapshot
+Cannot open netlink socket: Operation not permitted
+Route snapshot
+Cannot open netlink socket: Operation not permitted
+Namespace list
+Cannot open netlink socket: Operation not permitted
+SSH environment present: no
+Kernel BTF and filesystem targets
+ls: cannot access '/sys/kernel/debug/tracing': Permission denied
+ls: cannot access '/run/netns': No such file or directory
+ls: cannot access '/run/nn-ebpf-baseline.lock': No such file or directory
+dr-xr-xr-x 2 nobody nogroup       0 Oct 26 21:37 /sys/fs/bpf
+-r--r--r-- 1 nobody nogroup 6050732 Oct 26 22:10 /sys/kernel/btf/vmlinux
+drwx------ 6 nobody nogroup       0 Oct 26 21:37 /sys/kernel/tracing
+/sys   sysfs  ro,nosuid,nodev,noexec,noatime
+/sys/kernel/tracing tracefs ro,nosuid,nodev,noexec,relatime
+ABSENT OR INACCESSIBLE: /sys/kernel/tracing/trace_pipe
+ABSENT OR INACCESSIBLE: /sys/kernel/debug/tracing/trace_pipe
+ABSENT OR INACCESSIBLE: /sys/kernel/tracing/tracing_on
+ABSENT OR INACCESSIBLE: /sys/kernel/debug/tracing/tracing_on
+ABSENT OR INACCESSIBLE: /sys/fs/bpf/nn_idx
+ABSENT OR INACCESSIBLE: /sys/fs/bpf/nn_parameters
+Relevant active processes

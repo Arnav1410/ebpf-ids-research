@@ -1,0 +1,9 @@
+make: Entering directory '/home/arnav/research/ebpf-ids-research/src'
+mkdir -p "/home/arnav/research/ebpf-ids-research/src/.output"
+/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool btf dump file /sys/kernel/btf/vmlinux format c > /home/arnav/research/ebpf-ids-research/src/.output/vmlinux.h
+clang-12 -g -O3 -target bpf -I/home/arnav/research/ebpf-ids-research/src/.output -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include -I/home/arnav/research/ebpf-ids-research/libbpf/include -I/usr/include/x86_64-linux-gnu/ -c xdp.bpf.c -o /home/arnav/research/ebpf-ids-research/src/.output/xdp.bpf.o
+/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool gen skeleton /home/arnav/research/ebpf-ids-research/src/.output/xdp.bpf.o > /home/arnav/research/ebpf-ids-research/src/.output/xdp.skel.h
+clang-12 -O3 -g -Wall -I/home/arnav/research/ebpf-ids-research/src/.output -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include -I/home/arnav/research/ebpf-ids-research/libbpf/include -I/usr/include/x86_64-linux-gnu/ -c xdp.c -o /home/arnav/research/ebpf-ids-research/src/.output/xdp.o
+clang-12 -O3 -g -Wall -lelf -lz /home/arnav/research/ebpf-ids-research/src/.output/xdp.o /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a -o /home/arnav/research/ebpf-ids-research/src/.output/xdp
+clang-12 -g -Wall -lelf -lz -I/home/arnav/research/ebpf-ids-research/src/.output -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include -I/home/arnav/research/ebpf-ids-research/libbpf/include -I/usr/include/x86_64-linux-gnu/ hot_updating.c /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a -o /home/arnav/research/ebpf-ids-research/src/.output/hot_updating
+make: Leaving directory '/home/arnav/research/ebpf-ids-research/src'

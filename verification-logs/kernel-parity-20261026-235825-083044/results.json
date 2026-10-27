@@ -1,0 +1,42 @@
+{
+  "preparation": "PASS",
+  "kernel_execution": "NOT RUN",
+  "environment": {
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "uid": 1000,
+    "python": "3.10.12",
+    "restrictions": [
+      "CapInh:\t0000000000000000",
+      "CapPrm:\t0000000000000000",
+      "CapEff:\t0000000000000000",
+      "CapBnd:\t0000000000000000",
+      "CapAmb:\t0000000000000000",
+      "NoNewPrivs:\t1",
+      "Seccomp:\t2",
+      "Seccomp_filters:\t1"
+    ]
+  },
+  "compiler": "Ubuntu clang version 12.0.1-19ubuntu3\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+  "bpftool": "bpftool v7.3.0\nusing libbpf v1.3\nfeatures: libbfd\n",
+  "nonprivileged": {
+    "tests_run": 11,
+    "failures": 0,
+    "errors": 0,
+    "safe_fixtures_host_and_python": 7,
+    "saved_host_fixtures": 5,
+    "saved_dataset_hashes": "INSPECTED; dataset not rerun",
+    "original_object_schema": {
+      "event": "schema",
+      "program_count": 7,
+      "map_count": 5,
+      "flow_key_bytes": 16,
+      "flow_value_bytes": 344,
+      "model_bytes": 5216,
+      "all_pin_paths_disabled": true,
+      "kernel_execution": false
+    },
+    "protocol_event_tests": "MOCKS ONLY"
+  },
+  "approval_command": "sudo -n /usr/bin/python3 /home/arnav/research/ebpf-ids-research/validation/kernel_parity/run.py --execute /home/arnav/research/ebpf-ids-research/verification-logs/kernel-parity-20261026-235825-083044"
+}

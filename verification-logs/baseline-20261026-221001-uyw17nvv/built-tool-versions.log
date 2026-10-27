@@ -1,0 +1,7 @@
+bpftool v7.3.0
+using libbpf v1.3
+features: libbfd
+1.3.0
+Build warning/error matches
+4:...               clang-bpf-co-re: [ [31mOFF[m ]
+5:...                          llvm: [ [31mOFF[m ]

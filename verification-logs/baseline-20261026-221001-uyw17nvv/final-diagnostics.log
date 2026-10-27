@@ -1,0 +1,320 @@
+Tracked-file integrity
+Staged-file integrity
+Working-tree status
+?? verification-logs/
+Build diagnostic lines
+No compiler warning/error/fatal lines in either build log.
+BPF ELF sections (offline inspection only)
+There are 26 section headers, starting at offset 0x227e8:
+
+Section Headers:
+  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0
+  [ 1] .strtab           STRTAB          0000000000000000 02239d 00044b 00      0   0  1
+  [ 2] .text             PROGBITS        0000000000000000 000040 000708 00  AX  0   0  8
+  [ 3] xdp               PROGBITS        0000000000000000 000748 0064d8 00  AX  0   0  8
+  [ 4] .relxdp           REL             0000000000000000 019220 000180 10     25   3  8
+  [ 5] .maps             PROGBITS        0000000000000000 006c20 000090 00  WA  0   0  8
+  [ 6] .rodata           PROGBITS        0000000000000000 006cb0 000043 00   A  0   0  1
+  [ 7] license           PROGBITS        0000000000000000 006cf3 000004 00  WA  0   0  1
+  [ 8] .debug_loc        PROGBITS        0000000000000000 006cf7 005a1f 00      0   0  1
+  [ 9] .rel.debug_loc    REL             0000000000000000 0193a0 0004e0 10     25   8  8
+  [10] .debug_abbrev     PROGBITS        0000000000000000 00c716 00035a 00      0   0  1
+  [11] .debug_info       PROGBITS        0000000000000000 00ca70 0011d9 00      0   0  1
+  [12] .rel.debug_info   REL             0000000000000000 019880 0016d0 10     25  11  8
+  [13] .debug_ranges     PROGBITS        0000000000000000 00dc49 000660 00      0   0  1
+  [14] .rel.debug_ranges REL             0000000000000000 01af50 000b40 10     25  13  8
+  [15] .debug_str        PROGBITS        0000000000000000 00e2a9 000725 01  MS  0   0  1
+  [16] .BTF              PROGBITS        0000000000000000 00e9ce 001cac 00      0   0  1
+  [17] .rel.BTF          REL             0000000000000000 01ba90 000060 10     25  16  8
+  [18] .BTF.ext          PROGBITS        0000000000000000 01067a 006794 00      0   0  1
+  [19] .rel.BTF.ext      REL             0000000000000000 01baf0 006780 10     25  18  8
+  [20] .debug_frame      PROGBITS        0000000000000000 016e10 0000d0 00      0   0  8
+  [21] .rel.debug_frame  REL             0000000000000000 022270 000100 10     25  20  8
+  [22] .debug_line       PROGBITS        0000000000000000 016ee0 001860 00      0   0  1
+  [23] .rel.debug_line   REL             0000000000000000 022370 000020 10     25  22  8
+  [24] .llvm_addrsig     LOOS+0xfff4c03  0000000000000000 022390 00000d 00   E 25   0  1
+  [25] .symtab           SYMTAB          0000000000000000 018740 000ae0 18      1 104  8
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+BPF ELF symbols (offline inspection only)
+
+Symbol table '.symtab' contains 116 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS xdp.bpf.c
+     2: 00000000000003f8     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_10
+     3: 0000000000000458     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_12
+     4: 0000000000000470     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_14
+     5: 0000000000000498     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_16
+     6: 0000000000000530     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_18
+     7: 0000000000000540     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_19
+     8: 0000000000000570     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_21
+     9: 0000000000000620     0 NOTYPE  LOCAL  DEFAULT    3 LBB0_24
+    10: 00000000000007f0     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_10
+    11: 0000000000000850     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_12
+    12: 0000000000000880     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_13
+    13: 00000000000008c0     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_15
+    14: 00000000000008f0     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_16
+    15: 0000000000000930     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_18
+    16: 0000000000000960     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_19
+    17: 00000000000009a0     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_21
+    18: 00000000000009d0     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_22
+    19: 0000000000000a10     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_24
+    20: 0000000000000a40     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_25
+    21: 0000000000000a70     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_26
+    22: 00000000000007c8     0 NOTYPE  LOCAL  DEFAULT    3 LBB1_9
+    23: 00000000000036d0     0 NOTYPE  LOCAL  DEFAULT    3 LBB2_8
+    24: 0000000000003830     0 NOTYPE  LOCAL  DEFAULT    3 LBB3_7
+    25: 00000000000000f0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_10
+    26: 0000000000000120     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_12
+    27: 0000000000000150     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_14
+    28: 0000000000000180     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_16
+    29: 00000000000001f0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_18
+    30: 0000000000000030     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_2
+    31: 0000000000000228     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_20
+    32: 0000000000000260     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_22
+    33: 0000000000000298     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_24
+    34: 00000000000002d0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_26
+    35: 0000000000000308     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_28
+    36: 0000000000000340     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_30
+    37: 0000000000000378     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_32
+    38: 00000000000003b0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_34
+    39: 00000000000003e8     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_36
+    40: 0000000000000420     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_38
+    41: 0000000000000060     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_4
+    42: 0000000000000458     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_40
+    43: 0000000000000490     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_42
+    44: 00000000000004c8     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_44
+    45: 0000000000000500     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_46
+    46: 0000000000000538     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_48
+    47: 0000000000000570     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_50
+    48: 00000000000005a8     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_52
+    49: 00000000000005e0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_54
+    50: 0000000000000618     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_56
+    51: 0000000000000650     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_58
+    52: 0000000000000090     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_6
+    53: 0000000000000688     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_60
+    54: 00000000000006c0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_62
+    55: 00000000000006f8     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_64
+    56: 00000000000000c0     0 NOTYPE  LOCAL  DEFAULT    2 LBB4_8
+    57: 00000000000043c8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_10
+    58: 0000000000004470     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_12
+    59: 0000000000004518     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_14
+    60: 00000000000045c0     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_16
+    61: 0000000000004668     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_18
+    62: 0000000000004710     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_20
+    63: 00000000000047b8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_22
+    64: 0000000000004860     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_24
+    65: 0000000000004908     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_26
+    66: 00000000000049b0     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_28
+    67: 0000000000004a58     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_30
+    68: 0000000000004b00     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_32
+    69: 0000000000004ba8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_34
+    70: 0000000000004c50     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_36
+    71: 0000000000004cf8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_38
+    72: 0000000000004da0     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_40
+    73: 0000000000004e48     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_42
+    74: 0000000000004ef0     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_44
+    75: 0000000000004f98     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_46
+    76: 0000000000005040     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_48
+    77: 00000000000050e8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_50
+    78: 0000000000005190     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_52
+    79: 0000000000005238     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_54
+    80: 00000000000052e0     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_56
+    81: 0000000000005388     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_58
+    82: 0000000000005430     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_60
+    83: 00000000000054d8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_62
+    84: 0000000000005580     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_64
+    85: 0000000000005628     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_66
+    86: 00000000000056c8     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_68
+    87: 0000000000005778     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_70
+    88: 0000000000004320     0 NOTYPE  LOCAL  DEFAULT    3 LBB5_8
+    89: 00000000000058d8     0 NOTYPE  LOCAL  DEFAULT    3 LBB6_7
+    90: 0000000000006480     0 NOTYPE  LOCAL  DEFAULT    3 LBB7_11
+    91: 00000000000064c8     0 NOTYPE  LOCAL  DEFAULT    3 LBB7_12
+    92: 0000000000006398     0 NOTYPE  LOCAL  DEFAULT    3 LBB7_8
+    93: 0000000000000000  1800 FUNC    LOCAL  DEFAULT    2 relu
+    94: 0000000000000000    67 OBJECT  LOCAL  DEFAULT    6 xdp_output_linear.____fmt
+    95: 0000000000000000     0 SECTION LOCAL  DEFAULT    2 .text
+    96: 0000000000000000     0 SECTION LOCAL  DEFAULT    3 xdp
+    97: 0000000000000000     0 SECTION LOCAL  DEFAULT    6 .rodata
+    98: 0000000000000000     0 SECTION LOCAL  DEFAULT    8 .debug_loc
+    99: 0000000000000000     0 SECTION LOCAL  DEFAULT   10 .debug_abbrev
+   100: 0000000000000000     0 SECTION LOCAL  DEFAULT   13 .debug_ranges
+   101: 0000000000000000     0 SECTION LOCAL  DEFAULT   15 .debug_str
+   102: 0000000000000000     0 SECTION LOCAL  DEFAULT   20 .debug_frame
+   103: 0000000000000000     0 SECTION LOCAL  DEFAULT   22 .debug_line
+   104: 0000000000000000     4 OBJECT  GLOBAL DEFAULT    7 __license
+   105: 0000000000000028    32 OBJECT  GLOBAL DEFAULT    5 flow_map
+   106: 0000000000000000    40 OBJECT  GLOBAL DEFAULT    5 nn_idx
+   107: 0000000000000068    40 OBJECT  GLOBAL DEFAULT    5 nn_parameters
+   108: 0000000000000048    32 OBJECT  GLOBAL DEFAULT    5 progs
+   109: 0000000000003840  8008 FUNC    GLOBAL DEFAULT    3 xdp_hidden_linear
+   110: 0000000000005788   352 FUNC    GLOBAL DEFAULT    3 xdp_hidden_relu
+   111: 0000000000000a80 11360 FUNC    GLOBAL DEFAULT    3 xdp_input_linear
+   112: 00000000000036e0   352 FUNC    GLOBAL DEFAULT    3 xdp_input_relu
+   113: 00000000000058e8  3056 FUNC    GLOBAL DEFAULT    3 xdp_output_linear
+   114: 0000000000000630  1104 FUNC    GLOBAL DEFAULT    3 xdp_preprocessing
+   115: 0000000000000000  1584 FUNC    GLOBAL DEFAULT    3 xdp_prog
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info
+readelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info
+Generated skeleton map/program names
+152:	s->map_cnt = 5;
+154:	s->maps = (struct bpf_map_skeleton *)calloc(s->map_cnt, s->map_skel_sz);
+160:	s->maps[0].name = "nn_idx";
+163:	s->maps[1].name = "flow_map";
+166:	s->maps[2].name = "progs";
+169:	s->maps[3].name = "nn_parameters";
+172:	s->maps[4].name = "xdp_bpf.rodata";
+176:	s->prog_cnt = 7;
+178:	s->progs = (struct bpf_prog_skeleton *)calloc(s->prog_cnt, s->prog_skel_sz);
+184:	s->progs[0].name = "xdp_prog";
+188:	s->progs[1].name = "xdp_preprocessing";
+192:	s->progs[2].name = "xdp_input_linear";
+196:	s->progs[3].name = "xdp_input_relu";
+200:	s->progs[4].name = "xdp_hidden_linear";
+204:	s->progs[5].name = "xdp_hidden_relu";
+208:	s->progs[6].name = "xdp_output_linear";
+Built artifacts
+.output/bpftool/bpftool:  ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=97c2332f9e81b98e68675706811de6547aa5ce27, for GNU/Linux 3.2.0, with debug_info, not stripped
+.output/libbpf/libbpf.a:  current ar archive
+src/.output/vmlinux.h:    C source, ASCII text
+src/.output/xdp.bpf.o:    ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped
+src/.output/xdp.skel.h:   C source, ASCII text
+src/.output/xdp.o:        ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), with debug_info, not stripped
+src/.output/xdp:          ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=69186e2205dbf4732b1aa74a722a42ddd93d10b6, for GNU/Linux 3.2.0, with debug_info, not stripped
+src/.output/hot_updating: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=196dd30575e70422e13c30ad27807bbc7d907b07, for GNU/Linux 3.2.0, with debug_info, not stripped
+Built artifact SHA256
+f1eda339ea9ab66a9f5c5c21a851505027267658f1af93914da10fed118bdfdd  .output/bpftool/bpftool
+c64a894094479a720be3c11518a0f56061271b9f37bfa67662e968764543ca8e  .output/libbpf/libbpf.a
+8ab32866f1c1f211ed7bc2eefd79b915cbd70f0639a553b228d50921f53ad55b  src/.output/vmlinux.h
+45a89c9e8b6028e00ef1200d509b8244afde81175296da04fc14875f3647fc4c  src/.output/xdp.bpf.o
+6a6fba941b27ae4d306d3d1e73f5f5608d3c9b2a6eacb260b91c615d28c26b0d  src/.output/xdp.skel.h
+1d04b5ec0a87f08a85a2fa16f9c7d075dce60ff01b07aa6cc8d121e38ee8f59e  src/.output/xdp.o
+a27e214d2f4dbd2f65e77893f0b156818b0bf1a9c5d78d97568d80d22bd47789  src/.output/xdp
+985ab2851eac570286e3282ec181a71ea56293ddbb2213ca367973436d65a553  src/.output/hot_updating
+Preflight retained files
+total 12
+drwx------ 2 arnav arnav 4096 Oct 26 22:12 .
+drwx------ 3 arnav arnav 4096 Oct 26 22:12 ..
+-rw------- 1 arnav arnav 1031 Oct 26 22:12 run.log
+Additional build dependency package versions
+binutils-dev 2.38-4ubuntu2.12 install ok installed
+libc6-dev 2.35-0ubuntu3.15 install ok installed
+libcap-dev 1:2.44-1ubuntu0.22.04.3 install ok installed
+libelf-dev 0.186-1ubuntu0.1 install ok installed
+zlib1g-dev 1:1.2.11.dfsg-2ubuntu9.2 install ok installed

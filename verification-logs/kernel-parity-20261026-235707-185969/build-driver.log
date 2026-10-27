@@ -1,0 +1,8 @@
+In file included from /home/arnav/research/ebpf-ids-research/validation/kernel_parity/runner.c:21:
+/home/arnav/research/ebpf-ids-research/validation/kernel_parity/../../src/params.bpf.h:19:18: error: use of undeclared identifier 'LIBBPF_PIN_BY_NAME'
+        __uint(pinning, LIBBPF_PIN_BY_NAME); // <- pin
+                        ^
+/home/arnav/research/ebpf-ids-research/validation/kernel_parity/../../src/params.bpf.h:28:18: error: use of undeclared identifier 'LIBBPF_PIN_BY_NAME'
+        __uint(pinning, LIBBPF_PIN_BY_NAME); // <- pin
+                        ^
+2 errors generated.

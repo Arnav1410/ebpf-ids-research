@@ -1,0 +1,133 @@
+{
+  "preparation": "PASS (previous bundle)",
+  "kernel_execution": "PASS",
+  "environment": {
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "uid": 0,
+    "python": "3.10.12",
+    "restrictions": [
+      "CapInh:\t0000000000000000",
+      "CapPrm:\t000001ffffffffff",
+      "CapEff:\t000001ffffffffff",
+      "CapBnd:\t000001ffffffffff",
+      "CapAmb:\t0000000000000000",
+      "NoNewPrivs:\t0",
+      "Seccomp:\t0",
+      "Seccomp_filters:\t0"
+    ]
+  },
+  "comparisons": {
+    "fixed_fixtures": [
+      {
+        "name": "stored_mean",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      },
+      {
+        "name": "one_scale_above",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 0
+      },
+      {
+        "name": "one_scale_below",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      },
+      {
+        "name": "small_tcp",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      },
+      {
+        "name": "packet_fixture",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      },
+      {
+        "name": "normalization_neighbors",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      },
+      {
+        "name": "bounded_large",
+        "feature_values": "PASS",
+        "stage_tensors": "PASS",
+        "prediction_derived": 1
+      }
+    ],
+    "packet_fixtures": [
+      {
+        "name": "syn",
+        "features": [
+          20,
+          0,
+          20,
+          5001,
+          20,
+          1
+        ],
+        "sampled_kernel_timestamp": 8989022392403,
+        "comparison": "PASS",
+        "time_basis": "stored bpf_ktime_get_ns samples"
+      },
+      {
+        "name": "data",
+        "features": [
+          124,
+          3340,
+          20,
+          5001,
+          44,
+          2
+        ],
+        "sampled_kernel_timestamp": 8989022395743,
+        "comparison": "PASS",
+        "time_basis": "stored bpf_ktime_get_ns samples"
+      },
+      {
+        "name": "fin",
+        "features": [
+          124,
+          3340,
+          20,
+          5001,
+          64,
+          3
+        ],
+        "sampled_kernel_timestamp": 8989022398483,
+        "comparison": "PASS",
+        "time_basis": "stored bpf_ktime_get_ns samples"
+      },
+      {
+        "name": "rst",
+        "features": [
+          23,
+          0,
+          23,
+          5001,
+          20,
+          1
+        ],
+        "sampled_kernel_timestamp": 8989022419344,
+        "comparison": "PASS",
+        "time_basis": "stored bpf_ktime_get_ns samples"
+      },
+      {
+        "name": "reverse_ignored",
+        "ignored": "PASS"
+      }
+    ],
+    "test_run_invocations": 59,
+    "tensor_comparisons": 54,
+    "original_trace_prediction": "NOT CAPTURED; classification derived separately from read-back logits",
+    "tail_call_chain": "NOT TESTED; array intentionally empty and stages individually test-run",
+    "cleanup": "PASS"
+  }
+}

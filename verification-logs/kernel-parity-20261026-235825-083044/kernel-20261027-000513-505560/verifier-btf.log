@@ -1,0 +1,185 @@
+magic: 0xeb9f
+version: 1
+flags: 0x0
+hdr_len: 24
+type_off: 0
+type_len: 2396
+str_off: 2396
+str_len: 4916
+btf_total_size: 7336
+[1] PTR (anon) type_id=3
+[2] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[3] ARRAY (anon) type_id=2 index_type_id=4 nr_elems=2
+[4] INT __ARRAY_SIZE_TYPE__ size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[5] PTR (anon) type_id=6
+[6] TYPEDEF int32_t type_id=7
+[7] TYPEDEF s32 type_id=8
+[8] TYPEDEF __s32 type_id=2
+[9] PTR (anon) type_id=10
+[10] ARRAY (anon) type_id=2 index_type_id=4 nr_elems=1
+[11] STRUCT (anon) size=40 vlen=5
+	type type_id=1 bits_offset=0
+	key type_id=5 bits_offset=64
+	value type_id=5 bits_offset=128
+	max_entries type_id=9 bits_offset=192
+	pinning type_id=9 bits_offset=256
+[12] VAR nn_idx type_id=11 linkage=1
+[13] PTR (anon) type_id=14
+[14] ARRAY (anon) type_id=2 index_type_id=4 nr_elems=8192
+[15] PTR (anon) type_id=16
+[16] STRUCT flow size=16 vlen=4
+	saddr type_id=2 bits_offset=0
+	sport type_id=2 bits_offset=32
+	daddr type_id=2 bits_offset=64
+	dport type_id=2 bits_offset=96
+[17] PTR (anon) type_id=18
+[18] STRUCT flow_attribute size=344 vlen=13
+	num_packet type_id=19 bits_offset=0
+	min_packet_length type_id=19 bits_offset=64
+	max_packet_length type_id=19 bits_offset=128
+	max_duration type_id=19 bits_offset=192
+	dst_port type_id=19 bits_offset=256
+	header_length type_id=19 bits_offset=320
+	last_packet_time type_id=19 bits_offset=384
+	status type_id=19 bits_offset=448
+	total_feature_extraction_time type_id=22 bits_offset=512
+	detection_start_time type_id=22 bits_offset=576
+	nn_idx type_id=7 bits_offset=640
+	hidden1 type_id=25 bits_offset=672
+	hidden2 type_id=25 bits_offset=1696
+[19] TYPEDEF s64 type_id=20
+[20] TYPEDEF __s64 type_id=21
+[21] INT long long int size=8 bits_offset=0 nr_bits=64 encoding=SIGNED
+[22] TYPEDEF u64 type_id=23
+[23] TYPEDEF __u64 type_id=24
+[24] INT long long unsigned int size=8 bits_offset=0 nr_bits=64 encoding=(none)
+[25] ARRAY (anon) type_id=7 index_type_id=4 nr_elems=32
+[26] STRUCT (anon) size=32 vlen=4
+	type type_id=9 bits_offset=0
+	max_entries type_id=13 bits_offset=64
+	key type_id=15 bits_offset=128
+	value type_id=17 bits_offset=192
+[27] VAR flow_map type_id=26 linkage=1
+[28] PTR (anon) type_id=29
+[29] ARRAY (anon) type_id=2 index_type_id=4 nr_elems=3
+[30] PTR (anon) type_id=31
+[31] ARRAY (anon) type_id=2 index_type_id=4 nr_elems=1024
+[32] PTR (anon) type_id=33
+[33] TYPEDEF u32 type_id=34
+[34] TYPEDEF __u32 type_id=35
+[35] INT unsigned int size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[36] STRUCT (anon) size=32 vlen=4
+	type type_id=28 bits_offset=0
+	max_entries type_id=30 bits_offset=64
+	key type_id=32 bits_offset=128
+	value type_id=32 bits_offset=192
+[37] VAR progs type_id=36 linkage=1
+[38] PTR (anon) type_id=39
+[39] STRUCT Net size=5216 vlen=5
+	layer_0_weight type_id=40 bits_offset=0
+	layer_1_weight type_id=41 bits_offset=6144
+	layer_2_weight type_id=42 bits_offset=38912
+	mean type_id=44 bits_offset=40960
+	scale type_id=44 bits_offset=41344
+[40] ARRAY (anon) type_id=6 index_type_id=4 nr_elems=192
+[41] ARRAY (anon) type_id=6 index_type_id=4 nr_elems=1024
+[42] ARRAY (anon) type_id=6 index_type_id=4 nr_elems=64
+[43] TYPEDEF int64_t type_id=19
+[44] ARRAY (anon) type_id=43 index_type_id=4 nr_elems=6
+[45] STRUCT (anon) size=40 vlen=5
+	type type_id=1 bits_offset=0
+	key type_id=5 bits_offset=64
+	value type_id=38 bits_offset=128
+	max_entries type_id=1 bits_offset=192
+	pinning type_id=9 bits_offset=256
+[46] VAR nn_parameters type_id=45 linkage=1
+[47] PTR (anon) type_id=48
+[48] STRUCT xdp_md size=24 vlen=6
+	data type_id=34 bits_offset=0
+	data_end type_id=34 bits_offset=32
+	data_meta type_id=34 bits_offset=64
+	ingress_ifindex type_id=34 bits_offset=96
+	rx_queue_index type_id=34 bits_offset=128
+	egress_ifindex type_id=34 bits_offset=160
+[49] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[50] FUNC xdp_prog type_id=49
+[51] STRUCT ethhdr size=14 vlen=3
+	h_dest type_id=53 bits_offset=0
+	h_source type_id=53 bits_offset=48
+	h_proto type_id=54 bits_offset=96
+[52] INT unsigned char size=1 bits_offset=0 nr_bits=8 encoding=(none)
+[53] ARRAY (anon) type_id=52 index_type_id=4 nr_elems=6
+[54] TYPEDEF __be16 type_id=55
+[55] TYPEDEF __u16 type_id=56
+[56] INT unsigned short size=2 bits_offset=0 nr_bits=16 encoding=(none)
+[57] STRUCT iphdr size=20 vlen=10
+	ihl type_id=58 bitfield_size=4 bits_offset=0
+	version type_id=58 bitfield_size=4 bits_offset=4
+	tos type_id=58 bitfield_size=0 bits_offset=8
+	tot_len type_id=54 bitfield_size=0 bits_offset=16
+	id type_id=54 bitfield_size=0 bits_offset=32
+	frag_off type_id=54 bitfield_size=0 bits_offset=48
+	ttl type_id=58 bitfield_size=0 bits_offset=64
+	protocol type_id=58 bitfield_size=0 bits_offset=72
+	check type_id=59 bitfield_size=0 bits_offset=80
+	(anon) type_id=60 bitfield_size=0 bits_offset=96
+[58] TYPEDEF __u8 type_id=52
+[59] TYPEDEF __sum16 type_id=55
+[60] UNION (anon) size=8 vlen=2
+	(anon) type_id=61 bits_offset=0
+	addrs type_id=63 bits_offset=0
+[61] STRUCT (anon) size=8 vlen=2
+	saddr type_id=62 bits_offset=0
+	daddr type_id=62 bits_offset=32
+[62] TYPEDEF __be32 type_id=34
+[63] STRUCT (anon) size=8 vlen=2
+	saddr type_id=62 bits_offset=0
+	daddr type_id=62 bits_offset=32
+[64] STRUCT tcphdr size=20 vlen=17
+	source type_id=54 bitfield_size=0 bits_offset=0
+	dest type_id=54 bitfield_size=0 bits_offset=16
+	seq type_id=62 bitfield_size=0 bits_offset=32
+	ack_seq type_id=62 bitfield_size=0 bits_offset=64
+	res1 type_id=55 bitfield_size=4 bits_offset=96
+	doff type_id=55 bitfield_size=4 bits_offset=100
+	fin type_id=55 bitfield_size=1 bits_offset=104
+	syn type_id=55 bitfield_size=1 bits_offset=105
+	rst type_id=55 bitfield_size=1 bits_offset=106
+	psh type_id=55 bitfield_size=1 bits_offset=107
+	ack type_id=55 bitfield_size=1 bits_offset=108
+	urg type_id=55 bitfield_size=1 bits_offset=109
+	ece type_id=55 bitfield_size=1 bits_offset=110
+	cwr type_id=55 bitfield_size=1 bits_offset=111
+	window type_id=54 bitfield_size=0 bits_offset=112
+	check type_id=59 bitfield_size=0 bits_offset=128
+	urg_ptr type_id=54 bitfield_size=0 bits_offset=144
+[65] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[66] FUNC xdp_preprocessing type_id=65
+[67] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[68] FUNC xdp_input_linear type_id=67
+[69] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[70] FUNC xdp_input_relu type_id=69
+[71] CONST (anon) type_id=6
+[72] FUNC_PROTO (anon) return=0 args=(5 tensor, 71 size)
+[73] FUNC relu type_id=72
+[74] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[75] FUNC xdp_hidden_linear type_id=74
+[76] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[77] FUNC xdp_hidden_relu type_id=76
+[78] FUNC_PROTO (anon) return=2 args=(47 ctx)
+[79] FUNC xdp_output_linear type_id=78
+[80] CONST (anon) type_id=81
+[81] INT char size=1 bits_offset=0 nr_bits=8 encoding=SIGNED
+[82] ARRAY (anon) type_id=80 index_type_id=4 nr_elems=67
+[83] VAR xdp_output_linear.____fmt type_id=82 linkage=0
+[84] ARRAY (anon) type_id=81 index_type_id=4 nr_elems=4
+[85] VAR __license type_id=84 linkage=1
+[86] DATASEC .maps size=144 vlen=4
+	 type_id=12 offset=0 size=40
+	 type_id=27 offset=40 size=32
+	 type_id=37 offset=72 size=32
+	 type_id=46 offset=104 size=40
+[87] DATASEC .rodata size=67 vlen=1
+	 type_id=83 offset=0 size=67
+[88] DATASEC license size=4 vlen=1
+	 type_id=85 offset=0 size=4

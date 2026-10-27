@@ -1,0 +1,6 @@
+baseline source manifest: PASS (14 files)
+validation source manifest: PASS (10 files)
+Preserved artifact SHA256 checks: PASS (21 files)
+Repeat-run fixed fixtures and common full-dataset summary: IDENTICAL
+Existing tracked and staged files: UNCHANGED
+No commit, push, network configuration, or privileged BPF operation performed.

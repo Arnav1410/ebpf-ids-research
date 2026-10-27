@@ -1,0 +1,2129 @@
+
+FILE: README
+ABSENT
+
+FILE: README.md
+ABSENT
+
+FILE: README.rst
+ABSENT
+
+FILE: Makefile
+da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d  Makefile
+OUTPUT = .output
+
+BPFTOOL_SRC = $(abspath bpftool/src)
+BPFTOOL_OUTPUT = $(abspath $(OUTPUT)/bpftool)
+
+LIBBPF_SRC = $(abspath libbpf/src)
+LIBBPF_OUTPUT = $(abspath $(OUTPUT)/libbpf)
+
+TARGET = examples
+
+CLANG = clang-12
+
+.PHONY: clean
+
+all: bpftool libbpf
+
+$(OUTPUT):
+	$(shell if [ ! -e $(OUTPUT) ];then mkdir $(OUTPUT); fi)
+
+$(BPFTOOL_OUTPUT): $(OUTPUT)
+	$(shell if [ ! -e $(BPFTOOL_OUTPUT) ];then mkdir $(BPFTOOL_OUTPUT); fi)
+
+$(LIBBPF_OUTPUT): $(OUTPUT)
+	$(shell if [ ! -e $(LIBBPF_OUTPUT) ];then mkdir $(LIBBPF_OUTPUT); fi)
+
+bpftool: $(BPFTOOL_OUTPUT)
+	OUTPUT=$(BPFTOOL_OUTPUT)/ make -C $(BPFTOOL_SRC)
+
+libbpf: $(LIBBPF_OUTPUT)
+	BUILD_STATIC_ONLY=y OBJDIR=$(LIBBPF_OUTPUT) DESTDIR=$(LIBBPF_OUTPUT) make -C $(LIBBPF_SRC) install
+
+clean:
+	rm -rf $(OUTPUT)
+
+FILE: src/Makefile
+a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81  src/Makefile
+# $(BPFTOOL) $(LIBBPF_INCLUDE) $(LIBBPF_OBJ) from outside
+
+OUTPUT ?= $(abspath .output)
+CLANG = clang-12
+LIBBPF_INCLUDE ?= $(abspath ../.output/libbpf/usr/include)
+LIBBPF_SRC ?= $(abspath ../libbpf/include)
+LIBBPF_OBJ ?= $(abspath ../.output/libbpf/libbpf.a)
+BPFTOOL ?= $(abspath ../.output/bpftool/bpftool)
+
+INCLUDES = -I$(OUTPUT) -I$(LIBBPF_INCLUDE) -I$(LIBBPF_SRC) -I/usr/include/x86_64-linux-gnu/
+TARGET = $(OUTPUT)/xdp $(OUTPUT)/hot_updating
+SRC = xdp.bpf.c $(OUTPUT)/vmlinux.h handler.bpf.h common.h mlp.bpf.h params.bpf.h
+
+all: $(TARGET)
+
+# Order-only directory prerequisites keep directory changes from forcing rebuilds.
+$(OUTPUT):
+	mkdir -p "$(OUTPUT)"
+
+$(OUTPUT)/hot_updating: hot_updating.c mlp_params.bpf.h | $(OUTPUT)
+	$(CLANG) -g -Wall -lelf -lz $(INCLUDES) $< $(LIBBPF_OBJ) -o $@
+
+$(OUTPUT)/test-mlp: test-mlp.c mlp.bpf.h params.bpf.h | $(OUTPUT)
+	$(CLANG) -O2 -g -Wall $(INCLUDES) $(LIBBPF_OBJ) $< -o $@
+
+$(OUTPUT)/xdp: $(OUTPUT)/xdp.o | $(OUTPUT)
+	$(CLANG) -O3 -g -Wall -lelf -lz $^ $(LIBBPF_OBJ) -o $@
+
+$(OUTPUT)/xdp.o: xdp.c $(OUTPUT)/xdp.skel.h | $(OUTPUT)
+	$(CLANG) -O3 -g -Wall $(INCLUDES) -c $< -o $@
+
+$(OUTPUT)/xdp.skel.h: $(OUTPUT)/xdp.bpf.o | $(OUTPUT)
+	$(BPFTOOL) gen skeleton $< > $@
+
+$(OUTPUT)/xdp.bpf.o: $(SRC) | $(OUTPUT)
+	$(CLANG) -g -O3 -target bpf $(INCLUDES) -c $< -o $@
+
+$(OUTPUT)/vmlinux.h: | $(OUTPUT)
+	$(BPFTOOL) btf dump file /sys/kernel/btf/vmlinux format c > $@
+
+.PHONY: clean
+clean:
+	rm -fr $(OUTPUT)/*
+FILE: BASELINE_SUMMARY.md
+c4ecc2602ab1c7de17c1ff65b232e9530a51fd144b3e6a1b0c03c2b18577c578  BASELINE_SUMMARY.md
+# Repository baseline and runner summary
+
+## Purpose and current status
+
+This repository runs a flow-based neural-network detector in Linux XDP/eBPF.
+The baseline uses the quantized parameters already present in the repository;
+retraining is a separate reproducibility exercise.
+
+An end-to-end smoke run has succeeded: XDP attached, parameters were initialized,
+TCP traffic reached the detector, a final-stage prediction was logged, and cleanup
+checks passed. This establishes an execution baseline, **not model accuracy or
+numerical correctness**. The historical results are recorded below.
+
+## Repository components
+
+| Path | Responsibility |
+| --- | --- |
+| [src/xdp.c](src/xdp.c) | Userspace loader: loads BPF programs, populates the tail-call map, selects the initial model slot, and attaches XDP to the interface argument. |
+| [src/xdp.bpf.c](src/xdp.bpf.c) | Packet handling, source-IP filtering, inference stages, and timing/prediction output. |
+| [src/handler.bpf.h](src/handler.bpf.h) | Updates per-flow statistics and internal timing counters. |
+| [src/common.h](src/common.h) | Flow keys, feature/intermediate state, and the flow hash map. |
+| [src/params.bpf.h](src/params.bpf.h) | Model layout and pinned parameter/index maps. |
+| [src/mlp.bpf.h](src/mlp.bpf.h) | Integer normalization, linear layers, and ReLU arithmetic. |
+| [src/mlp_params.bpf.h](src/mlp_params.bpf.h) | Quantized weights and normalization constants used by the updater. |
+| [src/hot_updating.c](src/hot_updating.c) | Writes parameters into the inactive model slot, then changes the active index. |
+| [src/mlp_train.py](src/mlp_train.py), [src/mlp_quant.py](src/mlp_quant.py), [src/mlp.py](src/mlp.py) | Training, quantization, and PyTorch model code; not invoked by the runner. |
+| [dataset/](dataset/), [dataset-instance/](dataset-instance/) | Dataset files and traffic-instance directories. |
+| [libbpf/](libbpf/), [bpftool/](bpftool/) | Vendored BPF tooling and libraries. |
+| [Makefile](Makefile), [src/Makefile](src/Makefile) | Build the dependencies and detector executables, respectively. |
+| [run-baseline.sh](run-baseline.sh) | Standalone Bash smoke-test orchestration, logging, verification, and cleanup. |
+
+## Detector behavior
+
+The entry program processes matching IPv4/TCP traffic from **33.33.33.73**.
+It maintains directional flow statistics and triggers inference on a FIN or RST.
+Its six input features, in model order, are maximum TCP-segment length, maximum
+inter-packet duration, minimum TCP-segment length, destination port, accumulated
+TCP-header length, and packet count. Segment length is computed as IPv4 total
+length minus IPv4 header length; it is not application-payload length.
+
+The network has six inputs, two hidden layers of 32 units each, and two output
+scores. Integer arithmetic uses 16 fractional bits. The tail-call sequence is:
+
+```mermaid
+flowchart TD
+    entry["xdp_prog: matching source and FIN/RST"] --> pre["Slot 0: xdp_preprocessing"]
+    pre --> input["Slot 1: xdp_input_linear"]
+    input --> inputrelu["Slot 2: xdp_input_relu"]
+    inputrelu --> hidden["Slot 3: xdp_hidden_linear"]
+    hidden --> hiddenrelu["Slot 4: xdp_hidden_relu"]
+    hiddenrelu --> output["Slot 5: xdp_output_linear and trace output"]
+```
+
+`flow_map` holds flow features and intermediate activations. The `progs` program
+array connects the stages. `/sys/fs/bpf/nn_parameters` provides two model slots;
+`/sys/fs/bpf/nn_idx` selects the active slot. The loader initializes the index to
+1; a successful first updater invocation writes slot 0 and switches to it.
+The detector passes packets onward with `XDP_PASS`; a prediction is not a packet
+blocking decision.
+
+## Build and run
+
+Use an **isolated Linux VM**, not a production host. Required facilities include
+kernel BTF at `/sys/kernel/btf/vmlinux`, XDP/BPF support, mounted bpffs at
+`/sys/fs/bpf`, and readable, enabled kernel tracing. Building requires the
+vendored dependency trees, Make, a C toolchain, `clang-12` with BPF support, and
+libelf/zlib development libraries. The current build assumes x86-64 include paths.
+
+From the repository root, build without sudo:
+
+```bash
+make
+make -C src
+```
+
+Dependency outputs go into `.output/`; detector outputs go into `src/.output/`,
+including `xdp`, `hot_updating`, the generated kernel header, and the BPF skeleton.
+Generated targets have order-only output-directory prerequisites, so a clean
+build creates `src/.output` before writing files.
+
+Inspect the runner and perform a non-root preflight:
+
+```bash
+./run-baseline.sh --help
+./run-baseline.sh --check
+```
+
+Non-root preflight cannot establish root-only BPF, pin, or trace permissions.
+The following root preflight checks those prerequisites without creating the lab
+network; the second command performs the actual smoke test:
+
+```bash
+sudo ./run-baseline.sh --check
+sudo ./run-baseline.sh
+```
+
+The runner requires Bash, Python 3's standard library, iproute2, Make, GNU
+coreutils, and util-linux. It does not require netcat or Python packages. It
+requires current executables and checks build freshness; it does not build them.
+
+For a longer per-stage timeout and persistent logs outside the repository:
+
+```bash
+sudo ./run-baseline.sh \
+  --timeout 30 \
+  --log-dir "$HOME/nn-ebpf-baseline-$(date +%Y%m%d-%H%M%S)"
+```
+
+The log directory must be **new**, with an existing parent. The timeout accepts
+1–300 seconds and defaults to 20. Exit zero means smoke success, or preflight
+success when `--check` was specified; it does not certify the model.
+
+## Runner workflow and safety
+
+The temporary network uses these fixed names and addresses to match the source
+filter without editing the detector:
+
+| Location | Interface | IPv4 address |
+| --- | --- | --- |
+| Host namespace | `ids-server` | `33.33.33.1/24` |
+| `ids-client` namespace | `ids-client0` | `33.33.33.73/24` |
+
+The runner performs these operations in order:
+
+1. Checks tools, binaries, build freshness, lab-name availability, overlapping
+   non-default IPv4 routes, and, under root, existing model pins and BPF access.
+2. Takes a single-runner lock and creates the namespace/veth network.
+3. Starts trace capture, then launches the detector on `ids-server`.
+4. Verifies the actual XDP attachment, all six tail-call entries, and that the
+   pinned model maps belong to the inference chain. Stage names may be exact full
+   BTF names or exact 15-character kernel names; wrong names/types still fail.
+5. Runs the updater, verifies the active-slot switch, and compares every active
+   parameter byte with the header. It also rejects zero normalization divisors.
+6. Opens a TCP listener on port 5001, sends `hello\n` from the client namespace,
+   explicitly sends a FIN, and verifies the server response.
+7. Requires a new final-stage timing/prediction message, then cleans up.
+
+On success, failure, Ctrl+C, or SIGTERM, cleanup attempts to stop its children,
+checks XDP detachment and model pins, and removes its network. The loader receives
+SIGINT because it does not install a SIGTERM handler. Residual pins are removed
+only when their recorded map IDs still match. Unknown/replaced pins are left in
+place and cause failure; they must not be blindly deleted. Forced termination
+such as SIGKILL or a VM crash cannot run these cleanup traps.
+
+The runner does **not** edit source/model files, retrain, install packages, mount
+filesystems, change sysctls, or switch to generic XDP if attachment fails. It
+creates logs/runtime artifacts and temporary networking; an unheld lock file may
+remain at `/run/nn-ebpf-baseline.lock` after exit.
+
+Do not run another detector, updater, or trace reader concurrently. The original
+loader uses fixed global pin paths and unconditionally attempts to remove them
+on its cleanup path; the runner's lock does not coordinate unrelated programs.
+`trace_pipe` is shared: reading consumes records, although the runner does not
+clear or reconfigure tracing. Attribution of a matching trace line to this test
+assumes no competing detector emits the same message.
+
+## Logs and evidence
+
+The runner prints its log-directory path. By default, it creates
+`/tmp/nn-ebpf-baseline.XXXXXX`. Files are retained on success and failure and,
+under normal sudo invocation, ownership is returned to the invoking user.
+`/tmp` is not archival storage: use a persistent `--log-dir` for reproducibility.
+Some files below exist only if execution reached their corresponding stage.
+
+| Artifact | What it records |
+| --- | --- |
+| `run.log` | Timestamped progress, commands, verification results, cleanup, and final status. |
+| `detector.log` | Loader/libbpf output and BPF loading or attachment diagnostics. |
+| `updater.log` | Model-updater output and index transition. |
+| `trace.log` | Kernel trace records, including final inference output. May also contain unrelated/historical records. |
+| `trace-reader.log` | Trace-reader errors. |
+| `server.log` | Received greeting, source address, and observed client FIN. |
+| `state.json` | Entry-program metadata, map metadata, initial index, and attachment snapshot; not feature values or per-layer outputs. |
+| `active-model.json` | Raw and BTF-formatted contents of the selected parameter slot after updating. |
+| `pins.json` | Recorded model-map IDs used to guard residual-pin cleanup. |
+| `server-address.json`, `client-addresses.json` | Lab interface/address snapshots. |
+| `programs-before.json` | BPF programs visible before the run, when checked as root. |
+| `net-after.json` | Attachment state after loader exit and before veth deletion. |
+
+The generated Python helper and readiness markers are removed during cleanup.
+
+## Previously observed successful baseline
+
+The earlier inspected run was `/tmp/nn-ebpf-baseline.eaF6Of`, with log timestamps
+starting at `2026-10-25 03:23:03 +0530`. Those temporary logs are no longer present
+at the time of writing this summary. The following records the previously
+inspected evidence, **not a fresh privileged rerun**:
+
+| Observation | Recorded result and evidence |
+| --- | --- |
+| Environment | Linux `6.8.0-138-generic`, bpftool `7.3.0`, libbpf `1.3` in `run.log`. |
+| Attachment | `state.json`: XDP driver mode on `ids-server`; the entry program was JIT compiled. |
+| Tail calls | `run.log`: all six slots verified. |
+| Model initialization | Index changed from 1 to 0. All 5,216 saved parameter bytes matched the header; weights, means, and scales were also independently decoded and compared. |
+| TCP exchange | `server.log`: greeting and client FIN from the expected address; `run.log`: expected response received. |
+| Prediction | `trace.log`: numeric label `1` from the final output stage. |
+| Average feature-extraction interval | `trace.log`: 662 ns, or 0.662 microseconds. |
+| Detection interval | `trace.log`: 3,998 ns, or 3.998 microseconds. |
+| Cleanup | Model pins absent, `net-after.json` contained an empty XDP attachment list, and network cleanup checks passed. Final status was `PASS`. |
+
+The label is selected by comparing the two output scores: output 0 wins only when
+strictly greater; otherwise the result is label 1, including ties. It is not a
+probability. Neither a benign greeting nor that label establishes an attack,
+classification correctness, or a false positive without a verified label mapping
+and reference calculation.
+
+Timing units follow `bpf_ktime_get_ns()`. The extraction metric averages the
+instrumented flow-statistics update interval across the flow's packets; the
+detection interval runs from its FIN/RST timestamp to the final-stage timestamp.
+Neither measures application round-trip time or full packet-processing latency.
+A single observation does not establish throughput or latency distributions.
+
+## Known setup issues and interpretation limits
+
+- **Missing output directory:** fixed in `src/Makefile` through order-only
+  directory prerequisites and `mkdir -p`; no manual directory workaround is needed.
+- **False tail-call-name failure:** the runner previously required truncated
+  names even when bpftool returned full BTF names. The current exact-form check
+  handles both without disabling stage/type validation.
+- **Updater says `error: Success`:** its wording is unconditional. Read this
+  alongside the slot/byte checks, not as a standalone failure or success proof.
+- **Attachment failure:** inspect `detector.log`; the runner preserves the
+  loader's original attachment mechanism rather than silently changing modes.
+- **Existing names, pins, or conflicting routes:** investigate ownership instead
+  of deleting unrelated resources or bypassing preflight.
+
+The baseline does not validate malformed-packet handling, the six feature values,
+fixed-point overflow/rounding, intermediate-layer parity, model accuracy,
+early-traffic readiness, flow-map reclamation, or concurrent-flow safety. Reaching
+the final stage is execution evidence, not proof of correct arithmetic.
+
+Next correctness work should compare deterministic packet-derived features and
+per-layer integer outputs against an independent bit-accurate reference, then
+exercise parser boundaries, readiness, flow lifecycle, concurrency, and sustained
+performance. Keep retraining separate: `mlp_quant.py` overwrites
+`src/mlp_params.bpf.h` when run from `src`; preserve baseline weights and record
+the checkpoint, seed, and environment before conducting that experiment.
+
+FILE: run-baseline.sh
+c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba  run-baseline.sh
+#!/usr/bin/env bash
+# Baseline smoke test only: no source edits, builds, training, package installs,
+# mounts, sysctl changes, or numerical-correctness claims. See --help.
+set -Eeuo pipefail
+umask 077
+
+usage() {
+    cat <<'HELP'
+Usage: sudo ./run-baseline.sh [--log-dir NEW_DIRECTORY] [--timeout SECONDS]
+       ./run-baseline.sh --check [--log-dir NEW_DIRECTORY]
+
+Run only in an isolated Linux VM. Requires current binaries from `make -C src`,
+plus iproute2, Python 3, GNU coreutils, util-linux, mounted bpffs and tracefs.
+The detector must already accept an interface argument (this checkout does).
+
+Creates ids-client, ids-server and ids-client0, using 33.33.33.1/24 and
+33.33.33.73/24 to match the checked-in source-IP filter. Refuses existing names,
+model pins and overlapping non-default routes. Does not touch other interfaces.
+Loads XDP, checks all six tail-call slots, runs hot_updating, compares the active
+model bytes with mlp_params.bpf.h, then sends one TCP greeting/FIN on port 5001.
+Success requires a timing/prediction line from the final inference stage.
+Stage-name checks accept full BTF names and the kernel's 15-character names.
+
+Automatically stops its children, removes its network and checks model-pin/XDP
+cleanup on success, failure and Ctrl+C. Residual pins are removed only if their
+recorded map IDs still match. The original loader itself uses global pin paths:
+do not run another loader/updater concurrently. Also, do not run another reader
+of the shared trace_pipe. Records are consumed, but tracing is not reconfigured.
+No automatic generic-XDP fallback if this kernel rejects the original loader.
+
+--check       Check prerequisites without loading BPF or changing networking.
+              Non-root checks cannot validate root-only BPF/trace permissions.
+--log-dir DIR Create a NEW directory for run.log, detector.log, updater.log,
+              trace.log and JSON evidence. Default: /tmp/nn-ebpf-baseline.XXXXXX.
+--timeout N   Per-stage deadline in seconds, 1..300 (default: 20).
+--help        Show this help. No root required.
+
+Logs are retained, including on failure; under sudo their ownership is returned
+to the invoking user. Exit 0 means smoke success (or --check passed), not model
+accuracy, feature/fixed-point correctness, flow-map hygiene or concurrency safety.
+Those need separate experiments. Training is intentionally not automated because
+mlp_quant.py overwrites the checked-in parameter header.
+HELP
+}
+
+check_only=0
+log_dir=''
+stage_timeout=20
+while (($#)); do
+    case $1 in
+        --help|-h) usage; exit 0 ;;
+        --check) check_only=1; shift ;;
+        --log-dir|--timeout)
+            (($# >= 2)) || { printf 'Missing value for %s\n' "$1" >&2; exit 2; }
+            if [[ $1 == --log-dir ]]; then log_dir=$2; else stage_timeout=$2; fi
+            shift 2 ;;
+        *) printf 'Unknown argument: %s\n' "$1" >&2; usage >&2; exit 2 ;;
+    esac
+done
+[[ $stage_timeout =~ ^[1-9][0-9]{0,2}$ ]] && ((stage_timeout <= 300)) || {
+    printf '%s\n' '--timeout must be an integer from 1 to 300.' >&2; exit 2;
+}
+root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+bpftool=$root/.output/bpftool/bpftool
+for tool in python3 ip make stdbuf flock tee mktemp findmnt; do
+    command -v "$tool" >/dev/null || { printf 'Missing command: %s\n' "$tool" >&2; exit 1; }
+done
+if [[ -z $log_dir ]]; then
+    log_dir=$(mktemp -d -t nn-ebpf-baseline.XXXXXX)
+else
+    mkdir -m 700 -- "$log_dir" || { printf 'Log directory must be new.\n' >&2; exit 1; }
+    log_dir=$(cd -- "$log_dir" && pwd)
+fi
+exec 3>&1 4>&2
+exec > >(tee "$log_dir/run.log") 2>&1
+logger_pid=$!
+log() { printf '[%(%Y-%m-%dT%H:%M:%S%z)T] %s\n' -1 "$*"; }
+fail() { log "ERROR: $*"; exit 1; }
+run() { printf '[command]'; printf ' %q' "$@"; printf '\n'; "$@"; }
+loader_pid='' trace_pid='' server_pid=''
+netns_owned=0 link_owned=0
+helper=$log_dir/helper.py
+
+stop_child() {
+    local pid=$1 signal=$2 n
+    [[ -n $pid ]] || return 0
+    if kill -0 "$pid" 2>/dev/null; then
+        kill -s "$signal" "$pid" 2>/dev/null || true
+        for ((n=0; n<50; n++)); do
+            kill -0 "$pid" 2>/dev/null || break
+            sleep 0.1
+        done
+        if kill -0 "$pid" 2>/dev/null; then
+            log "WARNING: process $pid required SIGKILL after SIG$signal."
+            kill -KILL "$pid" 2>/dev/null || true
+        fi
+    fi
+    wait "$pid" 2>/dev/null || true
+}
+cleanup() {
+    local result=$?
+    trap - EXIT INT TERM ERR
+    set +e
+    log 'Cleaning up lab resources.'
+    stop_child "$server_pid" TERM
+    # The original loader handles SIGINT, not SIGTERM.
+    stop_child "$loader_pid" INT
+    stop_child "$trace_pid" TERM
+    if [[ -n $loader_pid ]]; then
+        python3 "$helper" clean-pins "$bpftool" "$log_dir" || result=1
+        if ((link_owned)); then
+            # Save actual post-loader attachment state before deleting the veth.
+            "$bpftool" -j net show dev ids-server > "$log_dir/net-after.json"
+            if (($? != 0)); then
+                log 'ERROR: could not verify XDP detachment.'; result=1
+            elif ! python3 "$helper" detached "$log_dir/net-after.json"; then
+                result=1
+            fi
+        fi
+    fi
+    if ((link_owned)); then
+        run ip link del ids-server || result=1
+        if ip link show dev ids-server >/dev/null 2>&1; then
+            log 'ERROR: ids-server still exists.'; result=1
+        fi
+    fi
+    if ((netns_owned)); then
+        run ip netns del ids-client || result=1
+        if [[ -e /run/netns/ids-client ]]; then
+            log 'ERROR: ids-client still exists.'; result=1
+        fi
+    fi
+    rm -f -- "$helper" "$log_dir/trace.ready" "$log_dir/server.ready"
+    # Report final status after artifact ownership and cleanup have been checked.
+    # Only this newly created, root-owned artifact directory is handed back.
+    if [[ ${SUDO_UID:-} =~ ^[0-9]+$ && ${SUDO_GID:-} =~ ^[0-9]+$ ]]; then
+        chown -- "$SUDO_UID:$SUDO_GID" "$log_dir" "$log_dir"/* || result=1
+    fi
+    if ((result == 0)); then log 'RESULT: PASS'; else log "RESULT: FAIL (exit $result)"; fi
+    log "Logs: $log_dir"
+    exec 1>&3 2>&4
+    if ! wait "$logger_pid"; then
+        printf 'ERROR: log writer failed; logs may be incomplete.\n' >&2
+        result=1
+    fi
+    exit "$result"
+}
+trap cleanup EXIT
+trap 'log "Interrupted (SIGINT)."; exit 130' INT
+trap 'log "Interrupted (SIGTERM)."; exit 143' TERM
+trap 'log "ERROR: line $LINENO: $BASH_COMMAND (exit $?)"' ERR
+
+# Keep structured BPF/JSON checks and portable TCP traffic in Python's stdlib;
+# no nc implementation-specific flags, Python packages or persistent helpers.
+cat > "$helper" <<'PY'
+import ipaddress
+import json
+import os
+from pathlib import Path
+import re
+import select
+import socket
+import struct
+import subprocess
+import sys
+import time
+
+
+def need(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def cmd(*args):
+    return subprocess.check_output(args, text=True)
+
+
+def obj(value):
+    # bpftool show returns a singleton array on some versions.
+    if isinstance(value, list):
+        need(len(value) == 1, 'Expected one BPF object')
+        return value[0]
+    return value
+
+
+def bpf(tool, *args):
+    return json.loads(cmd(tool, '-j', *args))
+
+
+def raw(value):
+    return bytes(int(x, 16) if isinstance(x, str) else x for x in value)
+
+
+def lookup(tool, selector, key):
+    encoded = [f'{x:02x}' for x in struct.pack('=i', key)]
+    return raw(bpf(tool, 'map', 'lookup', *selector, 'key', 'hex', *encoded)['value'])
+
+
+def check_stage(stage, key, expected):
+    # bpftool restores full BTF names when available; the kernel name is shorter.
+    name, kind = stage.get('name'), stage.get('type')
+    need(kind == 'xdp' and name in (expected, expected[:15]),
+         f'Tail-call slot {key}: expected XDP program {expected!r} '
+         f'(or kernel name {expected[:15]!r}); got name={name!r}, '
+         f'type={kind!r}, program ID={stage.get("id")}')
+
+
+def alive(pid):
+    os.kill(int(pid), 0)
+
+
+def preflight():
+    names = {'ids-server', 'ids-client0'}
+    links = json.loads(cmd('ip', '-j', 'link', 'show'))
+    need(not names.intersection(x['ifname'] for x in links), 'Lab interface name already in use')
+    need('ids-client' not in [x.split()[0] for x in cmd('ip', 'netns', 'list').splitlines()],
+         'Namespace ids-client already exists')
+    network = ipaddress.ip_network('33.33.33.0/24')
+    for route in json.loads(cmd('ip', '-j', '-4', 'route', 'show', 'table', 'all')):
+        dst = route.get('dst', 'default')
+        if dst not in ('default', '0.0.0.0/0'):
+            need(not network.overlaps(ipaddress.ip_network(dst, strict=False)),
+                 f'Existing route overlaps lab addresses: {route}')
+    if os.geteuid() == 0:
+        for name in ('nn_idx', 'nn_parameters'):
+            need(not os.path.lexists('/sys/fs/bpf/' + name), f'Existing pinned map: {name}')
+    print('Lab names and routes available; existing resources will not be reused.')
+
+
+def ready(tool, directory, pid, seconds):
+    directory = Path(directory)
+    deadline = time.monotonic() + int(seconds)
+    while time.monotonic() < deadline:
+        pins = {}
+        for name in ('nn_idx', 'nn_parameters'):
+            path = '/sys/fs/bpf/' + name
+            if os.path.exists(path):
+                pins[name] = obj(bpf(tool, 'map', 'show', 'pinned', path))['id']
+        # Record pins even if attachment subsequently fails, for safe cleanup.
+        if pins:
+            (directory / 'pins.json').write_text(json.dumps(pins))
+        alive(pid)
+        net = bpf(tool, 'net', 'show', 'dev', 'ids-server')
+        xdp = obj(net)['xdp']
+        if xdp and len(pins) == 2:
+            need(len(xdp) == 1, 'Expected one XDP attachment')
+            program = obj(bpf(tool, 'prog', 'show', 'id', str(xdp[0]['id'])))
+            need(program['name'] == 'xdp_prog', 'Unexpected XDP entry program')
+            maps = {}
+            for map_id in program['map_ids']:
+                info = obj(bpf(tool, 'map', 'show', 'id', str(map_id)))
+                maps[info['name']] = info
+            stages = ('xdp_preprocessing', 'xdp_input_linear', 'xdp_input_relu',
+                      'xdp_hidden_linear', 'xdp_hidden_relu', 'xdp_output_linear')
+            for key, name in enumerate(stages):
+                prog_id = int.from_bytes(lookup(tool, ['id', str(maps['progs']['id'])], key), sys.byteorder)
+                stage = obj(bpf(tool, 'prog', 'show', 'id', str(prog_id)))
+                check_stage(stage, key, name)
+                for map_id in stage.get('map_ids', []):
+                    info = obj(bpf(tool, 'map', 'show', 'id', str(map_id)))
+                    previous = maps.get(info['name'])
+                    need(previous is None or previous['id'] == map_id,
+                         f"Stages disagree on map {info['name']}")
+                    maps[info['name']] = info
+            # nn_parameters is referenced by tail-call stages, not xdp_prog.
+            for name, map_id in pins.items():
+                need(maps[name]['id'] == map_id, f'{name} pin does not belong to the inference chain')
+            index = struct.unpack('=i', lookup(tool, ['pinned', '/sys/fs/bpf/nn_idx'], 0))[0]
+            need(index in (0, 1), f'Invalid initial model index: {index}')
+            state = {'initial_index': index, 'program': program, 'maps': maps, 'network': net}
+            (directory / 'state.json').write_text(json.dumps(state, indent=2))
+            print(f'XDP attached to ids-server; all six tail-call slots verified; initial slot={index}.')
+            return
+        time.sleep(0.1)
+    raise RuntimeError('Timed out waiting for XDP attachment and both model pins; see detector.log')
+
+
+def model(tool, directory, header):
+    directory = Path(directory)
+    state = json.loads((directory / 'state.json').read_text())
+    index = struct.unpack('=i', lookup(tool, ['pinned', '/sys/fs/bpf/nn_idx'], 0))[0]
+    need(index == (state['initial_index'] + 1) % 2, 'Updater did not switch to the inactive model slot')
+    expected = b''
+    text = Path(header).read_text()
+    fields = [('layer_0_weight', 192, 'i'), ('layer_1_weight', 1024, 'i'),
+              ('layer_2_weight', 64, 'i'), ('mean', 6, 'q'), ('scale', 6, 'q')]
+    for name, count, fmt in fields:
+        match = re.search(r'\b' + name + r'\s*\[\d+\]\s*=\s*\{([^}]+)\}', text)
+        need(match is not None, f'Cannot read checked-in array {name}')
+        values = [int(x.strip()) for x in match[1].split(',') if x.strip()]
+        need(len(values) == count, f'Unexpected array size: {name}')
+        if name == 'scale':
+            need(all(x != 0 for x in values), 'Model contains zero scale divisor')
+        expected += struct.pack('=' + fmt * count, *values)
+    entry = bpf(tool, 'map', 'lookup', 'pinned', '/sys/fs/bpf/nn_parameters',
+                'key', 'hex', *[f'{x:02x}' for x in struct.pack('=i', index)])
+    (directory / 'active-model.json').write_text(json.dumps(entry, indent=2))
+    need(raw(entry['value']) == expected, 'Active model bytes differ from mlp_params.bpf.h')
+    print(f'Active model slot={index}: all {len(expected)} parameter bytes match the checked-in header.')
+
+
+def clean_pins(tool, directory):
+    path = Path(directory) / 'pins.json'
+    owned = json.loads(path.read_text()) if path.exists() else {}
+    errors = []
+    for name in ('nn_idx', 'nn_parameters'):
+        pin = '/sys/fs/bpf/' + name
+        try:
+            if os.path.lexists(pin):
+                current = obj(bpf(tool, 'map', 'show', 'pinned', pin))['id']
+                need(owned.get(name) == current, f'Refusing to delete unknown/replaced pin: {pin}')
+                os.unlink(pin)
+                print(f'Removed residual owned pin {pin} (map {current}).')
+            need(not os.path.lexists(pin), f'Pin remains: {pin}')
+        except (OSError, ValueError, KeyError, RuntimeError, subprocess.SubprocessError) as exc:
+            errors.append(str(exc))
+    need(not errors, '; '.join(errors))
+    print('Both model pins absent after cleanup.')
+
+
+def trace(path, ready_file):
+    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+    # Drain historical records into the log before announcing readiness.
+    while True:
+        try:
+            data = os.read(fd, 65536)
+        except BlockingIOError:
+            break
+        need(data, 'trace_pipe closed unexpectedly')
+        sys.stdout.buffer.write(data)
+        sys.stdout.buffer.flush()
+    Path(ready_file).touch()
+    while True:
+        if select.select([fd], [], [], 1)[0]:
+            try:
+                data = os.read(fd, 65536)
+            except BlockingIOError:
+                continue
+            need(data, 'trace_pipe closed unexpectedly')
+            sys.stdout.buffer.write(data)
+            sys.stdout.buffer.flush()
+
+
+def serve(host, source, port, ready_file, seconds):
+    with socket.socket() as server:
+        server.settimeout(int(seconds))
+        server.bind((host, int(port)))
+        server.listen(1)
+        Path(ready_file).touch()
+        with server.accept()[0] as conn:
+            conn.settimeout(int(seconds))
+            need(conn.getpeername()[0] == source, 'Unexpected TCP client source')
+            data = b''
+            while True:
+                chunk = conn.recv(1024)
+                if not chunk:
+                    break
+                data += chunk
+                need(len(data) <= 1024, 'Unexpected TCP payload size')
+            need(data == b'hello\n', f'Unexpected greeting: {data!r}')
+            conn.sendall(b'baseline-ok\n')
+            print(f'TCP server received {data!r} and client FIN from {source}.')
+
+
+def client(source, host, port, seconds):
+    with socket.socket() as conn:
+        conn.settimeout(int(seconds))
+        conn.bind((source, 0))
+        conn.connect((host, int(port)))
+        conn.sendall(b'hello\n')
+        conn.shutdown(socket.SHUT_WR)  # Explicit FIN triggers the original detector.
+        reply = b''
+        while True:
+            chunk = conn.recv(1024)
+            if not chunk:
+                break
+            reply += chunk
+            need(len(reply) <= 1024, 'Unexpected TCP response size')
+        need(reply == b'baseline-ok\n', f'Unexpected TCP reply: {reply!r}')
+        print(f'TCP greeting/FIN and response verified: {source} -> {host}:{port}.')
+
+
+def prediction(path, offset, pid, seconds):
+    deadline = time.monotonic() + int(seconds)
+    pattern = re.compile(r'avg feature extraction time: (-?\d+), detection time: (-?\d+), label: ([01])\b')
+    while time.monotonic() < deadline:
+        alive(pid)
+        with open(path, 'rb') as stream:
+            stream.seek(int(offset))
+            match = pattern.search(stream.read().decode('utf-8', errors='replace'))
+        if match:
+            print('Final inference stage observed: ' + match[0])
+            return
+        time.sleep(0.1)
+    raise RuntimeError('No final inference line before deadline; inspect trace.log, state.json and active-model.json')
+
+
+def detached(path):
+    need(not obj(json.loads(Path(path).read_text()))['xdp'], 'XDP remained attached after loader exit')
+    print('XDP attachment absent after loader exit.')
+
+
+if __name__ == '__main__':
+    actions = {'preflight': preflight, 'ready': ready, 'model': model,
+               'clean-pins': clean_pins, 'trace': trace, 'serve': serve,
+               'client': client, 'prediction': prediction, 'detached': detached}
+    try:
+        actions[sys.argv[1]](*sys.argv[2:])
+    except (OSError, ValueError, KeyError, RuntimeError, subprocess.SubprocessError, struct.error) as exc:
+        print(f'ERROR: {exc}', file=sys.stderr)
+        sys.exit(1)
+PY
+
+log "Baseline log directory: $log_dir"
+log "Kernel: $(uname -r); repository: $root"
+for binary in "$root/src/.output/xdp" "$root/src/.output/hot_updating" "$bpftool"; do
+    [[ -x $binary ]] || fail "Missing executable: $binary. Build dependencies with make, then make -C src."
+done
+run make -C "$root/src" -q || fail 'Build is stale or incomplete. Run make -C src before this runner.'
+run "$bpftool" version
+run python3 "$helper" preflight
+[[ $(findmnt -n -o FSTYPE --target /sys/fs/bpf) == bpf ]] || fail 'Mount bpffs at /sys/fs/bpf before running.'
+trace_pipe=''
+for candidate in /sys/kernel/tracing/trace_pipe /sys/kernel/debug/tracing/trace_pipe; do
+    if [[ -r $candidate ]]; then trace_pipe=$candidate; break; fi
+done
+if ((EUID != 0)); then
+    ((check_only)) || fail 'Run with sudo in your isolated VM (or use --check for unprivileged checks).'
+    log 'CHECK: root-only pin, BPF, and trace access not verified. Repeat --check with sudo for those checks.'
+else
+    [[ -n $trace_pipe ]] || fail 'No readable trace_pipe; mount/enable tracefs before running.'
+    [[ $(< "${trace_pipe%/*}/tracing_on") == 1 ]] || fail 'Kernel tracing is disabled; enable it before running.'
+    # Check BPF access before creating any networking resources.
+    "$bpftool" -j prog show > "$log_dir/programs-before.json"
+fi
+if ((check_only)); then
+    log 'CHECK: prerequisites passed; no networking or BPF objects changed.'
+    exit 0
+fi
+
+# One runner at a time: both original executables use fixed global pin paths.
+exec 9>/run/nn-ebpf-baseline.lock
+flock -n 9 || fail 'Another baseline runner is active.'
+# Recheck names/pins after taking the lock.
+run python3 "$helper" preflight
+run ip netns add ids-client
+netns_owned=1
+run ip link add ids-server type veth peer name ids-client0
+link_owned=1
+run ip link set ids-client0 netns ids-client
+run ip addr add 33.33.33.1/24 dev ids-server
+run ip link set ids-server up
+run ip netns exec ids-client ip addr add 33.33.33.73/24 dev ids-client0
+run ip netns exec ids-client ip link set lo up
+run ip netns exec ids-client ip link set ids-client0 up
+ip -j addr show dev ids-server > "$log_dir/server-address.json"
+ip netns exec ids-client ip -j addr show > "$log_dir/client-addresses.json"
+
+wait_ready_file() {
+    local marker=$1 pid=$2
+    for ((n=0; n<stage_timeout*10; n++)); do
+        kill -0 "$pid" 2>/dev/null || fail "Child $pid exited before readiness; inspect its log."
+        [[ -e $marker ]] && return 0
+        sleep 0.1
+    done
+    fail "Timed out waiting for $marker."
+}
+log "Reading $trace_pipe into trace.log (do not run a competing trace reader)."
+python3 -u "$helper" trace "$trace_pipe" "$log_dir/trace.ready" > "$log_dir/trace.log" 2> "$log_dir/trace-reader.log" &
+trace_pid=$!
+wait_ready_file "$log_dir/trace.ready" "$trace_pid"
+log 'Starting detector on ids-server; output: detector.log.'
+stdbuf -oL -eL "$root/src/.output/xdp" ids-server > "$log_dir/detector.log" 2>&1 &
+loader_pid=$!
+run python3 "$helper" ready "$bpftool" "$log_dir" "$loader_pid" "$stage_timeout"
+log 'Initializing neural-network parameters; output: updater.log.'
+if ! "$root/src/.output/hot_updating" > "$log_dir/updater.log" 2>&1; then
+    fail 'Updater exited unsuccessfully; see updater.log.'
+fi
+run python3 "$helper" model "$bpftool" "$log_dir" "$root/src/mlp_params.bpf.h"
+
+log 'Starting TCP listener on 33.33.33.1:5001; output: server.log.'
+python3 -u "$helper" serve 33.33.33.1 33.33.33.73 5001 "$log_dir/server.ready" "$stage_timeout" > "$log_dir/server.log" 2>&1 &
+server_pid=$!
+wait_ready_file "$log_dir/server.ready" "$server_pid"
+trace_offset=$(stat -c %s "$log_dir/trace.log")
+run ip netns exec ids-client python3 "$helper" client 33.33.33.73 33.33.33.1 5001 "$stage_timeout"
+wait "$server_pid" || fail 'TCP listener failed; see server.log.'
+server_pid=''
+kill -0 "$trace_pid" 2>/dev/null || fail 'Trace reader exited; see trace-reader.log.'
+run python3 "$helper" prediction "$log_dir/trace.log" "$trace_offset" "$loader_pid" "$stage_timeout"
+log 'Smoke test succeeded. This is not numerical/model correctness validation.'
+
+FILE: src/xdp.c
+4ffd4aee38c2902a95ec3508fb277eb6063a7c15c95a2e1b9987d4c0d9186ffa  src/xdp.c
+#include <bpf/libbpf.h>
+#include <bpf/bpf.h>
+#include <signal.h>
+#include <unistd.h>
+#include "xdp.skel.h"
+#include <net/if.h>
+
+static volatile bool exiting = false;
+
+static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
+{
+    return vfprintf(stderr, format, args);
+}
+
+static void sig_handler(int sig)
+{
+    exiting = true;
+}
+
+struct bpf_progs_desc
+{
+    char name[256];
+    enum bpf_prog_type type;
+    int map_prog_idx;
+    struct bpf_program *prog;
+};
+
+static struct bpf_progs_desc progs[] = {
+    {"xdp_preprocessing", BPF_PROG_TYPE_XDP, 0, NULL},
+    {"xdp_input_linear", BPF_PROG_TYPE_XDP, 1, NULL},
+    {"xdp_input_relu", BPF_PROG_TYPE_XDP, 2, NULL},
+    {"xdp_hidden_linear", BPF_PROG_TYPE_XDP, 3, NULL},
+    {"xdp_hidden_relu", BPF_PROG_TYPE_XDP, 4, NULL},
+    {"xdp_output_linear", BPF_PROG_TYPE_XDP, 5, NULL},
+};
+
+int main(int argc, char **argv)
+{
+    const char *interface = argc > 1 ? argv[1] : "ens3";
+    unsigned int ifindex = if_nametoindex(interface);
+
+    /* Set up libbpf errors and debug info callback */
+    libbpf_set_print(libbpf_print_fn);
+
+    /* Cleaner handling of Ctrl-C */
+    signal(SIGINT, sig_handler);
+    // signal(SIGTERM, sig_handler);
+
+    struct xdp_bpf *skel;
+    int map_progs_fd, prog_count;
+    int err;
+
+    skel = xdp_bpf__open();
+    if (!skel)
+    {
+        fprintf(stderr, "Failed to open BPF skeleton\n");
+        return 1;
+    }
+
+    err = xdp_bpf__load(skel);
+    if (err)
+    {
+        fprintf(stderr, "Failed to load and verify BPF skeleton\n");
+        goto cleanup;
+    }
+
+    map_progs_fd = bpf_object__find_map_fd_by_name(skel->obj, "progs");
+    prog_count = sizeof(progs) / sizeof(progs[0]);
+    for (int i = 0; i < prog_count; i++)
+    {
+        progs[i].prog = bpf_object__find_program_by_name(skel->obj, progs[i].name);
+        if (!progs[i].prog)
+        {
+            fprintf(stderr, "Error: bpf_object__find_program_by_name failed\n");
+            return 1;
+        }
+        bpf_program__set_type(progs[i].prog, progs[i].type);
+    }
+
+    for (int i = 0; i < prog_count; i++)
+    {
+        int prog_fd = bpf_program__fd(progs[i].prog);
+        if (prog_fd < 0)
+        {
+            fprintf(stderr, "Error: Couldn't get file descriptor for program %s\n", progs[i].name);
+            return 1;
+        }
+
+        unsigned int map_prog_idx = progs[i].map_prog_idx;
+        if (map_prog_idx < 0)
+        {
+            fprintf(stderr, "Error: Cannot get prog fd for bpf program %s\n", progs[i].name);
+            return 1;
+        }
+        // 给 progs map 的 map_prog_idx 插入 prog_fd
+        err = bpf_map_update_elem(map_progs_fd, &map_prog_idx, &prog_fd, 0);
+        if (err)
+        {
+            fprintf(stderr, "Error: bpf_map_update_elem failed for prog array map\n");
+            return 1;
+        }
+    }
+
+    //  update nn index
+    int32_t nn_idx = 0;
+    int32_t nn_idx_value = 1;
+
+    err = bpf_map__update_elem(skel->maps.nn_idx, &nn_idx, sizeof(int32_t), &nn_idx_value, sizeof(int32_t), BPF_ANY);
+    if (err)
+    {
+        fprintf(stderr, "Error: updating nn index\n");
+        return 1;
+    }
+
+    struct bpf_link *link = bpf_program__attach_xdp(skel->progs.xdp_prog, ifindex);
+    if (link == NULL)
+    {
+        fprintf(stderr, "Error: bpf_program__attach_xdp failed\n");
+        return 1;
+    }
+
+    printf("Successfully started! Please run `sudo cat /sys/kernel/debug/tracing/trace_pipe` "
+           "to see output of the BPF programs.\n");
+
+    printf("pid: %d\n", getpid());
+
+    while (!exiting)
+    {
+        fprintf(stderr, ".");
+        sleep(60);
+    }
+
+cleanup:
+    // delete pinned map
+    remove("/sys/fs/bpf/nn_parameters");
+    remove("/sys/fs/bpf/nn_idx");
+    xdp_bpf__destroy(skel);
+
+    return err < 0 ? -err : 0;
+}
+
+FILE: src/xdp.bpf.c
+b8736d4f88b1818fa3cfe2e37473d12b00c034a5b22b4e1ab1ccad5c9f65c10a  src/xdp.bpf.c
+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+/* Copyright (c) 2022 Hengqi Chen */
+#include <vmlinux.h>
+#include <bpf/bpf_endian.h>
+#include <bpf/bpf_helpers.h>
+#include <bpf/bpf_tracing.h>
+#include "params.bpf.h"
+#include "common.h"
+#include "handler.bpf.h"
+#include "mlp.bpf.h"
+
+#define ETH_P_IP 0x0800 /* Internet Protocol packet	*/
+
+struct
+{
+    __uint(type, BPF_MAP_TYPE_PROG_ARRAY);
+    __uint(max_entries, 1024);
+    __type(key, u32);
+    __type(value, u32);
+} progs SEC(".maps");
+
+static inline int flow_tuple(struct xdp_md *ctx, struct flow *f)
+{
+    void *data = (void *)(long)ctx->data;
+    void *data_end = (void *)(long)ctx->data_end;
+
+    struct ethhdr *eth = data;
+
+    if (eth + 1 > (struct ethhdr *)data_end)
+    {
+        return -1;
+    }
+
+    if (eth->h_proto != bpf_htons(ETH_P_IP))
+    {
+        return -1;
+    }
+
+    struct iphdr *ip = data + sizeof(struct ethhdr);
+    if (ip + 1 > (struct iphdr *)data_end)
+    {
+        return -1;
+    }
+
+    if (ip->protocol != IPPROTO_TCP)
+    {
+        return -1;
+    }
+
+    struct tcphdr *tcp = data + sizeof(struct ethhdr) + sizeof(struct iphdr);
+    if (tcp + 1 > (struct tcphdr *)data_end)
+    {
+        return -1;
+    }
+
+    f->saddr = ip->saddr;
+    f->daddr = ip->daddr;
+    f->sport = tcp->source;
+    f->dport = tcp->dest;
+
+    return 0;
+}
+
+SEC("xdp")
+int xdp_prog(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    void *data = (void *)(long)ctx->data;
+    void *data_end = (void *)(long)ctx->data_end;
+
+    // 33.33.33.73 == 555819337
+
+    // if ((bpf_ntohs(tcp->dest) == 5001))
+    if ((bpf_ntohl(f.saddr) == 555819337))
+    {
+        struct iphdr *ip = data + sizeof(struct ethhdr);
+        if (ip + 1 > (struct iphdr *)data_end)
+        {
+            return XDP_PASS;
+        }
+
+        struct tcphdr *tcp = data + sizeof(struct ethhdr) + sizeof(struct iphdr);
+        if (tcp + 1 > (struct tcphdr *)data_end)
+        {
+            return XDP_PASS;
+        }
+
+        u64 packet_length = bpf_ntohs(ip->tot_len) - ip->ihl * 4;
+
+        update_flow_attribute(&f, tcp, packet_length);
+
+        if (tcp->fin || tcp->rst)
+        {
+            int32_t idx = 0;
+            int32_t *idx_ptr = bpf_map_lookup_elem(&nn_idx, &idx);
+            struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+
+            if (idx_ptr && attr_ptr)
+            {
+                attr_ptr->nn_idx = *idx_ptr;
+                bpf_tail_call(ctx, &progs, 0);
+            }
+        }
+    }
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_preprocessing(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    // bpf_printk("[%d->%d] %lld,%lld,%lld,%lld,%lld,%lld",
+    //            bpf_ntohs(f.sport),
+    //            bpf_ntohs(f.dport),
+    //            attr_ptr->max_packet_length,
+    //            attr_ptr->max_duration,
+    //            attr_ptr->min_packet_length,
+    //            attr_ptr->dst_port,
+    //            attr_ptr->header_length,
+    //            attr_ptr->num_packet);
+    // bpf_printk("[%d->%d] NN index: %d",
+    //            bpf_ntohs(f.sport),
+    //            bpf_ntohs(f.dport),
+    //            attr_ptr->nn_idx);
+    // ！！！！！！！
+    // return XDP_PASS;
+
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+    if (!net)
+        return XDP_PASS;
+
+    int64_t x[6] = {attr_ptr->max_packet_length,
+                    attr_ptr->max_duration,
+                    attr_ptr->min_packet_length,
+                    attr_ptr->dst_port,
+                    attr_ptr->header_length,
+                    attr_ptr->num_packet};
+
+    standard_scaler(x, attr_ptr->hidden2, net->mean, net->scale, 6);
+
+    // bpf_printk("%d %d %d %d %d %d",
+    //            attr_ptr->hidden2[0],
+    //            attr_ptr->hidden2[1],
+    //            attr_ptr->hidden2[2],
+    //            attr_ptr->hidden2[3],
+    //            attr_ptr->hidden2[4],
+    //            attr_ptr->hidden2[5]);
+    // return XDP_PASS;
+
+    bpf_tail_call(ctx, &progs, 1);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_input_linear(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+    if (!net)
+        return XDP_PASS;
+
+    linear_layer(net->layer_0_weight, attr_ptr->hidden2, attr_ptr->hidden1, 32, 6);
+
+    // bpf_printk("%d %d %d %d %d %d",
+    //            attr_ptr->hidden2[0],
+    //            attr_ptr->hidden2[1],
+    //            attr_ptr->hidden2[2],
+    //            attr_ptr->hidden2[3],
+    //            attr_ptr->hidden2[4],
+    //            attr_ptr->hidden2[5]);
+
+    bpf_tail_call(ctx, &progs, 2);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_input_relu(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    relu(attr_ptr->hidden1, 32);
+
+    // bpf_printk("%d %d %d %d %d %d",
+    //            attr_ptr->hidden1[0],
+    //            attr_ptr->hidden1[1],
+    //            attr_ptr->hidden1[2],
+    //            attr_ptr->hidden1[3],
+    //            attr_ptr->hidden1[4],
+    //            attr_ptr->hidden1[5]);
+
+    bpf_tail_call(ctx, &progs, 3);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_hidden_linear(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+    if (!net)
+        return XDP_PASS;
+
+    linear_layer(net->layer_1_weight, attr_ptr->hidden1, attr_ptr->hidden2, 32, 32);
+    // bpf_printk("%d %d %d %d %d %d",
+    //            attr_ptr->hidden1[0],
+    //            attr_ptr->hidden1[1],
+    //            attr_ptr->hidden1[2],
+    //            attr_ptr->hidden1[3],
+    //            attr_ptr->hidden1[4],
+    //            attr_ptr->hidden1[5]);
+
+    bpf_tail_call(ctx, &progs, 4);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_hidden_relu(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    relu(attr_ptr->hidden2, 32);
+
+    // bpf_printk("%d %d %d %d %d %d",
+    //            attr_ptr->hidden2[0],
+    //            attr_ptr->hidden2[1],
+    //            attr_ptr->hidden2[2],
+    //            attr_ptr->hidden2[3],
+    //            attr_ptr->hidden2[4],
+    //            attr_ptr->hidden2[5]);
+
+    bpf_tail_call(ctx, &progs, 5);
+
+    return XDP_PASS;
+}
+
+SEC("xdp")
+int xdp_output_linear(struct xdp_md *ctx)
+{
+    struct flow f = {};
+
+    if (flow_tuple(ctx, &f) < 0)
+    {
+        return XDP_PASS;
+    }
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, &f);
+    if (!attr_ptr)
+        return XDP_PASS;
+
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &(attr_ptr->nn_idx));
+    if (!net)
+        return XDP_PASS;
+
+    linear_layer(net->layer_2_weight, attr_ptr->hidden2, attr_ptr->hidden1, 2, 32);
+
+    bpf_printk("avg feature extraction time: %lld, detection time: %lld, label: %d",
+               attr_ptr->total_feature_extraction_time / attr_ptr->num_packet,
+               bpf_ktime_get_ns() - attr_ptr->detection_start_time,
+               (attr_ptr->hidden1[0] > attr_ptr->hidden1[1]) ? 0 : 1);
+
+    return XDP_PASS;
+}
+
+char __license[] SEC("license") = "GPL";
+FILE: src/common.h
+9348693840e3122f39b5342efc239452f6e2a58da9d022d8b15298cdd57e5bef  src/common.h
+#ifndef COMMON_H
+#define COMMON_H
+
+struct flow_attribute
+{
+    s64 num_packet;        // Number of packets
+    s64 min_packet_length; // Minimum length of a packet
+    s64 max_packet_length; // Maximum length of a packet
+    s64 max_duration;      // Maximum time between two packets sent in the forward direction
+    s64 dst_port;          // Destination port
+    s64 header_length;     // TCP total header length
+
+    s64 last_packet_time;
+    s64 status;
+    u64 total_feature_extraction_time;
+    u64 detection_start_time;
+
+    s32 nn_idx;
+    s32 hidden1[32];
+    s32 hidden2[32];
+};
+
+struct flow
+{
+    int saddr;
+    int sport;
+    int daddr;
+    int dport;
+};
+
+#define MAX_PACKET_REACORD 8192
+
+struct
+{
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, MAX_PACKET_REACORD);
+    __type(key, struct flow);
+    __type(value, struct flow_attribute);
+} flow_map SEC(".maps");
+
+
+#endif
+FILE: src/handler.bpf.h
+770af1fc84194a225618e289e6cee8fd7a1b26c710fa0d454fcb10706b6c575e  src/handler.bpf.h
+#ifndef HANDLER_BPF_H
+#define HANDLER_BPF_H
+
+#include <vmlinux.h>
+#include "common.h"
+#include "mlp.bpf.h"
+
+static inline void init_flow_attribute(struct flow_attribute *attr)
+{
+    attr->num_packet = 0;
+    attr->min_packet_length = 0x3fffffffffffffffULL;
+    attr->max_duration = 0;
+    attr->max_packet_length = 0;
+    attr->dst_port = 0;
+    attr->header_length = 0;
+
+    attr->last_packet_time = 0;
+    attr->status = 0;
+}
+
+static inline void update_flow_attribute(struct flow *f, struct tcphdr *tcp, u64 packet_length)
+{
+    u64 packet_time = bpf_ktime_get_ns();
+
+    u64 extraction_start_time = bpf_ktime_get_ns();
+
+    struct flow_attribute *attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, f);
+
+    if (!attr_ptr)
+    {
+        struct flow_attribute attr = {};
+        init_flow_attribute(&attr);
+        attr.last_packet_time = packet_time;
+        attr.dst_port = bpf_ntohs(tcp->dest);
+        bpf_map_update_elem(&flow_map, f, &attr, BPF_NOEXIST);
+        attr_ptr = (struct flow_attribute *)bpf_map_lookup_elem(&flow_map, f);
+        if (!attr_ptr)
+            return;
+    }
+
+    attr_ptr->num_packet += 1;
+
+    if (packet_length < attr_ptr->min_packet_length)
+        attr_ptr->min_packet_length = packet_length;
+
+    if (packet_length > attr_ptr->max_packet_length)
+        attr_ptr->max_packet_length = packet_length;
+
+    u64 duration = packet_time - attr_ptr->last_packet_time;
+    if (duration > attr_ptr->max_duration)
+        attr_ptr->max_duration = duration;
+    attr_ptr->last_packet_time = packet_time;
+
+    attr_ptr->header_length += tcp->doff * 4;
+
+    attr_ptr->total_feature_extraction_time += bpf_ktime_get_ns() - extraction_start_time;
+
+    if (tcp->fin || tcp->rst)
+    {
+        attr_ptr->detection_start_time = bpf_ktime_get_ns();
+    }
+}
+
+#endif
+FILE: src/params.bpf.h
+385d745f00e7e3c015781b59b6bb3b0e462c31b3af6f24c288921d13f73df46a  src/params.bpf.h
+#ifndef PARAMS_BPF_H
+#define PARAMS_BPF_H
+
+struct Net
+{
+	int32_t layer_0_weight[192];
+	int32_t layer_1_weight[1024];
+	int32_t layer_2_weight[64];
+    int64_t mean[6];
+    int64_t scale[6];
+};
+
+struct
+{
+	__uint(type, BPF_MAP_TYPE_ARRAY);
+	__type(key, int32_t);
+	__type(value, struct Net);
+	__uint(max_entries, 2);
+	__uint(pinning, LIBBPF_PIN_BY_NAME); // <- pin
+} nn_parameters SEC(".maps");
+
+struct
+{
+	__uint(type, BPF_MAP_TYPE_ARRAY);
+	__type(key, int32_t);
+	__type(value, int32_t);
+	__uint(max_entries, 1);
+	__uint(pinning, LIBBPF_PIN_BY_NAME); // <- pin
+} nn_idx SEC(".maps");
+
+#endif
+FILE: src/mlp.bpf.h
+124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f  src/mlp.bpf.h
+#ifndef MLP_BPF_H
+#define MLP_BPF_H
+
+#include <vmlinux.h>
+
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+// x: N
+// W: MxN
+
+static inline void linear_layer(const int32_t *W, const int32_t *x, int32_t *y, const int32_t M, const int32_t N)
+{
+    int64_t sum;
+    #pragma clang loop unroll(full)
+    for (int32_t i = 0; i < M; ++i)
+    {
+        sum = 0;
+        for (int32_t j = 0; j < N; ++j)
+        {
+            sum += ((int64_t)(W[i * N + j])) * ((int64_t)(x[j]));
+        }
+        y[i] = sum >> 16;
+    }
+}
+
+static inline void relu(int32_t *tensor, const int32_t size)
+{
+    #pragma clang loop unroll(full)
+    for (int32_t i = 0; i < size; i++)
+        tensor[i] = MAX(tensor[i], 0);
+}
+
+static inline void standard_scaler(int64_t *x, int32_t *y, int64_t *mean, int64_t *scale, int32_t N)
+{
+    #pragma clang loop unroll(full)
+    for (int32_t i = 0; i < N; ++i)
+    {
+        if (mean[i] > x[i]) 
+            y[i] = -((int32_t)(((uint64_t)mean[i] - (uint64_t)x[i]) * (1 << 16) / (uint64_t)scale[i]));
+        else
+            y[i] = (int32_t)(((uint64_t)x[i] - (uint64_t)mean[i]) * (1 << 16) / (uint64_t)scale[i]);
+    }
+}
+
+#endif
+FILE: src/mlp_params.bpf.h
+f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11  src/mlp_params.bpf.h
+#ifndef PARAMS_BPF_H
+#define PARAMS_BPF_H
+
+#define FIX_POINT 16
+
+#define N0 6
+#define N1 32
+static const int32_t layer_0_weight[192] = {459, 25462, -44400, -20077, -17088, -21160, -20031, -10655, 22635, -21580, 21948, 25038, -18887, -30202, 6016, 5015, 18691, 21793, -19013, 6024, -26292, -4532, -39024, -30241, 6161, 19200, -36322, 22677, -18095, -16299, -18356, 35435, -46589, 15301, 14883, -7199, -8268, -1394, -26344, 23734, -27284, -2820, -18390, 32621, 14958, -22699, 589, -5753, -5542, 7809, -33236, -20183, -18239, -34390, 1046, 22985, 14935, -12186, -12777, -30587, -26890, -20125, 34676, 5380, 17156, 19503, -17594, 22530, 17793, -18265, 2935, -11881, -9672, 14305, -46515, 25691, -1876, -29, -1771, 27272, -36986, -33574, -15602, -8339, -9750, -1284, -1969, -23664, -37322, -13863, -8760, 17291, 11308, 11621, -16395, 5344, 12616, 4515, -10783, -36598, -33387, 1668, 5082, 23963, 10281, -8110, 1095, 23670, -32368, -29636, 31860, -13595, 34852, 6148, -7038, 55, 20429, 3875, -23176, -12846, 19168, -33411, 25786, 3392, 23329, 9631, -14273, 10366, 17219, 35432, 128, 309, -31993, -29068, -1357, 1200, -6089, 25548, -27810, -1302, -7919, -21286, -7146, -10292, 9137, 17787, -26033, -37102, -9874, -36805, -7529, 317, -10439, -29227, 1751, -20879, 34854, 21929, 26209, -19388, 8159, 11165, 1703, 10567, -20932, -19192, -10275, -31542, 28825, 16778, 5188, 18904, 19179, 29076, 31304, -30202, -13956, 5292, 26396, 31082, -7262, 19457, 825, 11330, -25138, 3984, -20320, -303, -464, -36598, -31518, -1133};
+
+#define N2 32
+static const int32_t layer_1_weight[1024] = {-12770, 163, 2946, -4584, 309, -7787, 3479, 17308, -916, 6843, 1289, 17326, 7686, 8156, -23288, 9360, 23354, 18552, -3513, 3544, 28066, 984, -11114, -8508, 3806, -302, 13245, 4886, 3346, 15242, -3775, -18778, -8097, -7842, -3753, 8419, 2212, -5460, -7814, -2700, 2691, -8378, 2135, -8603, -8739, -3985, 656, 1325, -12195, -8435, -10993, 1746, -7622, -9346, -6194, -9191, -4286, 1461, 1745, 4053, -6078, -3758, -1842, 9467, 11588, -15794, -1145, 16616, 17535, 412, 16128, -4692, 6902, 6984, -16043, 8443, 13913, 18944, 13274, 5179, 1215, -4553, -10857, 8070, -413, 17108, -16463, 9485, 18780, 12271, -6278, 17084, -7006, -19439, 3113, 6502, -6871, 8565, 10172, 8880, -13087, -14892, -11986, 4902, -6876, -11390, 19971, -11394, -2628, 2678, 10421, -14622, -11487, -1008, 14634, 10719, 4017, 711, 2246, 14164, 6934, -5741, 3165, -14066, 10305, 5387, 4966, -1688, -5474, -1268, 1860, 7900, -2837, 420, -15764, -1265, -14389, 12700, -246, 3803, 741, 2165, -11280, 3449, 20020, 16782, 14800, 4554, 11238, -149, 90, -23952, 12358, -5669, 21287, -9781, 15842, 4612, 13914, -9186, -1050, -4651, 1661, -11819, 8042, 18649, -10083, 6550, -2575, 3043, -4718, 10032, 3801, 1069, -13925, 8088, 3965, 16670, -1229, -15062, 22571, -5059, -2712, -3015, 1227, -14351, 6769, 14172, 8674, 12438, -3291, -5832, -27349, 2002, 13031, -2179, -3360, -15913, 3558, 5623, -18134, 3494, 18191, -4293, -5605, -9452, 1534, -9788, 1031, -7086, 21500, 12368, 9813, -11314, 9063, 6391, -1218, 1558, 19711, -8178, 10350, 13606, -19015, 10625, 20525, -12513, -18878, 5466, 10216, -5385, 3064, -1125, 3141, 7387, -6853, -1034, 1742, 7537, 20192, -3034, 17234, -4778, -3921, 284, -8228, -8254, -17153, 344, 15921, 10460, -7530, 10453, -11133, -20954, 8532, 17163, -10323, 10006, 6739, -7044, 2517, 3442, -11260, 8678, -13420, 1447, 14475, 2254, -12587, -3028, 9112, 5891, 7321, -4006, 19372, 8617, 12986, -4900, 18494, 8482, -6950, 2848, 21003, -16740, 15228, 6659, 5545, 2564, -22968, 4455, -4407, -16609, -10508, -8198, -5366, -2693, -17500, -21233, 3844, 12675, 5688, -25221, 1629, -12910, 97, -2054, 4786, -13281, 20662, 8595, -14148, -5402, 14095, -5843, 12236, 1555, 8365, 18899, 4183, -10528, -18695, 13944, 22077, 3620, -2882, -16378, 7679, 6371, -1524, -11525, 7653, 7957, -27719, -18035, 3914, -8273, -25233, -5196, 3252, 3269, 1765, -9707, 20687, 11991, -23827, 13257, -11115, -16035, -8757, 8001, -20104, 3011, 16843, -17507, 2106, -420, 12542, 19932, -2233, 5201, 5952, 2590, -3776, 6579, 9884, 8302, 13229, 16014, 13631, -5410, -14761, 17791, -17717, 13519, -11003, 1284, 10423, 6277, -9526, 2083, -873, -6109, 16571, 11103, -628, -10719, -19052, 4228, 1, 3228, 16446, 13102, 14204, 14347, -1609, -6404, 21002, 14490, 17459, -1042, 11510, -28, -8331, 8187, -2405, 11881, -7501, -6387, 20495, -1372, -4212, 16498, -3912, -19657, 14256, 11564, 5671, -20016, -16929, 9527, -525, 13035, 17628, 9735, 10813, 863, -20482, 11796, 22524, 238, 6219, 14127, 10535, -1703, -10837, 9736, -8202, -399, -2553, 3063, 21353, 20366, -9116, 13119, -5448, -19105, 6674, 7189, 10088, -12408, -18633, 11795, -6288, 17755, -7520, 8932, 7788, 14322, -17782, 8138, 6157, 10727, 14395, 8031, 6352, -8950, -3900, 13344, -10470, -8127, -13247, 11761, 21927, 5857, -14746, 9144, -8717, 765, 17772, 14740, -12854, 25332, 12759, -4581, -8573, -17800, 10775, -2585, -3630, -28798, 9711, 2819, -17267, -17057, -12287, -24563, 5716, -3133, 10749, -558, 6275, -2960, 13692, 15174, -6975, 8040, 23908, -11845, 11062, 20298, -15851, 14313, -1149, -6755, 3133, -11974, 726, -6869, -5465, 5899, -4240, 6946, -3950, 1040, 4689, 2245, -18825, 16086, 19563, 1302, -196, 6543, 23806, 3621, 2502, -7332, 15552, -9252, 17926, 1946, 15078, 9791, -1831, -1049, 22822, -14981, -19839, 15649, 5000, 296, -16187, 5433, 16476, 10073, -8887, 15451, 10593, 2790, 2831, 8290, 11746, -1465, -8122, -8302, -14685, -14672, -10005, 4728, 6368, 10080, 946, 16807, -4589, -19015, 4929, 16375, 7998, -8100, -4432, -7214, 1787, -1399, -11230, 13046, -7894, -3213, 12015, 5197, -2286, 8442, -11394, 18213, 7712, 17118, 314, 7370, 5245, -2338, -7, -9474, -8484, -6672, 7252, 5927, 3741, -5673, 7979, -4881, 14350, -11706, -6989, 11353, 14721, 3679, 5761, 8820, 13101, 15337, -16004, 14766, 16806, 15505, 10524, 13293, 17131, -9223, -8085, 136, 231, -3644, 2963, 871, -1185, 4097, -7496, 8711, -1587, -11013, 3384, 14825, 9665, -19641, -2289, 5113, -6018, 17021, 1236, -1127, 23343, 18811, -22737, -5154, 13151, 19219, 20037, 12858, 13540, -340, -17139, -5207, -8095, -9582, -14932, 12515, 17863, 489, -9383, 21605, -4082, -11428, -2199, 15771, 6428, -2886, 5900, -4300, -8358, -1201, 3966, 4371, -8579, 5418, 10102, 1198, 4035, 5556, -2186, -12741, 1328, 1948, -11142, 4678, 11891, 2590, -2562, -9133, 6208, 5401, 16790, 5925, 11298, 17913, 6088, -13868, 13200, -3577, -16131, 831, 1728, 11405, 1676, 1180, 17269, 19656, -17463, -3985, 9262, 956, 11329, -4668, 16286, -2369, -14042, 8586, -11509, 15895, -7892, 10313, 15851, 10611, -13175, 25129, -5049, -18691, 14026, 6815, -12073, 3513, -850, -1790, -12109, -7153, 4116, -4286, -3799, -23718, -1402, 2639, 6619, -23924, 6581, -12885, 14425, 857, -6673, -8313, -1472, 5581, -8866, -1036, -598, -1283, 2489, 2588, -4857, 12234, -5291, -28091, 17218, -10138, 512, 16899, -3131, 4329, 13019, 15289, 18401, 14333, -1561, 8126, 2575, 6406, 20918, 13957, 14110, -5807, -16335, 6265, -14187, 3906, 4723, 2764, 10046, 6792, -16059, 21323, 3258, -2461, -4171, 6282, 229, 8468, -761, -11405, -3868, -2357, -9098, 12697, -13077, 11051, -2907, 14983, 5940, 8010, -5018, 1252, 6396, 18375, 13160, 2763, 15084, 6858, 171, -14653, -82, -4260, 14648, 5597, 14109, 18006, 12151, -18411, 10804, -11574, -13779, 18194, 10303, 5434, 1260, 1933, 10794, 9057, -13640, 1646, 17723, 13594, 15920, 19533, 19039, 1911, -13947, 2805, -17891, 366, -7749, 2304, 14001, 17467, -14326, 23288, -3057, -8330, 16064, -1164, 6664, -2045, 5947, 4631, 7291, 639, 12075, -3694, -13348, 6729, -7504, -4803, 2603, -10890, -11118, 4137, 4054, -1327, 8201, 499, 4304, 14043, 3492, 4343, -12268, -12561, -11463, 5305, 7818, 4477, 8819, -3440, 14183, -16487, -14610, 11102, 16129, -5316, -9632, 2184, 17012, 19427, -22015, 12619, 4451, 17397, 16730, 13983, 14502, 4312, -18041, 7632, -1470, -11557, 3488, 3411, 1809, 4729, 398, 5562, -17820, -9791, -3402, 4552, 17977, -20552, -16405, 5222, 13089, 18155, -2326, 2784, 20118, 7231, -6399, 7400, 13616, 6921, 13329, 16090, 4225, -14968, -18756, -2430, -18438, 13911, -1292, 6588, 14027, 12865, -2520, 12230, 2145, -5171, -2769, 3811, 12374, 121, -1736, 11776, 17529, 4509, 7716, 12836, 11008, 4416, -9266, 13654, 24008, 4489, -2645, 13711, -3219, -617, -11306, -464, -1102, -3435, -11735, -691, 12560, 5729, 4251, 18062, -15855, -13136, 9494, -413, 21721, -19914, -13151, 21189, 9585, 10128, 16978, 11316, 5592, 3912, -8950, -1079, 10172, 604, 12615, 6465, 12496, -12373, -18224, 8781, -19874, 5147, -481, -2128, 18350, 9079, -2861, 22734, -21677, -8380, -3524, -1889};
+
+#define N3 2
+static const int32_t layer_2_weight[64] = {17806, 6200, -4606, 18396, 19739, 19959, 24738, -28956, 21114, 12584, 14432, -12206, -15414, -13939, -189, 28883, 12285, -17993, 4316, -14926, -10530, 16646, -15951, 3959, -19866, 15409, -21501, -8056, -18155, -21191, -11843, -21920, -13767, -3330, 19312, -16940, -18388, -21544, -23343, 23619, -20194, -28322, -24456, 14787, 12835, 17621, 19982, -11777, -23146, 6738, -18829, 15400, 16838, -5699, 25869, -6290, 13168, -11661, 6426, -1203, 22358, 6909, 17906, 3626};
+
+// mean
+static const int64_t mean[6] = {572, 11161066668, 36, 496, 12145, 379};
+
+// scale
+static const int64_t scale[6] = {451, 24027934608, 54, 1672, 49932, 1560};
+
+
+#endif
+
+FILE: src/hot_updating.c
+9abb2a777e1b353ada9e59e54a2718a9675a17c819d9bebe0dd2c44071edd598  src/hot_updating.c
+#include <bpf/bpf.h>
+#include <stdio.h>
+#include "mlp_params.bpf.h"
+
+struct Net
+{
+	int32_t layer_0_weight[192];
+	int32_t layer_1_weight[1024];
+	int32_t layer_2_weight[64];
+    int64_t mean[6];
+    int64_t scale[6];
+};
+
+int main()
+{
+    const char *nn_parameters_path = "/sys/fs/bpf/nn_parameters";
+    const char *nn_idx_path = "/sys/fs/bpf/nn_idx";
+
+    int nn_parameters_fd = bpf_obj_get(nn_parameters_path);
+    int nn_idx_fd = bpf_obj_get(nn_idx_path);
+
+    int zero_idx = 0;
+    int nn_idx = 0;
+
+    int err = bpf_map_lookup_elem(nn_idx_fd, &zero_idx, &nn_idx);
+    printf("load nn index error: %s\n", strerror(err));
+    printf("NN index: %d\n", nn_idx);
+
+    int new_nn_idx = (nn_idx + 1) % 2;
+    struct Net net;
+
+    // err = bpf_map_lookup_elem(nn_parameters_fd, &new_nn_idx, &net);
+    // printf("load ready nn error: %s\n", strerror(err));
+
+    // mean
+    memcpy(net.mean, mean, sizeof(int64_t) * N0);
+    // scale
+    memcpy(net.scale, scale, sizeof(int64_t) * N0);
+    // layer 0
+    memcpy(net.layer_0_weight, layer_0_weight, sizeof(int32_t) * N1 * N0);
+    // layer 1
+    memcpy(net.layer_1_weight, layer_1_weight, sizeof(int32_t) * N2 * N1);
+    // layer 2
+    memcpy(net.layer_2_weight, layer_2_weight, sizeof(int32_t) * N3 * N2);
+
+    printf("new NN index: %d\n", new_nn_idx);
+
+    err = bpf_map_update_elem(nn_parameters_fd, &new_nn_idx, &net, BPF_ANY);
+    printf("update nn error: %s\n", strerror(err));
+
+    err = bpf_map_update_elem(nn_idx_fd, &zero_idx, &new_nn_idx, BPF_ANY);
+    printf("update nn idx error: %s\n", strerror(err));
+}
+FILE: src/mlp.py
+7bd66eb7a22f3e19983959f5cf7c41fd2d6bb34eaa313bb5f1d651c23b47edb8  src/mlp.py
+import torch.nn.functional as F
+import torch.nn as nn
+import torch
+
+class Net(nn.Module):
+    def __init__(self, in_dim, out_dim):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(in_dim, 32, bias=False),
+            nn.ReLU(),
+            nn.Linear(32, 32, bias=False),
+            nn.ReLU(),
+            nn.Linear(32, out_dim, bias=False),
+        )
+    
+    def forward(self, X):
+        return self.model(X)
+    
+def train(num_epoch, train_loader, model, device, lr, model_path = None):
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    model.to(device)
+    for epoch in range(num_epoch):
+        totoal_loss = 0
+        for X, y in train_loader:
+            X, y = X.to(device), y.to(device)
+            output = model(X)
+            loss = criterion(output, y)
+            totoal_loss += loss.item()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        print(f'{epoch}: {totoal_loss / len(train_loader)}')
+        if model_path is not None:
+            torch.save(model, model_path)
+    return model
+
+def test(test_loader, model, device):
+    model.to(device)
+    criterion = nn.CrossEntropyLoss()
+    with torch.no_grad():
+        TP = 0
+        FP = 0
+        TN = 0
+        FN = 0
+        loss = 0
+        for X, y in test_loader:
+            X, y = X.to(device), y.to(device)
+            import time
+            # device = 'cpu'
+
+            # start = time.time()
+            output = model(X)
+            loss += criterion(output, y).item()
+            y_pred = F.softmax(output, dim=1).argmax(dim=1)
+            TP += torch.logical_and(y, y_pred).sum().item()
+            FP += torch.logical_and(torch.logical_not(y), y_pred).sum().item()
+            TN += torch.logical_and(torch.logical_not(y), torch.logical_not(y_pred)).sum().item()
+            FN += torch.logical_and(y, torch.logical_not(y_pred)).sum().item()
+            # duration = time.time() - start
+            # print(y_pred.shape)
+        A = 0.0
+        P = 0.0
+        R = 0.0
+        F2 = 0.0
+        try:
+            A = (TP + TN) / (TP + FP + TN + FN)
+            P = TP / (TP + FP)
+            R = TP / (TP + FN)
+            F2 = 2 * P * R / (P + R)
+            print(f'A:{A:.3f} P:{P:.3f} R:{R:.3f} F:{F2:.3f}')
+        except ZeroDivisionError:
+            print(TP, FP, FN)
+        return (loss / len(test_loader), P, R, F2)
+FILE: src/mlp_train.py
+997b763ea5ed4180a94566190489172a6e4e10aa02b71fb05dd0224909ef5276  src/mlp_train.py
+from sklearn import preprocessing
+from sklearn import model_selection
+import numpy as np
+from mlp import Net, train, test
+import torch.utils.data as Data
+import torch
+
+data_path = '../dataset/reproduction-xdp-data.npy'
+label_path = '../dataset/reproduction-xdp-label.npy'
+model_path = '../dataset/reproduction-xdp-MLP.pkl'
+
+batch_size = 512
+learning_rate = 1e-3
+num_epoch = 32
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+data = np.load(data_path)
+label = np.load(label_path, allow_pickle=True)
+
+# 划分训练集和测试集
+X_train, X_test, y_train, y_test = model_selection.train_test_split(
+    data, label, train_size=0.8, test_size=0.2, stratify=label)
+print("X_train, y_train:", X_train.shape, y_train.shape)
+print("X_test, y_test:", X_test.shape, y_test.shape)
+
+# 保存所用
+save_X_test = X_test.copy()
+
+# 数据标准化
+standard_scaler = preprocessing.StandardScaler()
+standard_scaler.fit(data)
+X_train = standard_scaler.transform(X_train)
+X_test = standard_scaler.transform(X_test)
+
+# 用pytorch进行训练和测试
+train_loader = Data.DataLoader(
+    dataset=Data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).long()),
+    batch_size=batch_size,
+    shuffle=True,
+    num_workers=4,
+)
+
+test_loader = Data.DataLoader(
+    dataset=Data.TensorDataset(torch.from_numpy(X_test).float(), torch.from_numpy(y_test).long()),
+    batch_size=batch_size,
+    shuffle=True, 
+    num_workers=4,
+)
+
+model = Net(X_train.shape[1], 2)
+print('Training...')
+model = train(num_epoch, train_loader, model, device, learning_rate, model_path)
+# model = torch.load(model_path)
+print('Testing...')
+test(test_loader, model, device)
+
+torch.save({'state_dict': model.state_dict(),
+            'train_loader': train_loader,
+            'X_test': X_test,
+            'y_test': y_test,
+            'raw_X_test': save_X_test,
+            'mean': standard_scaler.mean_,
+            'scale': standard_scaler.scale_},
+            'mlp.th')
+
+FILE: src/mlp_quant.py
+b53b71d14f49327ae94da8101d5572bbccbff94aa1ed7308ce10f92e7a583f34  src/mlp_quant.py
+import torch
+import sys
+import numpy as np
+
+def write_params_to_file(f, name, params):
+    f.write(f'static const int32_t {name}[{params.shape[0]}] = {{')
+    for idx in range(params.shape[0]):
+        if idx == 0:
+            f.write(f'{params[idx]}')
+        else:
+            f.write(f', {params[idx]}')
+    f.write(f'}};\n\n')
+
+saved_stats = torch.load(sys.argv[1])
+state_dict = saved_stats['state_dict']
+mean = saved_stats['mean']
+scale = saved_stats['scale']
+
+# order dictionary 按顺序排序
+with open('mlp_params.bpf.h', 'w') as f:
+    f.write('#ifndef MLP_PARAMS_BPF_H\n')
+    f.write('#define MLP_PARAMS_BPF_H\n\n')
+    f.write(f'#define FIX_POINT {sys.argv[2]}\n\n')
+
+    for i, (name, params) in enumerate(state_dict.items()):
+        if i == 0:
+            f.write(f'#define N{i} {params.shape[1]}\n')
+        
+        f.write(f'#define N{i+1} {params.shape[0]}\n')
+
+        params = params.flatten()
+        # fixed
+        params = params * (2 ** int(sys.argv[2]))
+        # round
+        params = params.round().int()
+
+        write_params_to_file(f, f'layer_{i}_weight', params)
+
+    mean = (saved_stats['mean']).round().astype(np.int64)
+    f.write(f"// mean\n")
+    f.write(f"static const int64_t mean[{len(mean)}] = {{")
+    for idx in range(len(mean)):
+        f.write(f"{mean[idx]}")
+        if idx < len(mean) - 1:
+            f.write(", ")
+    f.write("};\n\n")  
+
+    scale = (saved_stats['scale']).round().astype(np.int64)
+    f.write(f"// scale\n")
+    f.write(f"static const int64_t scale[{len(scale)}] = {{")
+    for idx in range(len(scale)):
+        f.write(f"{scale[idx]}")
+        if idx < len(scale) - 1:
+            f.write(", ")
+    f.write("};\n\n")  
+
+    print('\n#endif', file=f)
+
+FILE: bpftool/README.md
+edeb8b3e45d4e3f456aab19973da4186660bff42d380ec1e8deb43f739041373  bpftool/README.md
+bpftool
+=======
+
+This is a mirror of [bpf-next Linux source tree's
+`tools/bpf/bpftool`](https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/bpf/bpftool)
+directory, plus its few dependencies from under `kernel/bpf/`, and its
+supporting header files.
+
+All the gory details of syncing can be found in `scripts/sync-kernel.sh`
+script.
+
+Some header files in this repo (`include/linux/*.h`) are reduced versions of
+their counterpart files at
+[bpf-next](https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/)'s
+`tools/include/linux/*.h` to make compilation successful.
+
+BPF/bpftool usage and questions
+-------------------------------
+
+Please check out [the manual pages](docs) for documentation about bpftool. A
+number of example invocations are also displayed in [this blog
+post](https://qmonnet.github.io/whirl-offload/2021/09/23/bpftool-features-thread/).
+
+All general BPF questions, including kernel functionality, bpftool features and
+usage, should be sent to bpf@vger.kernel.org mailing list. You can subscribe to
+it [here](http://vger.kernel.org/vger-lists.html#bpf) and search its archive
+[here](https://lore.kernel.org/bpf/). Please search the archive before asking
+new questions. It very well might be that this was already addressed or
+answered before.
+
+bpf@vger.kernel.org is monitored by many more people and they will happily try
+to help you with whatever issue you have. This repository's PRs and issues
+should be opened only for dealing with issues pertaining to specific way this
+bpftool mirror repo is set up and organized.
+
+Dependencies
+------------
+
+Required:
+
+- libelf
+- zlib
+
+Optional:
+
+- libbfd (for dumping JIT-compiled program instructions)
+- libcap (for better feature probing)
+- kernel BTF information (for profiling programs or showing PIDs of processes
+  referencing BPF objects)
+- clang/LLVM (idem)
+
+Build
+[![build](https://github.com/libbpf/bpftool/actions/workflows/build.yaml/badge.svg)](https://github.com/libbpf/bpftool/actions/workflows/build.yaml)
+-----
+
+### Initialize libbpf submodule
+
+This repository uses libbpf as a submodule. You can initialize it when cloning
+bpftool:
+
+```console
+$ git clone --recurse-submodules https://github.com/libbpf/bpftool.git
+```
+
+Alternatively, if you have already cloned the repository, you can initialize
+the submodule by running the following command from within the repository:
+
+```console
+$ git submodule update --init
+```
+
+### Build bpftool
+
+To build bpftool:
+
+```console
+$ cd src
+$ make
+```
+
+To build and install bpftool on the system:
+
+```console
+$ cd src
+# make install
+```
+
+Building bpftool in a separate directory is supported via the `OUTPUT` variable:
+
+```console
+$ mkdir /tmp/bpftool
+$ cd src
+$ OUTPUT=/tmp/bpftool make
+```
+
+Most of the output is suppressed by default, but detailed building logs can be
+displayed by passing `V=1`:
+
+```console
+$ cd src
+$ make V=1
+```
+
+Additional compilation flags can be passed to the command line if required. For
+example, we can create a static build with the following commands:
+
+```console
+$ cd src
+$ EXTRA_CFLAGS=--static make
+```
+
+Note that to use the LLVM disassembler with static builds, we need a static
+version of the LLVM library installed on the system:
+
+1.  Download a precompiled LLVM release or build it locally.
+
+    - Download the appropriate
+      [release of LLVM](https://releases.llvm.org/download.html) for your
+      platform, for example on x86_64 with LLVM 15.0.0:
+
+      ```console
+      $ curl -LO https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.0/clang+llvm-15.0.0-x86_64-linux-gnu-rhel-8.4.tar.xz
+      $ tar xvf clang+llvm-15.0.0-x86_64-linux-gnu-rhel-8.4.tar.xz
+      $ mv clang+llvm-15.0.0-x86_64-linux-gnu-rhel-8.4 llvm_build
+      ```
+
+    - Alternatively, clone and build the LLVM libraries locally.
+
+      ```console
+      $ git clone https://github.com/llvm/llvm-project.git
+      $ mkdir llvm_build
+      $ cmake -S llvm-project/llvm -B llvm_build -DCMAKE_BUILD_TYPE=Release
+      $ make -j -C llvm_build llvm-config llvm-libraries
+      ```
+
+2.  Build bpftool with `EXTRA_CFLAGS` set to `--static`, and by passing the
+    path to the relevant `llvm-config`.
+
+    ```console
+    $ cd bpftool
+    $ LLVM_CONFIG=../../llvm_build/bin/llvm-config EXTRA_CFLAGS=--static make -j -C src
+    ```
+
+### Build bpftool's man pages
+
+The man pages for bpftool can be built with:
+
+```console
+$ cd docs
+$ make
+```
+
+They can be installed on the system with:
+
+```console
+$ cd docs
+# make install
+```
+
+License
+-------
+
+This work is dual-licensed under the GNU GPL v2.0 (only) license and the
+BSD 2-clause license. You can choose between one of them if you use this work.
+
+`SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)`
+
+FILE: libbpf/README.md
+00c7316ba0e2d30f5a95983aa7bd5f816aa9c94cd45eb6908168a44f22b76bb6  libbpf/README.md
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/libbpf-logo-sideways-darkbg.png" width="40%">
+  <img src="assets/libbpf-logo-sideways.png" width="40%">
+</picture>
+
+libbpf
+[![Github Actions Builds & Tests](https://github.com/libbpf/libbpf/actions/workflows/test.yml/badge.svg)](https://github.com/libbpf/libbpf/actions/workflows/test.yml)
+[![Coverity](https://img.shields.io/coverity/scan/18195.svg)](https://scan.coverity.com/projects/libbpf)
+[![CodeQL](https://github.com/libbpf/libbpf/workflows/CodeQL/badge.svg?branch=master)](https://github.com/libbpf/libbpf/actions?query=workflow%3ACodeQL+branch%3Amaster)
+[![OSS-Fuzz Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/libbpf.svg)](https://oss-fuzz-build-logs.storage.googleapis.com/index.html#libbpf)
+[![Read the Docs](https://readthedocs.org/projects/libbpf/badge/?version=latest)](https://libbpf.readthedocs.io/en/latest/)
+======
+
+**This is the official home of the libbpf library.**
+
+*Please use this Github repository for building and packaging libbpf
+and when using it in your projects through Git submodule.*
+
+Libbpf *authoritative source code* is developed as part of [bpf-next Linux source
+tree](https://kernel.googlesource.com/pub/scm/linux/kernel/git/bpf/bpf-next) under
+`tools/lib/bpf` subdirectory and is periodically synced to Github. As such, all the
+libbpf changes should be sent to [BPF mailing list](http://vger.kernel.org/vger-lists.html#bpf),
+please don't open PRs here unless you are changing Github-specific parts of libbpf
+(e.g., Github-specific Makefile).
+
+Libbpf and general BPF usage questions
+======================================
+
+Libbpf documentation can be found [here](https://libbpf.readthedocs.io/en/latest/api.html).
+It's an ongoing effort and has ways to go, but please take a look and consider contributing as well.
+
+Please check out [libbpf-bootstrap](https://github.com/libbpf/libbpf-bootstrap)
+and [the companion blog post](https://nakryiko.com/posts/libbpf-bootstrap/) for
+the examples of building BPF applications with libbpf.
+[libbpf-tools](https://github.com/iovisor/bcc/tree/master/libbpf-tools) are also
+a good source of the real-world libbpf-based tracing tools.
+
+See also ["BPF CO-RE reference guide"](https://nakryiko.com/posts/bpf-core-reference-guide/)
+for the coverage of practical aspects of building BPF CO-RE applications and
+["BPF CO-RE"](https://nakryiko.com/posts/bpf-portability-and-co-re/) for
+general introduction into BPF portability issues and BPF CO-RE origins.
+
+All general BPF questions, including kernel functionality, libbpf APIs and
+their application, should be sent to bpf@vger.kernel.org mailing list. You can
+subscribe to it [here](http://vger.kernel.org/vger-lists.html#bpf) and search
+its archive [here](https://lore.kernel.org/bpf/). Please search the archive
+before asking new questions. It very well might be that this was already
+addressed or answered before.
+
+bpf@vger.kernel.org is monitored by many more people and they will happily try
+to help you with whatever issue you have. This repository's PRs and issues
+should be opened only for dealing with issues pertaining to specific way this
+libbpf mirror repo is set up and organized.
+
+Building libbpf
+===============
+libelf is an internal dependency of libbpf and thus it is required to link
+against and must be installed on the system for applications to work.
+pkg-config is used by default to find libelf, and the program called can be
+overridden with `PKG_CONFIG`.
+
+If using `pkg-config` at build time is not desired, it can be disabled by
+setting `NO_PKG_CONFIG=1` when calling make.
+
+To build both static libbpf.a and shared libbpf.so:
+```bash
+$ cd src
+$ make
+```
+
+To build only static libbpf.a library in directory
+build/ and install them together with libbpf headers in a staging directory
+root/:
+```bash
+$ cd src
+$ mkdir build root
+$ BUILD_STATIC_ONLY=y OBJDIR=build DESTDIR=root make install
+```
+
+To build both static libbpf.a and shared libbpf.so against a custom libelf
+dependency installed in /build/root/ and install them together with libbpf
+headers in a build directory /build/root/:
+```bash
+$ cd src
+$ PKG_CONFIG_PATH=/build/root/lib64/pkgconfig DESTDIR=/build/root make install
+```
+
+BPF CO-RE (Compile Once – Run Everywhere)
+=========================================
+
+Libbpf supports building BPF CO-RE-enabled applications, which, in contrast to
+[BCC](https://github.com/iovisor/bcc/), do not require Clang/LLVM runtime
+being deployed to target servers and doesn't rely on kernel-devel headers
+being available.
+
+It does rely on kernel to be built with [BTF type
+information](https://www.kernel.org/doc/html/latest/bpf/btf.html), though.
+Some major Linux distributions come with kernel BTF already built in:
+  - Fedora 31+
+  - RHEL 8.2+
+  - OpenSUSE Tumbleweed (in the next release, as of 2020-06-04)
+  - Arch Linux (from kernel 5.7.1.arch1-1)
+  - Manjaro (from kernel 5.4 if compiled after 2021-06-18)
+  - Ubuntu 20.10
+  - Debian 11 (amd64/arm64)
+
+If your kernel doesn't come with BTF built-in, you'll need to build custom
+kernel. You'll need:
+  - `pahole` 1.16+ tool (part of `dwarves` package), which performs DWARF to
+    BTF conversion;
+  - kernel built with `CONFIG_DEBUG_INFO_BTF=y` option;
+  - you can check if your kernel has BTF built-in by looking for
+    `/sys/kernel/btf/vmlinux` file:
+  
+```shell
+$ ls -la /sys/kernel/btf/vmlinux
+-r--r--r--. 1 root root 3541561 Jun  2 18:16 /sys/kernel/btf/vmlinux
+```
+  
+To develop and build BPF programs, you'll need Clang/LLVM 10+. The following
+distributions have Clang/LLVM 10+ packaged by default:
+  - Fedora 32+
+  - Ubuntu 20.04+
+  - Arch Linux
+  - Ubuntu 20.10 (LLVM 11)
+  - Debian 11 (LLVM 11)
+  - Alpine 3.13+
+
+Otherwise, please make sure to update it on your system.
+
+The following resources are useful to understand what BPF CO-RE is and how to
+use it:
+- [BPF CO-RE reference guide](https://nakryiko.com/posts/bpf-core-reference-guide/)
+- [BPF Portability and CO-RE](https://nakryiko.com/posts/bpf-portability-and-co-re/)
+- [HOWTO: BCC to libbpf conversion](https://nakryiko.com/posts/bcc-to-libbpf-howto-guide/)
+- [libbpf-tools in BCC repo](https://github.com/iovisor/bcc/tree/master/libbpf-tools)
+  contain lots of real-world tools converted from BCC to BPF CO-RE. Consider
+  converting some more to both contribute to the BPF community and gain some
+  more experience with it.
+
+Distributions
+=============
+
+Distributions packaging libbpf from this mirror:
+  - [Fedora](https://src.fedoraproject.org/rpms/libbpf)
+  - [Gentoo](https://packages.gentoo.org/packages/dev-libs/libbpf)
+  - [Debian](https://packages.debian.org/source/sid/libbpf)
+  - [Arch](https://archlinux.org/packages/core/x86_64/libbpf/)
+  - [Ubuntu](https://packages.ubuntu.com/source/impish/libbpf)
+  - [Alpine](https://pkgs.alpinelinux.org/packages?name=libbpf)
+
+Benefits of packaging from the mirror over packaging from kernel sources:
+  - Consistent versioning across distributions.
+  - No ties to any specific kernel, transparent handling of older kernels.
+    Libbpf is designed to be kernel-agnostic and work across multitude of
+    kernel versions. It has built-in mechanisms to gracefully handle older
+    kernels, that are missing some of the features, by working around or
+    gracefully degrading functionality. Thus libbpf is not tied to a specific
+    kernel version and can/should be packaged and versioned independently.
+  - Continuous integration testing via
+    [GitHub Actions](https://github.com/libbpf/libbpf/actions).
+  - Static code analysis via [LGTM](https://lgtm.com/projects/g/libbpf/libbpf)
+    and [Coverity](https://scan.coverity.com/projects/libbpf).
+
+Package dependencies of libbpf, package names may vary across distros:
+  - zlib
+  - libelf
+
+[![libbpf distro packaging status](https://repology.org/badge/vertical-allrepos/libbpf.svg)](https://repology.org/project/libbpf/versions)
+
+
+bpf-next to Github sync
+=======================
+
+All the gory details of syncing can be found in `scripts/sync-kernel.sh`
+script. See [SYNC.md](SYNC.md) for instruction.
+
+Some header files in this repo (`include/linux/*.h`) are reduced versions of
+their counterpart files at
+[bpf-next](https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/)'s
+`tools/include/linux/*.h` to make compilation successful.
+
+License
+=======
+
+This work is dual-licensed under BSD 2-clause license and GNU LGPL v2.1 license.
+You can choose between one of them if you use this work.
+
+`SPDX-License-Identifier: BSD-2-Clause OR LGPL-2.1`
