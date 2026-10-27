@@ -1,0 +1,9 @@
+{
+  "preparation": "FAIL",
+  "runtime": "NOT RUN",
+  "optional_egress": "NOT IMPLEMENTED",
+  "branch": "feature/tc-ingress-prototype",
+  "commit": "2073fe78ee332d258511acb592b4c5003b29d82e",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "error": "build-host-tests failed (1); see build-host-tests.log"
+}

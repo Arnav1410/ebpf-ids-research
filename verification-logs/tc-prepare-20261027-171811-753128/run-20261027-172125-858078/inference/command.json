@@ -1,0 +1,1 @@
+["ip", "netns", "exec", "tcids-server", "/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--run", "/home/arnav/research/ebpf-ids-research/tc/.output/tc_ids.bpf.o", "tcids-s0", "4026532225", "/home/arnav/research/ebpf-ids-research/verification-logs/tc-prepare-20261027-171811-753128/run-20261027-172125-858078/inference"]

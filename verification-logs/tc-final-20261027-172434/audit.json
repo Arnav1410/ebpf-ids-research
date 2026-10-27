@@ -1,0 +1,97 @@
+{
+  "review": "PASS",
+  "method": "offline replay of actual saved kernel evidence",
+  "runtime_evidence": "/home/arnav/research/ebpf-ids-research/verification-logs/tc-prepare-20261027-171811-753128/run-20261027-172125-858078",
+  "new_privileged_operations": 0,
+  "preparation_checksums_verified": 24,
+  "runtime_checksums_verified": 68,
+  "source_and_binary_hashes_verified": {
+    "protected": 32,
+    "prototype": 19
+  },
+  "commit": "2073fe78ee332d258511acb592b4c5003b29d82e",
+  "branch": "feature/tc-ingress-prototype",
+  "previously_executed_nonprivileged_tests": {
+    "run": 11,
+    "failures": 0,
+    "errors": 0
+  },
+  "successful_logged_commands": 38,
+  "phases": {
+    "minimal": {
+      "verifier_programs": 1,
+      "entry_id": 392,
+      "program_ids": [
+        392
+      ],
+      "map_ids": [
+        58
+      ],
+      "packets": 7,
+      "bytes": 452,
+      "cleanup": "PASS"
+    },
+    "inference": {
+      "verifier_programs": 7,
+      "entry_id": 396,
+      "program_ids": [
+        396,
+        397,
+        398,
+        399,
+        400,
+        401,
+        402
+      ],
+      "map_ids": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "packets": 6,
+      "bytes": 410,
+      "cleanup": "PASS"
+    }
+  },
+  "comparisons": [
+    {
+      "features": [
+        40,
+        165398,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "stage_matches": {
+        "normalized": true,
+        "linear0": true,
+        "relu0": true,
+        "linear1": true,
+        "relu1": true,
+        "logits": true
+      },
+      "scalar_values_compared": 136,
+      "logits": [
+        -129096,
+        109857
+      ],
+      "label": 1,
+      "arithmetic_events": []
+    }
+  ],
+  "current_namespace_path_recheck": "NOT RUN: unprivileged access to /run/netns denied",
+  "namespace_cleanup_saved_evidence": {
+    "names": [
+      "tcids-client",
+      "tcids-server"
+    ],
+    "result": "PASS: recorded deletions and privileged runner absence checks"
+  },
+  "historical_map_56": "STILL PRESENT in saved global scan; from preceding failed run, outside this run's owned IDs",
+  "optional_egress": "NOT IMPLEMENTED",
+  "scope": "One attached live TCP/FIN flow; no accuracy/performance or general numerical-correctness claim"
+}

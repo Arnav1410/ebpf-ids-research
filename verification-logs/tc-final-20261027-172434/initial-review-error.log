@@ -1,0 +1,13 @@
+Initial offline review invocation:
+python3 verification-logs/tc-final-20261027-172434/review.py
+
+The first invocation stopped while independently checking namespace paths:
+PermissionError: [Errno 13] Permission denied: '/run/netns/tcids-server'
+
+The offline review was updated to record this optional current unprivileged
+check as NOT RUN. It still requires successful recorded namespace deletion,
+the privileged runner's recorded cleanup PASS/absence checks, all owned-ID
+release evidence, and every other integrity and tensor check. No detector,
+privileged runner or successful runtime evidence was altered.
+
+The corrected offline review executed successfully; see audit.json.

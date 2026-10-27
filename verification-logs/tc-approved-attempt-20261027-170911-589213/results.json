@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-10-27T17:09:11.589213+05:30",
+  "approval": "Explicit user approval for isolated TC demo",
+  "command": [
+    "sudo",
+    "-n",
+    "/usr/bin/python3",
+    "/home/arnav/research/ebpf-ids-research/tc/demo.py",
+    "--run",
+    "/home/arnav/research/ebpf-ids-research/verification-logs/tc-prepare-20261027-170012-699180"
+  ],
+  "exit_code": 1,
+  "status": "BLOCKED: sudo authentication required",
+  "stderr": "sudo: a password is required\n",
+  "prepared_hashes": "PASS",
+  "minimal_ingress": "NOT RUN",
+  "full_inference": "NOT RUN",
+  "verifier_acceptance": "NOT RUN",
+  "cleanup": "No resources created; no cleanup necessary",
+  "optional_egress": "NOT IMPLEMENTED"
+}

@@ -1,0 +1,14 @@
+test_attachment_uses_structured_id_and_direct_action (test_tc.CleanupEvidence) ... ok
+test_detach_requires_ack_for_exact_program (test_tc.CleanupEvidence) ... ok
+test_only_successful_empty_dump_establishes_absence (test_tc.CleanupEvidence) ... ok
+test_fragments_and_invalid_doff_pass_unscored (test_tc.HostTC) ... ok
+test_golden_six_features_and_all_layers (test_tc.HostTC) ... ok
+test_ipv4_options_are_parsed_at_correct_tcp_offset (test_tc.HostTC) ... ok
+test_rst_triggers (test_tc.HostTC) ... ok
+test_source_gate_and_nonclosing_traffic (test_tc.HostTC) ... ok
+test_truncation_and_invalid_lengths_pass_unscored (test_tc.HostTC) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.013s
+
+OK

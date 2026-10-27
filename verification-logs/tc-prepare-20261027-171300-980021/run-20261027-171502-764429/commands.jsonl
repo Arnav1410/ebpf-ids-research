@@ -1,0 +1,143 @@
+{"argv": ["ip", "netns", "list"], "exit_code": 0, "log": "namespaces-before.log"}
+{"argv": ["ip", "netns", "add", "tcids-server"], "exit_code": 0, "log": "command-002.log"}
+{"argv": ["ip", "netns", "add", "tcids-client"], "exit_code": 0, "log": "command-003.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "add", "tcids-s0", "type", "veth", "peer", "name", "tcids-c0"], "exit_code": 0, "log": "command-004.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-c0", "netns", "tcids-client"], "exit_code": 0, "log": "command-005.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "alias", "tcids-df090cd0722c42a18d65b1480af6290c"], "exit_code": 0, "log": "command-006.log"}
+{"argv": ["ip", "-n", "tcids-server", "addr", "add", "33.33.33.1/24", "dev", "tcids-s0"], "exit_code": 0, "log": "command-007.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "up"], "exit_code": 0, "log": "command-008.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-009.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "alias", "tcids-df090cd0722c42a18d65b1480af6290c"], "exit_code": 0, "log": "command-010.log"}
+{"argv": ["ip", "-n", "tcids-client", "addr", "add", "33.33.33.73/24", "dev", "tcids-c0"], "exit_code": 0, "log": "command-011.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "up"], "exit_code": 0, "log": "command-012.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-013.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-014.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "minimal-attachment.log"}
+{"argv": ["ip", "netns", "exec", "tcids-client", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "client", "40001"], "exit_code": 0, "log": "minimal-client.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "command-017.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "egress"], "exit_code": 0, "log": "command-018.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "qdisc", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-019.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "qdisc", "del", "dev", "tcids-s0", "clsact"], "exit_code": 0, "log": "command-020.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-021.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-022.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-023.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-024.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-025.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "inference-attachment.log"}
+{"argv": ["ip", "netns", "exec", "tcids-client", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "client", "40002"], "exit_code": 0, "log": "inference-client.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "command-028.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "egress"], "exit_code": 0, "log": "command-029.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "qdisc", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-030.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "qdisc", "del", "dev", "tcids-s0", "clsact"], "exit_code": 0, "log": "command-031.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-032.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-033.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-034.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-035.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-036.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-037.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-038.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-039.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-040.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-041.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-042.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-043.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-044.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-045.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-046.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-047.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-048.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-049.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-050.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-051.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-052.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-053.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-054.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-055.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-056.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-057.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-058.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-059.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-060.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-061.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-062.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-063.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-064.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-065.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-066.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-067.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-068.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-069.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-070.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-071.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-072.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-073.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-074.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-075.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-076.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-077.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-078.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-079.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-080.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-081.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-082.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-083.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-084.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-085.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-086.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-087.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-088.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "prog", "show"], "exit_code": 0, "log": "command-089.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-090.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-091.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-092.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-093.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-094.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-095.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-096.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-097.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-098.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-099.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-100.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-101.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-102.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-103.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-104.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-105.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-106.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-107.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-108.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-109.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-110.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-111.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-112.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-113.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-114.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-115.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-116.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-117.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-118.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-119.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-120.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-121.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-122.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-123.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-124.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-125.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-126.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-127.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-128.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-129.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-130.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-131.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-132.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-133.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-134.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-135.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-136.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-137.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-138.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/.output/bpftool/bpftool", "-j", "map", "show"], "exit_code": 0, "log": "command-139.log"}
+{"argv": ["ip", "netns", "pids", "tcids-client"], "exit_code": 0, "log": "command-140.log"}
+{"argv": ["ip", "netns", "delete", "tcids-client"], "exit_code": 0, "log": "command-141.log"}
+{"argv": ["ip", "netns", "pids", "tcids-server"], "exit_code": 0, "log": "command-142.log"}
+{"argv": ["ip", "netns", "delete", "tcids-server"], "exit_code": 0, "log": "command-143.log"}

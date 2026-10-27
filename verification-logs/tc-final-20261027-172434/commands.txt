@@ -1,0 +1,15 @@
+Offline final review (no new privileged operations):
+python3 verification-logs/tc-final-20261027-172434/review.py
+
+This was executed once before handling PermissionError for an optional current
+namespace-path read, then successfully after the review-only correction. The
+script records current git commit/branch and tracked-file status, validates
+saved preparation/runtime checksums and prepared source/binary hashes, and
+recomputes tensors using validation/reference.py. See initial-review-error.log
+and the successful audit.json output. It changes no networking and opens no
+BPF FDs.
+
+Exact previously executed preparation commands: ../tc-prepare-20261027-171811-753128/commands.jsonl
+Exact successful runtime subprocess commands: ../tc-prepare-20261027-171811-753128/run-20261027-172125-858078/commands.jsonl
+Controller commands: minimal/command.json and inference/command.json in that runtime directory.
+Traffic server commands: minimal/server-command.json and inference/server-command.json in that runtime directory.

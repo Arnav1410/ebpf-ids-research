@@ -1,0 +1,4 @@
+{"event":"schema","minimal":true,"program_type":3,"programs":1,"pins_disabled":true}
+{"event":"ready","ifindex":3,"program_id":374,"handle":1,"priority":1,"program_ids":[374],"map_ids":[50]}
+{"event":"snapshot","packets":7,"bytes":452,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"results":[]}
+{"event":"closed","qdisc_cleanup":"runner-owned interface only"}

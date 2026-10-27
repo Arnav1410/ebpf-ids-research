@@ -1,0 +1,32 @@
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/native.c:4:
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/../tc_ids.bpf.c:8:
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/../../src/handler.bpf.h:4:
+/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h:2:8: error: redefinition of '__sk_buff'
+struct __sk_buff { u32 len; };
+       ^
+/home/arnav/research/ebpf-ids-research/tc/tests/../tc_ids.bpf.c:3:10: note: '/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h' included multiple times, additional include site here
+#include <vmlinux.h>
+         ^
+/home/arnav/research/ebpf-ids-research/tc/tests/../../src/handler.bpf.h:4:10: note: '/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h' included multiple times, additional include site here
+#include <vmlinux.h>
+         ^
+/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h:2:8: note: unguarded header; consider using #ifdef guards or #pragma once
+struct __sk_buff { u32 len; };
+       ^
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/native.c:4:
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/../tc_ids.bpf.c:8:
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/../../src/handler.bpf.h:6:
+In file included from /home/arnav/research/ebpf-ids-research/tc/tests/../../src/mlp.bpf.h:4:
+/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h:2:8: error: redefinition of '__sk_buff'
+struct __sk_buff { u32 len; };
+       ^
+/home/arnav/research/ebpf-ids-research/tc/tests/../tc_ids.bpf.c:3:10: note: '/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h' included multiple times, additional include site here
+#include <vmlinux.h>
+         ^
+/home/arnav/research/ebpf-ids-research/tc/tests/../../src/mlp.bpf.h:4:10: note: '/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h' included multiple times, additional include site here
+#include <vmlinux.h>
+         ^
+/home/arnav/research/ebpf-ids-research/tc/tests/include/vmlinux.h:2:8: note: unguarded header; consider using #ifdef guards or #pragma once
+struct __sk_buff { u32 len; };
+       ^
+2 errors generated.
