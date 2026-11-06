@@ -1,0 +1,7 @@
+{
+  "stage": "Canonical keys, ingress only",
+  "kernel_execution": "NOT RUN",
+  "tests": 29,
+  "failures": 0,
+  "errors": 0
+}

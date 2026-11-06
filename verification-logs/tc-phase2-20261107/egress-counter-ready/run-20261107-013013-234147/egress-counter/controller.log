@@ -1,0 +1,2 @@
+libbpf: bpf_tc_opts has non-zero extra bytes
+TC egress attach: Invalid argument (errno=22)

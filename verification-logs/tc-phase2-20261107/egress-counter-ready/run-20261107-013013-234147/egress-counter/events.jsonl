@@ -1,0 +1,4 @@
+{"event":"schema","minimal":true,"program_type":3,"programs":2,"pins_disabled":true}
+{"event":"loaded","program_ids":[80,81],"map_ids":[37]}
+{"event":"detach_acknowledged","program_id":80,"direction":"ingress","absence_verification":"pending_filter_dumps"}
+{"event":"closed","qdisc_cleanup":"runner-owned interface only"}

@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT / 'validation'))
 sys.path.insert(0, str(ROOT / 'tc/tests'))
 from reference import Model, STAGES
 from safety import require_attached_filter, require_detach_ack, require_empty_filters
+from packet_witness import compare_snapshot
 import test_tc
 
 SERVER, CLIENT = 'tcids-server', 'tcids-client'
@@ -75,14 +76,14 @@ def finish(output, result):
     if 'kernel_checks' in result:
         display={k:v for k,v in result.items() if not k.endswith('_snapshot')}
         display['packet_observations']={k.removesuffix('_snapshot'):
-            {name:v[name] for name in ('packets','bytes','matched','predictions','stages','tail_failures')}
+            {name:v[name] for name in ('packets','bytes','egress_packets','egress_bytes','matched','predictions','stages','tail_failures') if name in v}
             for k,v in result.items() if k.endswith('_snapshot')}
         display['tensor_evidence']='Full records in results.json and each phase/snapshot.json'
     (output/'REPORT.md').write_text('# TC ingress prototype run\n\n```json\n'+json.dumps(display,indent=2)+'\n```\n\n'
         'PASS in preparation means compilation and host tests only. Runtime evidence requires --run.\n'
         'TCP exchange, TC filter queries, per-stage counters and kernel snapshots establish the live demo.\n'
         'Reported snapshot parity uses the same captured features as the fixed-point reference; it is not an accuracy evaluation.\n'
-        'Original XDP/validation/model files are unchanged. Egress is NOT IMPLEMENTED in this iteration.\n')
+        'Original XDP/validation/model files are unchanged. Egress monitoring statistics are separate from ingress-leg MLP features.\n')
     files = [p for p in output.rglob('*') if p.is_file() and p.name != 'SHA256SUMS']
     (output/'SHA256SUMS').write_text(''.join(sha(p)+'  '+str(p.relative_to(output))+'\n' for p in sorted(files)))
     print(json.dumps(display,indent=2),flush=True)
@@ -121,6 +122,13 @@ def prepare(args):
         if args.phase1:
             result['approval_command'] += ' --phase1'
             result['phase1_gate'] = 'PENDING: actual kernel suite and live ingress tests required'
+        if args.egress_counter:
+            result['approval_command'] += ' --egress-counter'
+            result['phase2_stage'] = 'EGRESS COUNTER ONLY; flow tracking not started'
+            result['egress_counter_gate'] = 'PENDING: actual attached ingress/egress packet observation required'
+        if args.phase2:
+            result['approval_command']+=' --phase2'
+            result['phase2_gate']='PENDING: attached bidirectional traffic and all regressions required'
     except Exception as e: result['error'] = str(e)
     finish(out,result)
     return int(result['preparation'] != 'PASS')
@@ -131,8 +139,12 @@ class Loader:
         self.directory = log.output/mode; self.directory.mkdir()
         self.events = []; self.log = log; self.ready = None; self.pending = b''; self.stopped = False
         self.err = (self.directory/'controller.log').open('w')
+        minimal=mode in ('minimal','egress-counter')
         argv = ['ip','netns','exec',SERVER,str(ROOT/'tc/.output/controller'),'--run',
-                str(ROOT/f'tc/.output/{"tc_min" if mode == "minimal" else "tc_ids"}.bpf.o'),SIF,str(inode),str(self.directory)]
+                str(ROOT/f'tc/.output/{"tc_min" if minimal else "tc_ids"}.bpf.o'),SIF,str(inode),str(self.directory)]
+        if mode=='egress-counter': argv.append('--egress-counter')
+        if mode.startswith('bidirectional'):argv.append('--bidirectional')
+        if not minimal:argv+=['--client-ip','33.33.33.73']
         (self.directory/'command.json').write_text(json.dumps(argv)+'\n')
         self.proc = subprocess.Popen(argv,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.err,bufsize=0)
     def read(self, wanted, timeout=20):
@@ -176,10 +188,35 @@ class Loader:
     def validate_stop(self):
         need(self.proc.returncode == 0,'Controller cleanup failed')
         if self.ready:
-            require_detach_ack(self.events, self.ready['program_id'])
+            egress=self.ready.get('egress_program_id')
+            require_detach_ack(self.events, self.ready['program_id'], 'ingress' if egress else None)
+            if egress: require_detach_ack(self.events, egress, 'egress')
     def verify_ids_gone(self):
-        if not self.ready: return
-        verify_private_ids(self.log, self.directory, self.ready)
+        identity=self.ready or next((e for e in self.events if e['event']=='loaded'),None)
+        if identity: verify_private_ids(self.log, self.directory, identity)
+
+
+class Witness:
+    def __init__(self,directory):
+        self.directory=directory;self.stopped=False
+        self.output=(directory/'witness.log').open('w')
+        argv=['ip','netns','exec',SERVER,sys.executable,str(ROOT/'tc/packet_witness.py'),SIF,str(directory)]
+        (directory/'witness-command.json').write_text(json.dumps(argv)+'\n')
+        self.proc=subprocess.Popen(argv,stdout=self.output,stderr=subprocess.STDOUT)
+    def wait_ready(self):
+        deadline=time.monotonic()+10
+        while not (self.directory/'witness.ready').exists():
+            need(self.proc.poll() is None and time.monotonic()<deadline,'Independent packet witness not ready')
+            time.sleep(.02)
+    def stop(self):
+        if not self.stopped:
+            (self.directory/'witness.stop').write_text('stop\n')
+            try:self.proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.proc.terminate();self.proc.wait(timeout=3)
+            self.output.close();self.stopped=True
+        need(self.proc.returncode==0,'Independent packet witness failed; see witness.log')
+        return json.loads((self.directory/'packets.json').read_text())
 
 
 def verify_private_ids(log, directory, identity):
@@ -210,10 +247,11 @@ def compare_records(records):
                 integers=sum(sum(len(t) for t in r['tensors']) for r in records))
 
 
-def kernel_checks(log):
-    directory=log.output/'kernel-checks'; directory.mkdir()
-    r=log.command([ROOT/'tc/.output/controller','--kernel-tests',ROOT/'tc/.output/tc_ids.bpf.o',directory],
-                  'kernel-checks',check=False)
+def kernel_checks(log,bidirectional=False):
+    name='bidirectional-kernel-checks' if bidirectional else 'kernel-checks'
+    directory=log.output/name; directory.mkdir()
+    r=log.command([ROOT/'tc/.output/controller','--bidirectional-tests' if bidirectional else '--kernel-tests',ROOT/'tc/.output/tc_ids.bpf.o',directory],
+                  name,check=False)
     (directory/'events.jsonl').write_text(r.stdout)
     (directory/'controller.log').write_text(r.stderr)
     events=[json.loads(s) for s in r.stdout.splitlines()]
@@ -221,6 +259,22 @@ def kernel_checks(log):
     if loaded: verify_private_ids(log,directory,loaded)
     need(r.returncode==0,'Kernel concurrency/failure suite failed; inspect kernel-checks.log and verifier logs')
     cases={e['name'] for e in events if e['event']=='kernel_case' and e['assertions']=='PASS'}
+    if bidirectional:
+        need(cases=={'fixed_mean_above_below_full_chain','bidirectional_same_flow','bidirectional_distinct_flows',
+                     'egress_first_and_duplicate_result_immutable','malformed_egress_pass_unscored','egress_flow_capacity_pass'},
+             'Bidirectional kernel suite incomplete')
+        s=next(e for e in events if e['event']=='snapshot')
+        need(s['predictions']==15 and len(s['results'])==15 and s['stages']==[15]*6,'Bidirectional kernel result/stage counts')
+        need(s['tail_failures']==s['inference_failures']==s['workspace_busy']==s['result_failures']==0
+             and s['flow_full']==1 and s['egress_rejected']==3,'Unexpected bidirectional failure accounting')
+        same=next(f for f in s['flows'] if f['source_port']==47000)
+        need(same['packets']==514 and same['hooks']['ingress']['packets']==514
+             and same['hooks']['egress']['packets']==514,'Bidirectional same-flow counts')
+        need(all(f['state']==2 for f in s['flows']),'Bidirectional flow not complete')
+        comparisons=compare_records(s['results'])
+        (directory/'comparisons.json').write_text(json.dumps(comparisons,indent=2)+'\n')
+        return dict(status='PASS',cases=sorted(cases),numerical=comparisons,same_flow=same,
+                    scheduling='CPU-pinned workers on both programs; exact overlap not forced',cleanup='PASS')
     need(cases=={'same_flow','distinct_flows','all_missing_tail_slots_retry','missing_model_retry',
                  'duplicate_result_immutable','malformed_pass_unscored','flow_capacity_pass',
                  'result_capacity_retry','injected_reentrancy_guard','fixed_mean_above_below_full_chain'},
@@ -252,6 +306,22 @@ def qdisc_cleanup(log, directory):
         log.command(['ip','netns','exec',SERVER,'tc','qdisc','del','dev',SIF,'clsact'])
 
 
+def cleanup_loader(log, loader):
+    """Check resource absence even if the controller exited with a runtime error."""
+    evidence={}; errors=[]
+    try: loader.stop()
+    except Exception as e:
+        evidence['controller_diagnostic']=str(e)
+        if not loader.stopped: errors.append('Controller could not be stopped')
+    for name,action in (('filters',lambda:qdisc_cleanup(log,loader.directory)),
+                        ('owned_ids',loader.verify_ids_gone)):
+        try: action(); evidence[name]='PASS'
+        except Exception as e: evidence[name]=str(e); errors.append(f'{name}: {e}')
+    evidence['status']='FAIL' if errors else 'PASS'
+    (loader.directory/'cleanup-status.json').write_text(json.dumps(evidence,indent=2)+'\n')
+    need(not errors,'; '.join(errors))
+
+
 def cleanup_namespaces(log, owned):
     errors=[]
     for name, inode in reversed(list(owned.items())):
@@ -266,11 +336,11 @@ def cleanup_namespaces(log, owned):
     need(not errors,'; '.join(errors))
 
 
-def traffic(log, mode, port, count=1):
+def traffic(log, mode, port, count=1, repeat=1):
     directory=log.output/mode
     marker=directory/'server.ready'
     server_log=(directory/'server.log').open('w')
-    argv=['ip','netns','exec',SERVER,sys.executable,str(ROOT/'tc/traffic.py'),'server',str(marker),str(count)]
+    argv=['ip','netns','exec',SERVER,sys.executable,str(ROOT/'tc/traffic.py'),'server',str(marker),str(count),str(repeat)]
     (directory/'server-command.json').write_text(json.dumps(argv)+'\n')
     server=subprocess.Popen(argv,stdout=server_log,stderr=subprocess.STDOUT)
     try:
@@ -278,7 +348,7 @@ def traffic(log, mode, port, count=1):
         while not marker.exists():
             need(server.poll() is None and time.monotonic()<deadline,'TCP server not ready')
             time.sleep(.05)
-        log.command(['ip','netns','exec',CLIENT,sys.executable,ROOT/'tc/traffic.py','client',str(port),str(count)],mode+'-client')
+        log.command(['ip','netns','exec',CLIENT,sys.executable,ROOT/'tc/traffic.py','client',str(port),str(count),str(repeat)],mode+'-client')
         need(server.wait(timeout=15)==0,'TCP server exchange failed')
     finally:
         if server.poll() is None: server.terminate(); server.wait(timeout=3)
@@ -293,15 +363,18 @@ def run(args):
     for group in manifest.values():
         for name, expected in group.items(): need(sha(ROOT/name)==expected,f'Prepared source/build changed: {name}; prepare again')
     out=bundle/('run-'+stamp()); out.mkdir(); print(f'TC evidence: {out}',flush=True)
-    log=Log(out); owned={}; loader=None; lock=None
+    log=Log(out); owned={}; loader=None; witness=None; lock=None
     result=dict(minimal_ingress='NOT RUN', full_inference='NOT RUN', cleanup='NOT RUN', optional_egress='NOT IMPLEMENTED')
     try:
         lock=open('/run/tcids-demo.lock','a+'); fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         names=[s.split()[0] for s in log.command(['ip','netns','list'],'namespaces-before').stdout.splitlines()]
         need(SERVER not in names and CLIENT not in names,'Demo namespace names already exist')
-        if args.phase1:
+        if args.phase1 or args.phase2:
             result['kernel_checks']='FAIL'
             result['kernel_checks']=kernel_checks(log)
+        if args.phase2:
+            result['bidirectional_kernel_checks']='FAIL'
+            result['bidirectional_kernel_checks']=kernel_checks(log,True)
         for name in (SERVER,CLIENT):
             log.command(['ip','netns','add',name]); owned[name]=(Path('/run/netns')/name).stat().st_ino
             (out/'owned.json').write_text(json.dumps(owned,indent=2)+'\n')
@@ -314,7 +387,11 @@ def run(args):
             log.command(['ip','-n',name,'link','set',iface,'up'])
             log.command(['ip','-n',name,'link','set','lo','up'])
         phases=[('minimal',40001,1),('inference',40002,1)]
-        if args.phase1: phases.append(('concurrent',41000,10))
+        if args.phase1 or args.phase2: phases.append(('concurrent',41000,10))
+        if args.phase2:phases += [('bidirectional',40004,1),('bidirectional-concurrent',42000,10),('bidirectional-burst',43000,1)]
+        if args.egress_counter:
+            phases=[('egress-counter',40003,1)]
+            result['phase2_stage']='EGRESS COUNTER ONLY; canonical keys and directional flow state not implemented'
         for mode,port,count in phases:
             if mode=='inference' and args.minimal_only: break
             info=json.loads(log.command(['ip','-n',SERVER,'-j','-d','link','show','dev',SIF]).stdout)[0]
@@ -323,19 +400,47 @@ def run(args):
             loader.read('ready')
             filters=log.command(['ip','netns','exec',SERVER,'tc','-j','filter','show','dev',SIF,'ingress'],mode+'-attachment')
             require_attached_filter(filters.stdout, loader.ready['program_id'])
-            traffic(log,mode,port,count)
+            if mode=='egress-counter' or mode.startswith('bidirectional'):
+                need(loader.ready.get('egress_program_id'),'No attached egress program reported')
+                filters=log.command(['ip','netns','exec',SERVER,'tc','-j','filter','show','dev',SIF,'egress'],mode+'-egress-attachment')
+                require_attached_filter(filters.stdout,loader.ready['egress_program_id'])
+                before_traffic=loader.snapshot()
+                (loader.directory/'counters-before-traffic.json').write_text(json.dumps(before_traffic,indent=2)+'\n')
+            if mode.startswith('bidirectional'):
+                witness=Witness(loader.directory);witness.wait_ready()
+            traffic(log,mode,port,count,128 if mode=='bidirectional-burst' else 1)
             snapshot=loader.snapshot()
             # Read counters after traffic quiesces, rather than assuming one
             # application write corresponds to one skb or a fixed packet count.
+            stable=0
             for attempt in range(50):
-                time.sleep(.02)
+                time.sleep(.05)
                 latest=loader.snapshot()
-                if latest['packets']==snapshot['packets']:
-                    snapshot=latest; break
+                if latest['packets']==snapshot['packets'] and latest['egress_packets']==snapshot['egress_packets']:
+                    stable+=1
+                else:stable=0
                 snapshot=latest
+                if stable>=5:break
             else: raise RuntimeError('Controlled traffic did not quiesce')
+            if witness:
+                observed=witness.stop();witness=None
+                snapshot=loader.snapshot()
+                (loader.directory/'snapshot.json').write_text(json.dumps(snapshot,indent=2)+'\n')
+                comparison=compare_snapshot(snapshot,observed,port,count)
+                (loader.directory/'packet-comparisons.json').write_text(json.dumps(comparison,indent=2)+'\n')
+                result[mode+'_packets']=dict(status='PASS',flows=count,non_timing_features_checked=comparison['non_timing_features_checked'])
             need(snapshot['packets']>0 and snapshot['bytes']>0,'Ingress counter did not observe controlled traffic')
-            if mode=='minimal': result['minimal_ingress']='PASS'
+            if mode in ('minimal','egress-counter'):
+                result['minimal_ingress']='PASS'
+                if mode=='egress-counter':
+                    deltas={name:snapshot[name]-before_traffic[name]
+                            for name in ('packets','bytes','egress_packets','egress_bytes')}
+                    need(all(value>0 for value in deltas.values()),'Both hooks must observe new traffic during the controlled exchange')
+                    need(snapshot['predictions']==0 and snapshot['stages']==[0]*6 and not snapshot['results'] and not snapshot['flows'],
+                         'Minimal counter unexpectedly ran inference or flow tracking')
+                    result['egress_counter']='PASS'
+                    result['counter_deltas']=deltas
+                    result['optional_egress']='COUNTER ONLY; no bidirectional IDS claim'
             else:
                 need(snapshot['matched']>=3*count and snapshot['predictions']==count and snapshot['tail_failures']==0,'Inference counters failed')
                 need(snapshot['workspace_busy']==snapshot['inference_failures']==snapshot['flow_full']==snapshot['result_failures']==0,
@@ -354,6 +459,10 @@ def run(args):
                 result[mode+'_numerical']=comparisons
                 result['reference_comparisons']=result.get('reference_comparisons',0)+len(records)*6
                 if mode=='concurrent': result['concurrent_flows']='PASS'
+                if mode.startswith('bidirectional'):
+                    need(snapshot['egress_matched']>0 and snapshot['ingress_other_direction']==0,'Missing egress or mixed ingress MLP leg')
+                    result['optional_egress']='PASS: shared bidirectional monitoring; ingress-leg classification'
+                    result[mode]='PASS'
             (out/mode/'snapshot.json').write_text(json.dumps(snapshot,indent=2)+'\n')
             result[mode+'_snapshot']=snapshot
             loader.stop()
@@ -362,8 +471,11 @@ def run(args):
     except Exception as e: result['error']=str(e)
     finally:
         errors=[]
+        if witness:
+            try:witness.stop()
+            except Exception as e:errors.append(str(e))
         if loader:
-            try: loader.stop(); loader.verify_ids_gone()
+            try: cleanup_loader(log,loader)
             except Exception as e: errors.append(str(e))
         try: cleanup_namespaces(log,owned)
         except Exception as e: errors.append(str(e))
@@ -378,10 +490,26 @@ def run(args):
                 and result['protected_files']=='UNCHANGED' and 'error' not in result
                 and isinstance(result.get('kernel_checks'),dict) and result['kernel_checks']['status']=='PASS'
             ) else 'FAIL'
+        if args.egress_counter:
+            result['egress_counter_gate']='PASS' if (
+                result.get('minimal_ingress')=='PASS' and result.get('egress_counter')=='PASS'
+                and result['cleanup']=='PASS' and result['protected_files']=='UNCHANGED' and 'error' not in result
+            ) else 'FAIL'
+        if args.phase2:
+            result['phase2_gate']='PASS' if (
+                result.get('minimal_ingress')=='PASS' and result.get('full_inference')=='PASS'
+                and result.get('concurrent_flows')=='PASS' and result['cleanup']=='PASS'
+                and result['protected_files']=='UNCHANGED' and 'error' not in result
+                and all(isinstance(result.get(k),dict) and result[k]['status']=='PASS'
+                        for k in ('kernel_checks','bidirectional_kernel_checks'))
+                and all(result.get(k)=='PASS' for k in ('bidirectional','bidirectional-concurrent','bidirectional-burst'))
+            ) else 'FAIL'
         if lock: lock.close()
         finish(out,result)
     success=result['minimal_ingress']=='PASS' and (args.minimal_only or result['full_inference']=='PASS')
+    if args.egress_counter: success=result.get('egress_counter_gate')=='PASS'
     if args.phase1: success=success and result.get('phase1_gate')=='PASS'
+    if args.phase2:success=success and result.get('phase2_gate')=='PASS'
     return int(not success or result['cleanup']!='PASS' or result['protected_files']!='UNCHANGED' or 'error' in result)
 
 
@@ -393,9 +521,14 @@ def main():
     g.add_argument('--cleanup',type=Path,metavar='RUN_DIRECTORY')
     p.add_argument('--minimal-only',action='store_true')
     p.add_argument('--phase1',action='store_true',help='Run private kernel SMP/failure suite, ingress regression and ten live flows')
+    p.add_argument('--phase2',action='store_true',help='Ingress regression, two-hook kernel stress and attached bidirectional packet comparisons')
+    p.add_argument('--egress-counter',action='store_true',help='Phase 2 first gate: attach minimal ingress/egress counters only')
     p.add_argument('--output',type=Path)
     args=p.parse_args()
     need(not(args.phase1 and args.minimal_only),'--phase1 requires full inference')
+    need(not(args.phase2 and (args.phase1 or args.minimal_only or args.egress_counter)),'--phase2 is a separate integrated suite')
+    need(not(args.egress_counter and (args.phase1 or args.minimal_only or args.phase2)),
+         '--egress-counter is a separate staged test; do not combine with other test modes')
     if args.prepare: return prepare(args)
     if args.run:
         def interrupted(signum,frame): raise RuntimeError(f'Interrupted by signal {signum}')

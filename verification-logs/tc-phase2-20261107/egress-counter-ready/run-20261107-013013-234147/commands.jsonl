@@ -1,0 +1,18 @@
+{"argv": ["ip", "netns", "list"], "exit_code": 0, "log": "namespaces-before.log"}
+{"argv": ["ip", "netns", "add", "tcids-server"], "exit_code": 0, "log": "command-002.log"}
+{"argv": ["ip", "netns", "add", "tcids-client"], "exit_code": 0, "log": "command-003.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "add", "tcids-s0", "type", "veth", "peer", "name", "tcids-c0"], "exit_code": 0, "log": "command-004.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-c0", "netns", "tcids-client"], "exit_code": 0, "log": "command-005.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "alias", "tcids-cf9bd1ea0b8744d9abfb65c03932040c"], "exit_code": 0, "log": "command-006.log"}
+{"argv": ["ip", "-n", "tcids-server", "addr", "add", "33.33.33.1/24", "dev", "tcids-s0"], "exit_code": 0, "log": "command-007.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "up"], "exit_code": 0, "log": "command-008.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-009.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "alias", "tcids-cf9bd1ea0b8744d9abfb65c03932040c"], "exit_code": 0, "log": "command-010.log"}
+{"argv": ["ip", "-n", "tcids-client", "addr", "add", "33.33.33.73/24", "dev", "tcids-c0"], "exit_code": 0, "log": "command-011.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "up"], "exit_code": 0, "log": "command-012.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-013.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-014.log"}
+{"argv": ["ip", "netns", "pids", "tcids-client"], "exit_code": 0, "log": "command-015.log"}
+{"argv": ["ip", "netns", "delete", "tcids-client"], "exit_code": 0, "log": "command-016.log"}
+{"argv": ["ip", "netns", "pids", "tcids-server"], "exit_code": 0, "log": "command-017.log"}
+{"argv": ["ip", "netns", "delete", "tcids-server"], "exit_code": 0, "log": "command-018.log"}

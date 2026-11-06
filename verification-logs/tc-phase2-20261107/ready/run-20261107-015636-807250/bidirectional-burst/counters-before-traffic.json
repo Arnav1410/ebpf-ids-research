@@ -1,0 +1,30 @@
+{
+  "event": "snapshot",
+  "packets": 0,
+  "bytes": 0,
+  "matched": 0,
+  "rejected": 0,
+  "predictions": 0,
+  "tail_failures": 0,
+  "stages": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "flow_full": 0,
+  "workspace_busy": 0,
+  "duplicate_triggers": 0,
+  "inference_failures": 0,
+  "timestamp_reorders": 0,
+  "result_failures": 0,
+  "egress_packets": 0,
+  "egress_bytes": 0,
+  "egress_matched": 0,
+  "egress_rejected": 0,
+  "ingress_other_direction": 0,
+  "results": [],
+  "flows": []
+}

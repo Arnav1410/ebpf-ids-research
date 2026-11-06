@@ -1,0 +1,13 @@
+{
+  "minimal_ingress": "NOT RUN",
+  "full_inference": "NOT RUN",
+  "cleanup": "FAIL",
+  "optional_egress": "NOT IMPLEMENTED",
+  "phase2_stage": "EGRESS COUNTER ONLY; canonical keys and directional flow state not implemented",
+  "error": "controller exited before ready; see /home/arnav/research/ebpf-ids-research/verification-logs/tc-phase2-20261107/egress-counter-ready/run-20261107-013013-234147/egress-counter/controller.log",
+  "cleanup_errors": [
+    "Controller cleanup failed"
+  ],
+  "protected_files": "UNCHANGED",
+  "egress_counter_gate": "FAIL"
+}

@@ -11,7 +11,7 @@ $(OUTPUT):
 	mkdir -p $@
 $(OUTPUT)/vmlinux.h: | $(OUTPUT)
 	$(BPFTOOL) btf dump file /sys/kernel/btf/vmlinux format c > $@
-$(OUTPUT)/%.bpf.o: %.bpf.c abi.h $(BASE) $(OUTPUT)/vmlinux.h
+$(OUTPUT)/%.bpf.o: %.bpf.c abi.h flow_key.h $(BASE) $(OUTPUT)/vmlinux.h
 	$(CLANG) $(BPF_FLAGS) -c $< -o $@
-$(OUTPUT)/controller: controller.c kernel_checks.h abi.h id_scan.h ../src/params.bpf.h ../src/mlp_params.bpf.h | $(OUTPUT)
+$(OUTPUT)/controller: controller.c kernel_checks.h bidirectional_checks.h abi.h flow_key.h id_scan.h ../src/params.bpf.h ../src/mlp_params.bpf.h | $(OUTPUT)
 	$(CLANG) -O2 -g -Wall -Wextra -pthread -I$(INCLUDE) $< $(LIBBPF) -lelf -lz -o $@

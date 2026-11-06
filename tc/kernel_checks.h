@@ -4,10 +4,14 @@
 #include <sched.h>
 #include <stdatomic.h>
 #define KC(expr, msg) do { if (!(expr)) { fprintf(stderr,"Kernel case failed: %s errno=%d\n",msg,errno); return 1; } } while(0)
-static struct flow kc_key(unsigned port)
+static struct flow kc_tuple(unsigned port)
 {
     return (struct flow){.saddr=(int)htonl(555819337),.daddr=(int)htonl(555819265),
         .sport=htons(port),.dport=htons(5001)};
+}
+static struct tc_key kc_key(unsigned port)
+{
+    struct flow tuple=kc_tuple(port);struct tc_key key={};tc_key_build(&tuple,&key);return key;
 }
 static int kc_packet(int fd, unsigned port, unsigned char flags, int malformed)
 {
@@ -18,8 +22,8 @@ static int kc_packet(int fd, unsigned port, unsigned char flags, int malformed)
     if(malformed==1)p[14]=0x44;
     if(malformed==2)p[20]=0x20;
     if(malformed==3)p[46]=0x40;
-    struct bpf_test_run_opts o={.sz=sizeof(o),.data_in=p,.data_out=out,
-        .data_size_in=sizeof(p),.data_size_out=sizeof(out),.repeat=1};
+    LIBBPF_OPTS(bpf_test_run_opts,o,.data_in=p,.data_out=out,
+        .data_size_in=sizeof(p),.data_size_out=sizeof(out),.repeat=1);
     int rc=bpf_prog_test_run_opts(fd,&o);
     if(rc||o.retval!=TC_ACT_OK){fprintf(stderr,"TC test-run rc=%d action=%u errno=%d\n",rc,o.retval,errno);return 1;}
     return 0;
@@ -37,7 +41,7 @@ static void *kc_work(void *arg)
 }
 static int kc_flow(int fd,unsigned port,u32 state,u64 sequence,u64 failures)
 {
-    struct flow k=kc_key(port);struct tc_flow f={};
+    struct tc_key k=kc_key(port);struct tc_flow f={};
     KC(!bpf_map_lookup_elem_flags(fd,&k,&f,BPF_F_LOCK),"locked flow readback");
     KC(f.state==state&&f.sequence==sequence&&f.failures==failures,"flow state machine");return 0;
 }
@@ -57,7 +61,7 @@ static int kc_parallel(int fd,int distinct,int flow_fd)
     for(int i=0;i<created;++i){pthread_join(t[i],NULL);failed|=w[i].error;}
     KC(!failed&&created==n,"workers");
     for(int i=0;i<(distinct?n:1);++i){
-        struct flow k=kc_key(distinct?42000+i:41000);struct tc_flow f={};
+        struct tc_key k=kc_key(distinct?42000+i:41000);struct tc_flow f={};
         KC(!bpf_map_lookup_elem_flags(flow_fd,&k,&f,BPF_F_LOCK),"parallel readback");
         KC(f.packets==(u64)(distinct?calls:n*calls)&&f.bytes==f.packets*20,"lost updates");
         KC(f.state==TC_DONE&&f.sequence==1&&!f.failures&&f.duplicates==(u64)(distinct?0:n-1),"duplicate/running inference");
@@ -81,7 +85,7 @@ static int kc_capacity(int fd,int entry,int flows,int result_mode)
 {
     struct tc_flow f={};struct tc_result r={};int filled=0;
     for(int i=0;i<TC_FLOW_CAPACITY;++i){
-        struct flow k={.saddr=1,.daddr=2,.sport=i,.dport=3};
+        struct tc_key k={.a_addr=1,.b_addr=2,.a_port=i,.b_port=3,.protocol=6};
         if(bpf_map_update_elem(fd,&k,result_mode?(void *)&r:(void *)&f,BPF_NOEXIST)){
             KC(errno==E2BIG||errno==ENOSPC,"full hash error");break;
         }filled++;
@@ -89,8 +93,8 @@ static int kc_capacity(int fd,int entry,int flows,int result_mode)
     KC(filled>0&&filled<TC_FLOW_CAPACITY,"hash reached capacity");
     unsigned port=result_mode?45001:45000;KC(!kc_packet(entry,port,0x11,0),"full-map packet passes");
     if(result_mode){KC(!kc_flow(flows,port,TC_IDLE,1,1),"publication failure recovered");}
-    else{struct flow k=kc_key(port);KC(bpf_map_lookup_elem_flags(flows,&k,&f,BPF_F_LOCK)&&errno==ENOENT,"full flow map");}
-    for(int i=0;i<filled;++i){struct flow k={.saddr=1,.daddr=2,.sport=i,.dport=3};KC(!bpf_map_delete_elem(fd,&k),"fixture removal");}
+    else{struct tc_key k=kc_key(port);KC(bpf_map_lookup_elem_flags(flows,&k,&f,BPF_F_LOCK)&&errno==ENOENT,"full flow map");}
+    for(int i=0;i<filled;++i){struct tc_key k={.a_addr=1,.b_addr=2,.a_port=i,.b_port=3,.protocol=6};KC(!bpf_map_delete_elem(fd,&k),"fixture removal");}
     if(result_mode)KC(!kc_packet(entry,port,0x11,0)&&!kc_flow(flows,port,TC_DONE,2,1),"publication retry");
     kc_pass(result_mode?"result_capacity_retry":"flow_capacity_pass");return 0;
 }
@@ -100,10 +104,12 @@ static int kc_fixed(struct bpf_object *obj,int flows,int ws)
     int cpus=libbpf_num_possible_cpus();KC(cpus>0,"fixed fixture CPU count");
     struct tc_workspace *v=calloc(cpus,sizeof(*v));KC(v,"fixed fixture allocation");
     for(int fixture=0;fixture<3;++fixture){
-        struct flow key=kc_key(46000+fixture);struct tc_flow state={.state=TC_RUNNING,.sequence=1};
+        struct tc_key key=kc_key(46000+fixture);struct flow input=kc_tuple(46000+fixture);
+        struct tc_flow state={.state=TC_RUNNING,.sequence=1,.input=input,.input_initialized=1,.input_direction=1};
         if(bpf_map_update_elem(flows,&key,&state,BPF_NOEXIST)){free(v);KC(0,"fixed fixture flow");}
         for(int cpu=0;cpu<cpus;++cpu){
             v[cpu].busy=1;v[cpu].next_stage=0;v[cpu].record.key=key;
+            v[cpu].record.input=input;v[cpu].record.input_direction=1;
             v[cpu].record.sequence=1;v[cpu].record.cpu=cpu;
             for(int j=0;j<6;++j)v[cpu].record.features[j]=mean[j]+(fixture==1?scale[j]:fixture==2?-scale[j]:0);
         }
@@ -136,7 +142,7 @@ static int kernel_checks(struct bpf_object *obj)
     KC(!kc_packet(entry,43010,4,0)&&!kc_flow(flows,43010,TC_IDLE,1,1),"missing model recovery");
     KC(!bpf_map_update_elem(idx,&zero,&good,BPF_ANY),"restore model");
     KC(!kc_packet(entry,43010,4,0)&&!kc_flow(flows,43010,TC_DONE,2,1),"model retry");kc_pass("missing_model_retry");
-    struct flow k=kc_key(41000);struct tc_result before,after;
+    struct tc_key k=kc_key(41000);struct tc_result before,after;
     KC(!bpf_map_lookup_elem(results_fd,&k,&before),"duplicate result baseline");
     for(int i=0;i<5;++i)KC(!kc_packet(entry,41000,4,0),"duplicate RST passes");
     KC(!bpf_map_lookup_elem(results_fd,&k,&after)&&!memcmp(&before,&after,sizeof(before)),"duplicate result immutable");

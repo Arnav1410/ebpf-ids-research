@@ -1,0 +1,9 @@
+{"event":"schema","minimal":true,"program_type":3,"programs":2,"pins_disabled":true}
+{"event":"loaded","program_ids":[85,86],"map_ids":[38]}
+{"event":"ready","ifindex":3,"program_id":85,"handle":1,"priority":1,"program_ids":[85,86],"map_ids":[38],"egress_program_id":86}
+{"event":"snapshot","packets":0,"bytes":0,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"flow_full":0,"workspace_busy":0,"duplicate_triggers":0,"inference_failures":0,"timestamp_reorders":0,"result_failures":0,"egress_packets":0,"egress_bytes":0,"results":[],"flows":[]}
+{"event":"snapshot","packets":7,"bytes":452,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"flow_full":0,"workspace_busy":0,"duplicate_triggers":0,"inference_failures":0,"timestamp_reorders":0,"result_failures":0,"egress_packets":5,"egress_bytes":325,"results":[],"flows":[]}
+{"event":"snapshot","packets":7,"bytes":452,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"flow_full":0,"workspace_busy":0,"duplicate_triggers":0,"inference_failures":0,"timestamp_reorders":0,"result_failures":0,"egress_packets":5,"egress_bytes":325,"results":[],"flows":[]}
+{"event":"detach_acknowledged","program_id":86,"direction":"egress","absence_verification":"pending_filter_dumps"}
+{"event":"detach_acknowledged","program_id":85,"direction":"ingress","absence_verification":"pending_filter_dumps"}
+{"event":"closed","qdisc_cleanup":"runner-owned interface only"}

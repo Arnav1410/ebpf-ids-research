@@ -1,0 +1,7 @@
+{
+  "stage": "Directional shared state and ingress-MLP isolation",
+  "kernel_execution": "NOT RUN",
+  "tests": 34,
+  "failures": 0,
+  "errors": 0
+}

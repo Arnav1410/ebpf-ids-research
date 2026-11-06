@@ -1,0 +1,178 @@
+{
+  "command": [
+    "llvm-objdump-12",
+    "-d",
+    "--no-show-raw-insn",
+    "tc/.output/tc_ids.bpf.o"
+  ],
+  "exit_code": 0,
+  "object_sha256": "ed31c7ea2bafbb2cca5f8d76f978d24719368daf4c851aa1b738936f34853e49",
+  "functions": {
+    "tc_entry": {
+      "max_stack_offset": 456,
+      "helper_calls": [
+        1,
+        26,
+        26,
+        26,
+        1,
+        5,
+        8,
+        1,
+        1,
+        1,
+        2,
+        1,
+        93,
+        94,
+        94,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94,
+        94
+      ]
+    },
+    "tc_egress": {
+      "max_stack_offset": 376,
+      "helper_calls": [
+        1,
+        26,
+        26,
+        26,
+        1,
+        5,
+        1,
+        2,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_preprocessing": {
+      "max_stack_offset": 8,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_input_linear": {
+      "max_stack_offset": 32,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_input_relu": {
+      "max_stack_offset": 8,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_hidden_linear": {
+      "max_stack_offset": 176,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_hidden_relu": {
+      "max_stack_offset": 8,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        12,
+        1,
+        1,
+        1,
+        93,
+        94
+      ]
+    },
+    "tc_output_linear": {
+      "max_stack_offset": 168,
+      "helper_calls": [
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        1,
+        1,
+        93,
+        94,
+        1,
+        1,
+        1,
+        5,
+        2,
+        93,
+        94
+      ]
+    }
+  },
+  "scope": "Static instruction inspection; actual verifier/runtime evidence still required"
+}

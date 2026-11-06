@@ -1,0 +1,1 @@
+[{"protocol":"all","pref":1,"kind":"bpf","chain":0},{"protocol":"all","pref":1,"kind":"bpf","chain":0,"options":{"handle":"0x1","bpf_name":"tc_egress:[163]","direct-action":true,"not_in_hw":true,"prog":{"id":163,"tag":"77ee1ddb77526c98","jited":1}}}]

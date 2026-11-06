@@ -1,0 +1,1 @@
+["ip", "netns", "exec", "tcids-server", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "server", "/home/arnav/research/ebpf-ids-research/verification-logs/tc-phase2-20261107/ready/run-20261107-015636-807250/bidirectional/server.ready", "1", "1"]

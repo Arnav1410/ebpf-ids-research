@@ -1,0 +1,328 @@
+{
+  "status": "PASS",
+  "flows": 10,
+  "non_timing_features_checked": 50,
+  "comparisons": [
+    {
+      "source_port": 42000,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42000,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        1978331,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42001,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42001,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        1454229,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42002,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42002,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        347017,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42003,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42003,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        556075,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42004,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42004,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        1298454,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42005,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42005,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        2083899,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42006,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42006,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        1578597,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42007,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42007,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        1204250,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42008,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42008,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        791012,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    },
+    {
+      "source_port": 42009,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 42009,
+        "protocol": 6
+      },
+      "ingress_packets": 6,
+      "ingress_bytes": 410,
+      "egress_packets": 4,
+      "egress_bytes": 283,
+      "expected_non_timing_features": [
+        40,
+        null,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "kernel_features": [
+        40,
+        3148110,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    }
+  ],
+  "counter_basis": "Independent AF_PACKET observations in this isolated small-packet test; not general offload equivalence"
+}

@@ -2,9 +2,10 @@
 import json
 
 
-def require_detach_ack(events, program_id):
+def require_detach_ack(events, program_id, direction=None):
     if not any(e.get('event') == 'detach_acknowledged'
-               and e.get('program_id') == program_id for e in events):
+               and e.get('program_id') == program_id
+               and (direction is None or e.get('direction') == direction) for e in events):
         raise RuntimeError('Owned TC detach not acknowledged')
 
 

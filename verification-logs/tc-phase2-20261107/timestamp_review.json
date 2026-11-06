@@ -1,0 +1,68 @@
+{
+  "phase1_kernel_evidence": "verification-logs/tc-phase1-20261106/ready-r2/run-20261106-102343-292996",
+  "kernel_same_flow": {
+    "source_port": 41000,
+    "packets": 1033,
+    "bytes": 20660,
+    "state": 2,
+    "sequence": 1,
+    "duplicates": 8,
+    "failures": 0,
+    "timestamp_reorders": 26
+  },
+  "inference_snapshot": {
+    "source_port": 41000,
+    "cpu": 2,
+    "completed_ns": 9147440438650,
+    "features": [
+      20,
+      3862,
+      20,
+      5001,
+      12900,
+      645
+    ],
+    "sequence": 1
+  },
+  "attached_ingress_reorders": {
+    "inference": 0,
+    "concurrent": 0
+  },
+  "host_characterization": [
+    {
+      "test": "test_reorder_policy_can_overestimate_chronological_sample_gap",
+      "execution": "host-compiled C with mocked helper timestamps; not kernel",
+      "status": "PASS",
+      "processing_order_ns": [
+        1000,
+        3000,
+        2000
+      ],
+      "current_feature_ns": 2000,
+      "chronological_sample_max_gap_ns": 1000
+    },
+    {
+      "test": "test_reorder_policy_can_underestimate_chronological_sample_gap",
+      "execution": "host-compiled C with mocked helper timestamps; not kernel",
+      "status": "PASS",
+      "processing_order_ns": [
+        3000,
+        1000,
+        2000
+      ],
+      "current_feature_ns": 0,
+      "chronological_sample_max_gap_ns": 1000
+    }
+  ],
+  "prepared_manifest_checks": {
+    "protected": true,
+    "prototype": true
+  },
+  "prepared_manifest_entries": 53,
+  "limitations": [
+    "No individual helper timestamp sequence or lock acquisition order saved in Phase 1.",
+    "Cannot determine which of 26 reorders preceded the inference at packet 645.",
+    "Cannot quantify actual chronological IAT error of the recorded 3862 ns feature.",
+    "Parity checks establish arithmetic on the recorded feature vector, not wire timing correctness."
+  ]
+}

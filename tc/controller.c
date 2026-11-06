@@ -26,6 +26,7 @@ typedef uint32_t u32;
 #undef PARAMS_BPF_H
 #include "../src/mlp_params.bpf.h"
 #include "abi.h"
+#include "flow_key.h"
 _Static_assert(sizeof(struct tc_workspace) % 8 == 0, "per-CPU value stride must be aligned");
 
 static const char *stages[] = {"tc_preprocessing", "tc_input_linear", "tc_input_relu",
@@ -39,12 +40,21 @@ static int die(const char *op)
     return 1;
 }
 
+static void print_key(const struct tc_key *key)
+{
+    char a[INET_ADDRSTRLEN],b[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET,&key->a_addr,a,sizeof(a));inet_ntop(AF_INET,&key->b_addr,b,sizeof(b));
+    printf("{\"a_ip\":\"%s\",\"a_port\":%u,\"b_ip\":\"%s\",\"b_port\":%u,\"protocol\":%u}",
+           a,tc_host_port(key->a_port),b,tc_host_port(key->b_port),key->protocol);
+}
+
 static void print_record(const struct tc_result *r)
 {
-    printf("{\"cpu\":%u,\"completed_ns\":%llu,\"mask\":%llu,\"label\":%d,"
+    printf("{\"key\":");print_key(&r->key);
+    printf(",\"mlp_input_direction\":%u,\"cpu\":%u,\"completed_ns\":%llu,\"mask\":%llu,\"label\":%d,"
            "\"model_slot\":%d,\"source_port\":%u,\"sequence\":%llu,\"features\":[",
-           r->cpu, (unsigned long long)r->completed_ns, (unsigned long long)r->stage_mask,
-           r->label, r->model_slot, ntohs((uint16_t)r->key.sport), (unsigned long long)r->sequence);
+           r->input_direction,r->cpu, (unsigned long long)r->completed_ns, (unsigned long long)r->stage_mask,
+           r->label, r->model_slot, ntohs((uint16_t)r->input.sport), (unsigned long long)r->sequence);
     for (int j = 0; j < 6; ++j) printf("%s%lld", j ? "," : "", (long long)r->features[j]);
     printf("],\"tensors\":[");
     for (int stage = 0; stage < 6; ++stage) {
@@ -66,13 +76,18 @@ static int snapshot(struct bpf_object *obj, int minimal)
            (unsigned long long)s.rejected, (unsigned long long)s.predictions, (unsigned long long)s.tail_failures);
     for (int i = 0; i < 6; ++i) printf("%s%llu", i ? "," : "", (unsigned long long)s.stages[i]);
     printf("],\"flow_full\":%llu,\"workspace_busy\":%llu,\"duplicate_triggers\":%llu,"
-           "\"inference_failures\":%llu,\"timestamp_reorders\":%llu,\"result_failures\":%llu,\"results\":[",
+           "\"inference_failures\":%llu,\"timestamp_reorders\":%llu,\"result_failures\":%llu,"
+           "\"egress_packets\":%llu,\"egress_bytes\":%llu,\"egress_matched\":%llu,"
+           "\"egress_rejected\":%llu,\"ingress_other_direction\":%llu,\"results\":[",
            (unsigned long long)s.flow_full, (unsigned long long)s.workspace_busy,
            (unsigned long long)s.duplicate_triggers, (unsigned long long)s.inference_failures,
-           (unsigned long long)s.timestamp_reorders, (unsigned long long)s.result_failures);
+           (unsigned long long)s.timestamp_reorders, (unsigned long long)s.result_failures,
+           (unsigned long long)s.egress_packets, (unsigned long long)s.egress_bytes,
+           (unsigned long long)s.egress_matched,(unsigned long long)s.egress_rejected,
+           (unsigned long long)s.ingress_other_direction);
     if (!minimal) {
         int fd = bpf_object__find_map_fd_by_name(obj, "results"), count = 0;
-        struct flow key, next, *previous = NULL;
+        struct tc_key key, next, *previous = NULL;
         while (!bpf_map_get_next_key(fd, previous, &next)) {
             struct tc_result r;
             if (bpf_map_lookup_elem(fd, &next, &r)) return die("result lookup");
@@ -86,16 +101,29 @@ static int snapshot(struct bpf_object *obj, int minimal)
     printf("],\"flows\":[");
     if (!minimal) {
         int fd = bpf_object__find_map_fd_by_name(obj, "flow_map"), count = 0;
-        struct flow key, next, *previous = NULL;
+        struct tc_key key, next, *previous = NULL;
         while (!bpf_map_get_next_key(fd, previous, &next)) {
             struct tc_flow f = {};
             if (bpf_map_lookup_elem_flags(fd, &next, &f, BPF_F_LOCK)) return die("locked flow lookup");
             printf("%s{\"source_port\":%u,\"packets\":%llu,\"bytes\":%llu,\"state\":%u,"
-                   "\"sequence\":%llu,\"duplicates\":%llu,\"failures\":%llu,\"timestamp_reorders\":%llu}",
-                   count++ ? "," : "", ntohs((uint16_t)next.sport), (unsigned long long)f.packets,
+                   "\"sequence\":%llu,\"duplicates\":%llu,\"failures\":%llu,\"timestamp_reorders\":%llu,",
+                   count++ ? "," : "", ntohs((uint16_t)f.input.sport), (unsigned long long)f.packets,
                    (unsigned long long)f.bytes, f.state, (unsigned long long)f.sequence,
                    (unsigned long long)f.duplicates, (unsigned long long)f.failures,
                    (unsigned long long)f.timestamp_reorders);
+            printf("\"key\":");print_key(&next);
+            printf(",\"input_initialized\":%s,\"mlp_input_direction\":%u,\"hooks\":{",f.input_initialized?"true":"false",f.input_direction);
+            for(int h=0;h<2;++h){
+                const struct tc_direction_stats *d=&f.hooks[h];
+                printf("%s\"%s\":{\"packets\":%llu,\"bytes\":%llu,\"first_ns\":%llu,\"last_ns\":%llu,"
+                       "\"timestamp_reorders\":%llu,\"tcp_flags\":%u}",h?",":"",h?"egress":"ingress",
+                       (unsigned long long)d->packets,(unsigned long long)d->bytes,
+                       (unsigned long long)d->first_ns,(unsigned long long)d->last_ns,
+                       (unsigned long long)d->timestamp_reorders,d->tcp_flags);
+            }
+            printf("},\"endpoint_packets\":[%llu,%llu],\"endpoint_bytes\":[%llu,%llu]}",
+                   (unsigned long long)f.endpoint_packets[0],(unsigned long long)f.endpoint_packets[1],
+                   (unsigned long long)f.endpoint_bytes[0],(unsigned long long)f.endpoint_bytes[1]);
             key = next; previous = &key;
             if (count > TC_FLOW_CAPACITY) return die("flow iteration limit");
         }
@@ -106,6 +134,23 @@ static int snapshot(struct bpf_object *obj, int minimal)
 }
 
 #include "kernel_checks.h"
+#include "bidirectional_checks.h"
+
+static int detach_owned(struct bpf_tc_hook *hook, u32 program_id, const char *direction)
+{
+    LIBBPF_OPTS(bpf_tc_opts, q, .handle=1, .priority=1);
+    if (bpf_tc_query(hook,&q) || q.prog_id!=program_id) {
+        fprintf(stderr,"Owned TC %s filter changed: refusing unknown detach\n",direction);
+        return 1;
+    }
+    LIBBPF_OPTS(bpf_tc_opts, d, .handle=1, .priority=1);
+    if (bpf_tc_detach(hook,&d)) return die("detach owned TC filter");
+    /* Exact post-detach GETTFILTER may return EINVAL after a chain disappears.
+     * Successful empty dumps of BOTH directions remain mandatory in the runner. */
+    printf("{\"event\":\"detach_acknowledged\",\"program_id\":%u,\"direction\":\"%s\","
+           "\"absence_verification\":\"pending_filter_dumps\"}\n",program_id,direction);
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -119,22 +164,38 @@ int main(int argc, char **argv)
     }
     int inspect = argc == 4 && !strcmp(argv[1], "--inspect");
     int kernel_test = argc == 4 && !strcmp(argv[1], "--kernel-tests");
-    if (!inspect && !kernel_test && (argc != 6 || strcmp(argv[1], "--run"))) {
-        fprintf(stderr, "Usage: controller --inspect OBJECT LOGDIR | --run OBJECT tcids-s0 NETNS_INODE LOGDIR | --list-ids prog|map\n"); return 2;
+    int bidirectional_test=argc==4 && !strcmp(argv[1],"--bidirectional-tests");
+    kernel_test|=bidirectional_test;
+    int serve=argc>=5 && !strcmp(argv[1],"--serve");
+    int run=argc>=6 && !strcmp(argv[1],"--run");
+    if (!inspect && !kernel_test && !run && !serve) {
+        fprintf(stderr, "Usage: controller --inspect OBJECT LOGDIR | --run OBJECT tcids-s0 NETNS_INODE LOGDIR [--egress-counter|--bidirectional] [--client-ip IP|any] | --serve OBJECT INTERFACE LOGDIR [--bidirectional] [--client-ip IP|any] | --kernel-tests OBJECT LOGDIR | --bidirectional-tests OBJECT LOGDIR | --list-ids prog|map\n"); return 2;
     }
-    const char *logdir = argv[(inspect || kernel_test) ? 3 : 5];
+    int egress_counter=0,bidirectional=0;
+    struct tc_config configuration={};
+    if(kernel_test){configuration.client_filter=1;configuration.client_ipv4=htonl(555819337);}
+    for(int i=serve?5:6;(run||serve)&&i<argc;++i){
+        if(!strcmp(argv[i],"--egress-counter"))egress_counter=1;
+        else if(!strcmp(argv[i],"--bidirectional"))bidirectional=1;
+        else if(!strcmp(argv[i],"--client-ip") && i+1<argc){
+            const char *address=argv[++i];
+            configuration.client_filter=strcmp(address,"any")!=0;
+            if(configuration.client_filter && inet_pton(AF_INET,address,&configuration.client_ipv4)!=1){fprintf(stderr,"Invalid client IPv4 address\n");return 2;}
+        }else{fprintf(stderr,"Unknown or incomplete option: %s\n",argv[i]);return 2;}
+    }
+    const char *logdir = argv[(inspect || kernel_test) ? 3 : serve?4:5];
     if (kernel_test && geteuid()) { fprintf(stderr,"Kernel tests require approved root invocation\n"); return 2; }
     if (!inspect && !kernel_test) {
         struct stat ns;
-        if (geteuid() || strcmp(argv[3], "tcids-s0") || stat("/proc/self/ns/net", &ns)
-            || ns.st_ino != strtoull(argv[4], NULL, 10)) {
+        if (geteuid() || (!serve && (strcmp(argv[3], "tcids-s0") || stat("/proc/self/ns/net", &ns)
+            || ns.st_ino != strtoull(argv[4], NULL, 10)))) {
             fprintf(stderr, "Refusing: require root, tcids-s0 and the runner-owned namespace inode\n"); return 2;
         }
     }
     setvbuf(stdout, NULL, _IOLBF, 0);
     signal(SIGINT, stop); signal(SIGTERM, stop);
-    int rc = 0, attached = 0, loaded = 0;
-    uint32_t entry_id = 0, program_ids[16] = {}, map_ids[16] = {};
+    int rc = 0, attached = 0, egress_attached = 0, loaded = 0;
+    uint32_t entry_id = 0, egress_id = 0, program_ids[16] = {}, map_ids[16] = {};
     int np = 0, nm = 0;
     char *logs[16] = {};
     struct bpf_object *obj = bpf_object__open_file(argv[2], NULL);
@@ -151,14 +212,23 @@ int main(int argc, char **argv)
         ++np;
     }
     int minimal = bpf_object__find_program_by_name(obj, "tc_minimal") != NULL;
-    if (np != (minimal ? 1 : 7)) { rc = die("unexpected program count"); goto out; }
+    if (np != (minimal ? 2 : 8)) { rc = die("unexpected program count"); goto out; }
+    map=bpf_object__find_map_by_name(obj,"stats");
+    if (!map || bpf_map__type(map)!=BPF_MAP_TYPE_ARRAY || bpf_map__max_entries(map)!=1
+        || bpf_map__key_size(map)!=sizeof(u32) || bpf_map__value_size(map)!=sizeof(struct ids_tc_stats)) {
+        fprintf(stderr,"Counter map ABI mismatch\n"); rc=1; goto out;
+    }
+    if ((egress_counter && (!minimal || bidirectional)) || (bidirectional && minimal)) {
+        fprintf(stderr,"Egress counter requires minimal object; bidirectional requires full object\n"); rc=1; goto out;
+    }
     if (!minimal) {
         const char *names[]={"flow_map","workspace","results"};
         const enum bpf_map_type types[]={BPF_MAP_TYPE_HASH,BPF_MAP_TYPE_PERCPU_ARRAY,BPF_MAP_TYPE_HASH};
         const size_t values[]={sizeof(struct tc_flow),sizeof(struct tc_workspace),sizeof(struct tc_result)};
         for (int i=0;i<3;++i) {
             map=bpf_object__find_map_by_name(obj,names[i]);
-            if (!map || bpf_map__type(map)!=types[i] || bpf_map__value_size(map)!=values[i]) {
+            if (!map || bpf_map__type(map)!=types[i] || bpf_map__value_size(map)!=values[i]
+                || bpf_map__key_size(map)!=(i==1?sizeof(u32):sizeof(struct tc_key))) {
                 fprintf(stderr,"TC state ABI mismatch: %s\n",names[i]); rc=1; goto out;
             }
         }
@@ -167,7 +237,10 @@ int main(int argc, char **argv)
     }
     printf("{\"event\":\"schema\",\"minimal\":%s,\"program_type\":3,\"programs\":%d,\"pins_disabled\":true}\n",
            minimal ? "true" : "false", np);
-    struct bpf_tc_hook hook = {.sz = sizeof(hook), .attach_point = BPF_TC_INGRESS};
+    /* LIBBPF_OPTS clears padding too: libbpf validates trailing bytes. Ordinary
+     * designated initializers can leave those bytes unspecified at -O2. */
+    LIBBPF_OPTS(bpf_tc_hook, hook, .attach_point=BPF_TC_INGRESS);
+    LIBBPF_OPTS(bpf_tc_hook, egress_hook, .attach_point=BPF_TC_EGRESS);
     if (inspect) goto out;
     if (!kernel_test) {
         hook.ifindex = if_nametoindex(argv[3]);
@@ -186,6 +259,8 @@ int main(int argc, char **argv)
         struct bpf_map_info info = {}; uint32_t len = sizeof(info);
         if (nm >= 16 || bpf_map_get_info_by_fd(bpf_map__fd(map), &info, &len)) { rc = die("map metadata"); goto out; }
         map_ids[nm++] = info.id;
+        printf("{\"event\":\"map\",\"name\":\"%s\",\"id\":%u,\"key_bytes\":%u,\"value_bytes\":%u}\n",
+               bpf_map__name(map),info.id,info.key_size,info.value_size);
     }
     printf("{\"event\":\"loaded\",\"program_ids\":[");
     for (int i=0;i<np;++i) printf("%s%u",i?",":"",program_ids[i]);
@@ -193,6 +268,12 @@ int main(int argc, char **argv)
     for (int i=0;i<nm;++i) printf("%s%u",i?",":"",map_ids[i]);
     printf("]}\n");
     if (!minimal) {
+        u32 configuration_zero=0;
+        int cfg=bpf_object__find_map_fd_by_name(obj,"tc_configuration");
+        if(bpf_map_update_elem(cfg,&configuration_zero,&configuration,BPF_ANY) || bpf_map_freeze(cfg)){rc=die("configure private client filter");goto out;}
+        char client[INET_ADDRSTRLEN];inet_ntop(AF_INET,&configuration.client_ipv4,client,sizeof(client));
+        printf("{\"event\":\"configuration\",\"client_filter\":%s,\"client_ipv4\":\"%s\",\"mlp_input\":\"first eligible ingress leg only\"}\n",
+               configuration.client_filter?"true":"false",client);
         struct Net net = {}, actual;
         memcpy(net.layer_0_weight, layer_0_weight, sizeof(layer_0_weight));
         memcpy(net.layer_1_weight, layer_1_weight, sizeof(layer_1_weight));
@@ -225,21 +306,34 @@ int main(int argc, char **argv)
     }
     if (kernel_test) {
         if (minimal) { fprintf(stderr,"Kernel suite requires the full TC object\n"); rc=1; }
-        else rc=kernel_checks(obj);
+        else rc=bidirectional_test?kernel_bidirectional_checks(obj):kernel_checks(obj);
         goto out;
     }
     p = bpf_object__find_program_by_name(obj, minimal ? "tc_minimal" : "tc_entry");
     if (bpf_tc_hook_create(&hook)) { rc = die("create private clsact (existing qdisc refused)"); goto out; }
-    struct bpf_tc_opts opts = {.sz = sizeof(opts), .prog_fd = bpf_program__fd(p), .handle = 1, .priority = 1};
+    printf("{\"event\":\"qdisc_created\",\"ifindex\":%d}\n",hook.ifindex);
+    LIBBPF_OPTS(bpf_tc_opts, opts, .prog_fd=bpf_program__fd(p), .handle=1, .priority=1);
     if (bpf_tc_attach(&hook, &opts)) { rc = die("TC ingress attach"); goto out; }
     attached = 1; entry_id = opts.prog_id;
-    struct bpf_tc_opts query = {.sz = sizeof(query), .handle = 1, .priority = 1};
+    LIBBPF_OPTS(bpf_tc_opts, query, .handle=1, .priority=1);
     if (bpf_tc_query(&hook, &query) || query.prog_id != entry_id) { rc = die("TC attachment query"); goto out; }
+    if (egress_counter || bidirectional) {
+        egress_hook.ifindex=hook.ifindex;
+        p=bpf_object__find_program_by_name(obj,egress_counter?"tc_minimal_egress":"tc_egress");
+        if (!p) { fprintf(stderr,"Egress counter program missing\n"); rc=1; goto out; }
+        LIBBPF_OPTS(bpf_tc_opts, eo, .prog_fd=bpf_program__fd(p), .handle=1, .priority=1);
+        if (bpf_tc_attach(&egress_hook,&eo)) { rc=die("TC egress attach"); goto out; }
+        egress_attached=1; egress_id=eo.prog_id;
+        LIBBPF_OPTS(bpf_tc_opts, eq, .handle=1, .priority=1);
+        if (bpf_tc_query(&egress_hook,&eq) || eq.prog_id!=egress_id) { rc=die("TC egress attachment query"); goto out; }
+    }
     printf("{\"event\":\"ready\",\"ifindex\":%d,\"program_id\":%u,\"handle\":1,\"priority\":1,\"program_ids\":[", hook.ifindex, entry_id);
     for (int i = 0; i < np; ++i) printf("%s%u", i ? "," : "", program_ids[i]);
     printf("],\"map_ids\":[");
     for (int i = 0; i < nm; ++i) printf("%s%u", i ? "," : "", map_ids[i]);
-    printf("]}\n");
+    printf("]");
+    if (egress_attached) printf(",\"egress_program_id\":%u",egress_id);
+    printf("}\n");
     while (!exiting) {
         struct pollfd fds = {.fd = STDIN_FILENO, .events = POLLIN};
         int n = poll(&fds, 1, 500);
@@ -251,24 +345,8 @@ int main(int argc, char **argv)
         else { errno = EINVAL; rc = die("unknown control command"); break; }
     }
 out:
-    if (attached) {
-        struct bpf_tc_opts q = {.sz = sizeof(q), .handle = 1, .priority = 1};
-        if (bpf_tc_query(&hook, &q) || q.prog_id != entry_id) {
-            fprintf(stderr, "Owned TC filter changed: refusing to detach an unknown program\n"); rc = 1;
-        } else {
-            struct bpf_tc_opts d = {.sz = sizeof(d), .handle = 1, .priority = 1};
-            if (bpf_tc_detach(&hook, &d)) rc = die("detach owned filter");
-            else {
-                /* An exact GETTFILTER can return EINVAL when deleting the last
-                 * filter also removes its chain. Do not interpret query errors
-                 * as absence: the runner must dump BOTH directions successfully
-                 * and verify empty results before removing our clsact.
-                 */
-                printf("{\"event\":\"detach_acknowledged\",\"program_id\":%u,"
-                       "\"absence_verification\":\"pending_filter_dumps\"}\n", entry_id);
-            }
-        }
-    }
+    if (egress_attached && detach_owned(&egress_hook,egress_id,"egress")) rc=1;
+    if (attached && detach_owned(&hook,entry_id,"ingress")) rc=1;
     int i = 0;
     bpf_object__for_each_program(p, obj) {
         char path[4096]; snprintf(path, sizeof(path), "%s/verifier-%s.log", logdir, bpf_program__name(p));

@@ -1,0 +1,127 @@
+{
+  "packets": [
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 74,
+      "segment_bytes": 40,
+      "tcp_header_bytes": 40,
+      "tcp_flags": 2,
+      "sequence": 4118724630
+    },
+    {
+      "hook": "egress",
+      "source_ip": "33.33.33.1",
+      "source_port": 5001,
+      "dest_ip": "33.33.33.73",
+      "dest_port": 40004,
+      "skb_bytes": 74,
+      "segment_bytes": 40,
+      "tcp_header_bytes": 40,
+      "tcp_flags": 18,
+      "sequence": 2152751340
+    },
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 16,
+      "sequence": 4118724631
+    },
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 72,
+      "segment_bytes": 38,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 24,
+      "sequence": 4118724631
+    },
+    {
+      "hook": "egress",
+      "source_ip": "33.33.33.1",
+      "source_port": 5001,
+      "dest_ip": "33.33.33.73",
+      "dest_port": 40004,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 16,
+      "sequence": 2152751341
+    },
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 17,
+      "sequence": 4118724637
+    },
+    {
+      "hook": "egress",
+      "source_ip": "33.33.33.1",
+      "source_port": 5001,
+      "dest_ip": "33.33.33.73",
+      "dest_port": 40004,
+      "skb_bytes": 77,
+      "segment_bytes": 43,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 24,
+      "sequence": 2152751341
+    },
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 16,
+      "sequence": 4118724638
+    },
+    {
+      "hook": "egress",
+      "source_ip": "33.33.33.1",
+      "source_port": 5001,
+      "dest_ip": "33.33.33.73",
+      "dest_port": 40004,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 17,
+      "sequence": 2152751352
+    },
+    {
+      "hook": "ingress",
+      "source_ip": "33.33.33.73",
+      "source_port": 40004,
+      "dest_ip": "33.33.33.1",
+      "dest_port": 5001,
+      "skb_bytes": 66,
+      "segment_bytes": 32,
+      "tcp_header_bytes": 32,
+      "tcp_flags": 16,
+      "sequence": 4118724638
+    }
+  ],
+  "capture_packets": 15,
+  "capture_drops": 0,
+  "basis": "AF_PACKET skb observations; timing is not TC helper timing"
+}

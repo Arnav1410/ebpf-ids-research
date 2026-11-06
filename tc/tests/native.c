@@ -5,25 +5,34 @@
 #include <assert.h>
 #include "../id_scan.h"
 #include "../tc_ids.bpf.c"
+/* Compile the actual minimal-hook source too; the host helpers direct its
+ * renamed map to the same test counters. This is not kernel execution. */
+#define stats minimal_stats
+#define __license minimal_license
+#include "../tc_min.bpf.c"
+#undef TC_MINIMAL
+#undef __license
+#undef stats
 #undef PARAMS_BPF_H
 #include "../../src/mlp_params.bpf.h"
 #define HOST_CAPACITY 64
-static struct flow keys[HOST_CAPACITY];
+static struct tc_key keys[HOST_CAPACITY];
 static struct tc_flow attrs[HOST_CAPACITY];
 static struct tc_result records[HOST_CAPACITY];
 static int recorded[HOST_CAPACITY], count, capacity = HOST_CAPACITY;
 static pthread_mutex_t table_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct Net model;
 static struct ids_tc_stats counters;
+static struct tc_config configuration;
 static int32_t active;
 static int missing_slot = -1, result_failure, creator_race, stats_missing;
 static _Thread_local struct tc_workspace work;
 static _Thread_local const unsigned char *frame;
 static _Thread_local unsigned int frame_length;
 static _Thread_local uint64_t now;
-static _Thread_local struct flow last_key;
+static _Thread_local struct tc_key last_key;
 static _Thread_local int held;
-static int find(const struct flow *key)
+static int find(const struct tc_key *key)
 {
     for (int i = 0; i < count; ++i) if (!memcmp(&keys[i], key, sizeof(*key))) return i;
     return -1;
@@ -47,7 +56,8 @@ int tc_test_load(void *ctx, unsigned int offset, void *dst, unsigned int length)
 void *validation_lookup(void *map, const void *key)
 {
     assert(!held);
-    if (map == &stats) return stats_missing ? NULL : &counters;
+    if (map == &stats || map == &minimal_stats) return stats_missing ? NULL : &counters;
+    if (map == &tc_configuration) return &configuration;
     if (map == &workspace) return &work;
     if (map == &nn_idx) return &active;
     if (map == &nn_parameters) return *(const int32_t *)key >= 0 && *(const int32_t *)key < 2 ? &model : 0;
@@ -90,6 +100,7 @@ void host_reset(void)
 {
     count = 0; active = 0; missing_slot = -1; result_failure = creator_race = stats_missing = 0;
     capacity = HOST_CAPACITY; held = 0;
+    configuration=(struct tc_config){.client_filter=1,.client_ipv4=__builtin_bswap32(555819337)};
     memset(&counters, 0, sizeof(counters)); memset(&work, 0, sizeof(work));
     memset(keys, 0, sizeof(keys)); memset(attrs, 0, sizeof(attrs));
     memset(records, 0, sizeof(records)); memset(recorded, 0, sizeof(recorded));
@@ -103,8 +114,28 @@ int host_packet(const unsigned char *data, unsigned int len, uint64_t timestamp)
 {
     frame = data; frame_length = len; now = timestamp;
     struct __sk_buff skb = {.len = len}; struct tcphdr tcp; u64 segment;
-    tc_parse(&skb, &last_key, &tcp, &segment);
+    struct flow input={};
+    if(!tc_parse(&skb,&input,&tcp,&segment))tc_key_build(&input,&last_key);
     return tc_entry(&skb);
+}
+int host_egress_packet(const unsigned char *data,unsigned len,uint64_t timestamp)
+{
+    frame=data;frame_length=len;now=timestamp;
+    struct __sk_buff skb={.len=len};struct flow input={};struct tcphdr tcp;u64 length;
+    if(!tc_parse(&skb,&input,&tcp,&length))tc_key_build(&input,&last_key);
+    return tc_egress(&skb);
+}
+void host_filter(int enabled,u32 ipv4){configuration=(struct tc_config){enabled,ipv4};}
+void host_directional(u64 *out)
+{
+    memset(out,0,12*sizeof(*out));struct tc_flow *f=validation_lookup(&flow_map,&last_key);
+    if(!f)return;
+    tc_test_lock(&f->lock);
+    for(int hook=0;hook<2;++hook){out[hook*4]=f->hooks[hook].packets;out[hook*4+1]=f->hooks[hook].bytes;
+        out[hook*4+2]=f->hooks[hook].first_ns;out[hook*4+3]=f->hooks[hook].last_ns;}
+    out[8]=f->endpoint_packets[0];out[9]=f->endpoint_packets[1];
+    out[10]=f->input_initialized;out[11]=f->input_direction;
+    tc_test_unlock(&f->lock);
 }
 int host_parse(const unsigned char *data, unsigned int len)
 {
@@ -114,9 +145,17 @@ int host_parse(const unsigned char *data, unsigned int len)
 }
 void host_select_port(unsigned int port)
 {
-    last_key = (struct flow){.saddr=__builtin_bswap32(555819337),
+    struct flow tuple = {.saddr=__builtin_bswap32(555819337),
         .daddr=__builtin_bswap32(555819265), .sport=__builtin_bswap16((uint16_t)port),
         .dport=__builtin_bswap16(5001)};
+    tc_key_build(&tuple,&last_key);
+}
+unsigned host_key(const unsigned char *data,unsigned len,u32 *key)
+{
+    frame=data;frame_length=len;struct __sk_buff skb={.len=len};
+    struct flow tuple={};struct tcphdr tcp;u64 segment;struct tc_key k={};
+    if(tc_parse(&skb,&tuple,&tcp,&segment))return 2;
+    unsigned direction=tc_key_build(&tuple,&k);memcpy(key,&k,sizeof(k));return direction;
 }
 void host_record(int64_t *features, int32_t *tensors, int32_t *label, uint64_t *mask)
 {
@@ -145,6 +184,19 @@ void host_model_slot(int value) { active = value; }
 void host_missing_stats(int value) { stats_missing = value; }
 void host_busy(int value) { work.busy = value; }
 int host_is_busy(void) { return work.busy; }
+int host_minimal_ingress(unsigned int length)
+{
+    struct __sk_buff skb={.len=length}; return tc_minimal(&skb);
+}
+int host_minimal_egress(unsigned int length)
+{
+    struct __sk_buff skb={.len=length}; return tc_minimal_egress(&skb);
+}
+void host_hook_counters(uint64_t *out)
+{
+    out[0]=counters.packets; out[1]=counters.bytes;
+    out[2]=counters.egress_packets; out[3]=counters.egress_bytes;
+}
 
 /* Test the exact registry-walk helper using a synthetic GET_NEXT_ID callback.
  * These tests do not call bpf() and do not establish kernel cleanup.

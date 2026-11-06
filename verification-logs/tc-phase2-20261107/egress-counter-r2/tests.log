@@ -1,0 +1,32 @@
+test_attachment_uses_structured_id_and_direct_action (test_tc.CleanupEvidence) ... ok
+test_cleanup_id_failure_still_checks_filters_and_reports_failure (test_tc.CleanupEvidence) ... ok
+test_controller_error_does_not_skip_resource_absence_checks (test_tc.CleanupEvidence) ... ok
+test_detach_requires_ack_for_exact_program (test_tc.CleanupEvidence) ... ok
+test_only_successful_empty_dump_establishes_absence (test_tc.CleanupEvidence) ... ok
+test_two_hook_detach_requires_each_id_and_direction (test_tc.CleanupEvidence) ... ok
+test_capacity_and_reentrant_workspace_rejection_pass_packets (test_tc.HostTC) ... ok
+test_creation_race_relooks_up_winning_value (test_tc.HostTC) ... ok
+test_duplicate_fin_is_counted_without_reinference (test_tc.HostTC) ... ok
+test_each_missing_tail_target_releases_owner_and_retries (test_tc.HostTC) ... ok
+test_fragments_and_invalid_doff_pass_unscored (test_tc.HostTC) ... ok
+test_golden_six_features_and_all_layers (test_tc.HostTC) ... ok
+test_ipv4_options_are_parsed_at_correct_tcp_offset (test_tc.HostTC) ... ok
+test_minimal_both_hooks_pass_when_stats_missing (test_tc.HostTC) ... ok
+test_minimal_hook_counters_are_separate_and_pass_packets (test_tc.HostTC) ... ok
+test_missing_model_and_result_publication_failures_are_retryable (test_tc.HostTC) ... ok
+test_missing_stats_value_passes_without_inference_or_owner_leak (test_tc.HostTC) ... ok
+test_out_of_order_helper_samples_never_underflow_iat (test_tc.HostTC) ... ok
+test_registry_walk_does_not_treat_errors_as_absence (test_tc.HostTC) ... ok
+test_registry_walk_sparse_ids_and_empty_registry (test_tc.HostTC) ... ok
+test_reorder_policy_can_overestimate_chronological_sample_gap (test_tc.HostTC) ... ok
+test_reorder_policy_can_underestimate_chronological_sample_gap (test_tc.HostTC) ... ok
+test_rst_triggers (test_tc.HostTC) ... ok
+test_same_flow_host_concurrent_updates_and_duplicate_triggers (test_tc.HostTC) ... ok
+test_source_gate_and_nonclosing_traffic (test_tc.HostTC) ... ok
+test_ten_distinct_simultaneous_host_flows_keep_results (test_tc.HostTC) ... ok
+test_truncation_and_invalid_lengths_pass_unscored (test_tc.HostTC) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.118s
+
+OK

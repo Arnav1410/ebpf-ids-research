@@ -1,0 +1,1 @@
+["ip", "netns", "exec", "tcids-server", "/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--run", "/home/arnav/research/ebpf-ids-research/tc/.output/tc_min.bpf.o", "tcids-s0", "4026532228", "/home/arnav/research/ebpf-ids-research/verification-logs/tc-phase2-20261107/egress-counter-ready/run-20261107-013013-234147/egress-counter", "--egress-counter"]

@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "flows": 1,
+  "non_timing_features_checked": 5,
+  "comparisons": [
+    {
+      "source_port": 43000,
+      "key": {
+        "a_ip": "33.33.33.1",
+        "a_port": 5001,
+        "b_ip": "33.33.33.73",
+        "b_port": 43000,
+        "protocol": 6
+      },
+      "ingress_packets": 31,
+      "ingress_bytes": 2822,
+      "egress_packets": 20,
+      "egress_bytes": 1339,
+      "expected_non_timing_features": [
+        644,
+        null,
+        32,
+        5001,
+        936,
+        29
+      ],
+      "kernel_features": [
+        644,
+        86709,
+        32,
+        5001,
+        936,
+        29
+      ],
+      "status": "PASS",
+      "iat_comparison": "NOT TESTED: AF_PACKET timestamps are not TC helper samples"
+    }
+  ],
+  "counter_basis": "Independent AF_PACKET observations in this isolated small-packet test; not general offload equivalence"
+}

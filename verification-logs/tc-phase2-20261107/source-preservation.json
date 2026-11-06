@@ -1,0 +1,12 @@
+{
+  "phase1_checkpoint": "3dc5fe0f1a9ef0475cb2e198e5974c14700332dc",
+  "shared_six_stage_source_identical": true,
+  "six_stage_source_sha256": "7bd19442c234dc3a934debd4e181c4452b030ef9e0d221d7efb1a90ae1fa8a1e",
+  "inference_ownership_tailcall_publication_helpers_identical": true,
+  "helper_source_sha256": "18da35fa77e023a71cccb4d46331f2b935409c216e73dcf760677c03c4d78878",
+  "prepared_manifest": {
+    "protected": true,
+    "prototype": true
+  },
+  "prepared_manifest_entries": 56
+}

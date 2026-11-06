@@ -1,0 +1,2 @@
+{"argv": ["make", "-C", "tc"], "exit_code": 0, "log": "build.log"}
+{"argv": ["clang-12", "-O3", "-shared", "-fPIC", "-pthread", "-I/home/arnav/research/ebpf-ids-research/tc/tests/include", "-I/home/arnav/research/ebpf-ids-research/validation/include", "/home/arnav/research/ebpf-ids-research/tc/tests/native.c", "-o", "/home/arnav/research/ebpf-ids-research/verification-logs/tc-phase2-20261107/directional-host/host-tc.so"], "exit_code": 0, "log": "build-host-tests.log"}
