@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0
+#define _GNU_SOURCE
 #include <bpf/bpf.h>
 #include <bpf/libbpf.h>
 #include <arpa/inet.h>
@@ -16,15 +17,16 @@
 typedef int64_t s64;
 typedef int32_t s32;
 typedef uint64_t u64;
+typedef uint32_t u32;
 #define __uint(n, v) int (*n)[v]
 #define __type(n, v) v *n
 #define SEC(n)
 #define LIBBPF_PIN_BY_NAME 1
-#include "../src/common.h"
 #include "../src/params.bpf.h"
 #undef PARAMS_BPF_H
 #include "../src/mlp_params.bpf.h"
 #include "abi.h"
+_Static_assert(sizeof(struct tc_workspace) % 8 == 0, "per-CPU value stride must be aligned");
 
 static const char *stages[] = {"tc_preprocessing", "tc_input_linear", "tc_input_relu",
     "tc_hidden_linear", "tc_hidden_relu", "tc_output_linear"};
@@ -37,6 +39,22 @@ static int die(const char *op)
     return 1;
 }
 
+static void print_record(const struct tc_result *r)
+{
+    printf("{\"cpu\":%u,\"completed_ns\":%llu,\"mask\":%llu,\"label\":%d,"
+           "\"model_slot\":%d,\"source_port\":%u,\"sequence\":%llu,\"features\":[",
+           r->cpu, (unsigned long long)r->completed_ns, (unsigned long long)r->stage_mask,
+           r->label, r->model_slot, ntohs((uint16_t)r->key.sport), (unsigned long long)r->sequence);
+    for (int j = 0; j < 6; ++j) printf("%s%lld", j ? "," : "", (long long)r->features[j]);
+    printf("],\"tensors\":[");
+    for (int stage = 0; stage < 6; ++stage) {
+        printf("%s[", stage ? "," : "");
+        for (int j = 0; j < sizes[stage]; ++j) printf("%s%d", j ? "," : "", r->tensors[stage][j]);
+        printf("]");
+    }
+    printf("]}");
+}
+
 static int snapshot(struct bpf_object *obj, int minimal)
 {
     uint32_t zero = 0;
@@ -47,36 +65,47 @@ static int snapshot(struct bpf_object *obj, int minimal)
            (unsigned long long)s.packets, (unsigned long long)s.bytes, (unsigned long long)s.matched,
            (unsigned long long)s.rejected, (unsigned long long)s.predictions, (unsigned long long)s.tail_failures);
     for (int i = 0; i < 6; ++i) printf("%s%llu", i ? "," : "", (unsigned long long)s.stages[i]);
-    printf("],\"results\":[");
+    printf("],\"flow_full\":%llu,\"workspace_busy\":%llu,\"duplicate_triggers\":%llu,"
+           "\"inference_failures\":%llu,\"timestamp_reorders\":%llu,\"result_failures\":%llu,\"results\":[",
+           (unsigned long long)s.flow_full, (unsigned long long)s.workspace_busy,
+           (unsigned long long)s.duplicate_triggers, (unsigned long long)s.inference_failures,
+           (unsigned long long)s.timestamp_reorders, (unsigned long long)s.result_failures);
     if (!minimal) {
-        int cpus = libbpf_num_possible_cpus();
-        if (cpus <= 0) return die("CPU count");
-        struct tc_result *r = calloc(cpus, sizeof(*r));
-        if (!r) return die("result allocation");
-        if (bpf_map_lookup_elem(bpf_object__find_map_fd_by_name(obj, "results"), &zero, r)) {
-            free(r); return die("result lookup");
+        int fd = bpf_object__find_map_fd_by_name(obj, "results"), count = 0;
+        struct flow key, next, *previous = NULL;
+        while (!bpf_map_get_next_key(fd, previous, &next)) {
+            struct tc_result r;
+            if (bpf_map_lookup_elem(fd, &next, &r)) return die("result lookup");
+            if (count++) printf(",");
+            print_record(&r);
+            key = next; previous = &key;
+            if (count > TC_FLOW_CAPACITY) return die("result iteration limit");
         }
-        int count = 0;
-        for (int cpu = 0; cpu < cpus; ++cpu) {
-            if (!r[cpu].completed_ns) continue;
-            printf("%s{\"cpu\":%d,\"completed_ns\":%llu,\"mask\":%llu,\"label\":%d,"
-                   "\"model_slot\":%d,\"source_port\":%u,\"features\":[", count++ ? "," : "", cpu,
-                   (unsigned long long)r[cpu].completed_ns, (unsigned long long)r[cpu].stage_mask,
-                   r[cpu].label, r[cpu].model_slot, ntohs((uint16_t)r[cpu].key.sport));
-            for (int j = 0; j < 6; ++j) printf("%s%lld", j ? "," : "", (long long)r[cpu].features[j]);
-            printf("],\"tensors\":[");
-            for (int stage = 0; stage < 6; ++stage) {
-                printf("%s[", stage ? "," : "");
-                for (int j = 0; j < sizes[stage]; ++j) printf("%s%d", j ? "," : "", r[cpu].tensors[stage][j]);
-                printf("]");
-            }
-            printf("]}");
+        if (errno != ENOENT) return die("result key iteration");
+    }
+    printf("],\"flows\":[");
+    if (!minimal) {
+        int fd = bpf_object__find_map_fd_by_name(obj, "flow_map"), count = 0;
+        struct flow key, next, *previous = NULL;
+        while (!bpf_map_get_next_key(fd, previous, &next)) {
+            struct tc_flow f = {};
+            if (bpf_map_lookup_elem_flags(fd, &next, &f, BPF_F_LOCK)) return die("locked flow lookup");
+            printf("%s{\"source_port\":%u,\"packets\":%llu,\"bytes\":%llu,\"state\":%u,"
+                   "\"sequence\":%llu,\"duplicates\":%llu,\"failures\":%llu,\"timestamp_reorders\":%llu}",
+                   count++ ? "," : "", ntohs((uint16_t)next.sport), (unsigned long long)f.packets,
+                   (unsigned long long)f.bytes, f.state, (unsigned long long)f.sequence,
+                   (unsigned long long)f.duplicates, (unsigned long long)f.failures,
+                   (unsigned long long)f.timestamp_reorders);
+            key = next; previous = &key;
+            if (count > TC_FLOW_CAPACITY) return die("flow iteration limit");
         }
-        free(r);
+        if (errno != ENOENT) return die("flow key iteration");
     }
     printf("]}\n"); fflush(stdout);
     return 0;
 }
+
+#include "kernel_checks.h"
 
 int main(int argc, char **argv)
 {
@@ -89,11 +118,13 @@ int main(int argc, char **argv)
         return rc ? 1 : 0;
     }
     int inspect = argc == 4 && !strcmp(argv[1], "--inspect");
-    if (!inspect && (argc != 6 || strcmp(argv[1], "--run"))) {
+    int kernel_test = argc == 4 && !strcmp(argv[1], "--kernel-tests");
+    if (!inspect && !kernel_test && (argc != 6 || strcmp(argv[1], "--run"))) {
         fprintf(stderr, "Usage: controller --inspect OBJECT LOGDIR | --run OBJECT tcids-s0 NETNS_INODE LOGDIR | --list-ids prog|map\n"); return 2;
     }
-    const char *logdir = argv[inspect ? 3 : 5];
-    if (!inspect) {
+    const char *logdir = argv[(inspect || kernel_test) ? 3 : 5];
+    if (kernel_test && geteuid()) { fprintf(stderr,"Kernel tests require approved root invocation\n"); return 2; }
+    if (!inspect && !kernel_test) {
         struct stat ns;
         if (geteuid() || strcmp(argv[3], "tcids-s0") || stat("/proc/self/ns/net", &ns)
             || ns.st_ino != strtoull(argv[4], NULL, 10)) {
@@ -121,12 +152,27 @@ int main(int argc, char **argv)
     }
     int minimal = bpf_object__find_program_by_name(obj, "tc_minimal") != NULL;
     if (np != (minimal ? 1 : 7)) { rc = die("unexpected program count"); goto out; }
+    if (!minimal) {
+        const char *names[]={"flow_map","workspace","results"};
+        const enum bpf_map_type types[]={BPF_MAP_TYPE_HASH,BPF_MAP_TYPE_PERCPU_ARRAY,BPF_MAP_TYPE_HASH};
+        const size_t values[]={sizeof(struct tc_flow),sizeof(struct tc_workspace),sizeof(struct tc_result)};
+        for (int i=0;i<3;++i) {
+            map=bpf_object__find_map_by_name(obj,names[i]);
+            if (!map || bpf_map__type(map)!=types[i] || bpf_map__value_size(map)!=values[i]) {
+                fprintf(stderr,"TC state ABI mismatch: %s\n",names[i]); rc=1; goto out;
+            }
+        }
+        printf("{\"event\":\"state_abi\",\"flow_bytes\":%zu,\"workspace_bytes\":%zu,\"result_bytes\":%zu}\n",
+               sizeof(struct tc_flow),sizeof(struct tc_workspace),sizeof(struct tc_result));
+    }
     printf("{\"event\":\"schema\",\"minimal\":%s,\"program_type\":3,\"programs\":%d,\"pins_disabled\":true}\n",
            minimal ? "true" : "false", np);
     struct bpf_tc_hook hook = {.sz = sizeof(hook), .attach_point = BPF_TC_INGRESS};
     if (inspect) goto out;
-    hook.ifindex = if_nametoindex(argv[3]);
-    if (!hook.ifindex) { rc = die("test interface missing"); goto out; }
+    if (!kernel_test) {
+        hook.ifindex = if_nametoindex(argv[3]);
+        if (!hook.ifindex) { rc = die("test interface missing"); goto out; }
+    }
     if (bpf_object__load(obj)) { rc = die("TC load/verifier"); goto out; }
     loaded = 1;
     int pi = 0;
@@ -141,6 +187,11 @@ int main(int argc, char **argv)
         if (nm >= 16 || bpf_map_get_info_by_fd(bpf_map__fd(map), &info, &len)) { rc = die("map metadata"); goto out; }
         map_ids[nm++] = info.id;
     }
+    printf("{\"event\":\"loaded\",\"program_ids\":[");
+    for (int i=0;i<np;++i) printf("%s%u",i?",":"",program_ids[i]);
+    printf("],\"map_ids\":[");
+    for (int i=0;i<nm;++i) printf("%s%u",i?",":"",map_ids[i]);
+    printf("]}\n");
     if (!minimal) {
         struct Net net = {}, actual;
         memcpy(net.layer_0_weight, layer_0_weight, sizeof(layer_0_weight));
@@ -155,6 +206,7 @@ int main(int argc, char **argv)
                 || bpf_map_lookup_elem(params, &slot, &actual) || memcmp(&net, &actual, sizeof(net))) {
                 rc = die("model write/readback"); goto out;
             }
+        if (bpf_map_freeze(params)) { rc = die("freeze private static model"); goto out; }
         int zero = 0;
         if (bpf_map_update_elem(index_fd, &zero, &zero, BPF_ANY)) { rc = die("select model"); goto out; }
         for (uint32_t i = 0; i < 6; ++i) {
@@ -170,6 +222,11 @@ int main(int argc, char **argv)
             printf("{\"event\":\"tail_slot\",\"slot\":%u,\"program_id\":%u,\"type\":3}\n", i, id);
         }
         printf("{\"event\":\"model\",\"bytes_per_slot\":%zu,\"slots_verified\":2,\"active\":0}\n", sizeof(net));
+    }
+    if (kernel_test) {
+        if (minimal) { fprintf(stderr,"Kernel suite requires the full TC object\n"); rc=1; }
+        else rc=kernel_checks(obj);
+        goto out;
     }
     p = bpf_object__find_program_by_name(obj, minimal ? "tc_minimal" : "tc_entry");
     if (bpf_tc_hook_create(&hook)) { rc = die("create private clsact (existing qdisc refused)"); goto out; }

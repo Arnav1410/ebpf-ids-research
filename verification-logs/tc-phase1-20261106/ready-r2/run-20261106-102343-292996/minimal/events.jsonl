@@ -1,0 +1,7 @@
+{"event":"schema","minimal":true,"program_type":3,"programs":1,"pins_disabled":true}
+{"event":"loaded","program_ids":[43],"map_ids":[22]}
+{"event":"ready","ifindex":3,"program_id":43,"handle":1,"priority":1,"program_ids":[43],"map_ids":[22]}
+{"event":"snapshot","packets":7,"bytes":452,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"flow_full":0,"workspace_busy":0,"duplicate_triggers":0,"inference_failures":0,"timestamp_reorders":0,"result_failures":0,"results":[],"flows":[]}
+{"event":"snapshot","packets":7,"bytes":452,"matched":0,"rejected":0,"predictions":0,"tail_failures":0,"stages":[0,0,0,0,0,0],"flow_full":0,"workspace_busy":0,"duplicate_triggers":0,"inference_failures":0,"timestamp_reorders":0,"result_failures":0,"results":[],"flows":[]}
+{"event":"detach_acknowledged","program_id":43,"absence_verification":"pending_filter_dumps"}
+{"event":"closed","qdisc_cleanup":"runner-owned interface only"}

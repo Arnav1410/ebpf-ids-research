@@ -1,0 +1,187 @@
+{
+  "phase1": "VERIFIED",
+  "phase2": "DEFERRED AT USER REQUEST",
+  "branch": "feature/tc-concurrency-bidirectional",
+  "recorded_preparation_commit": "f06718f611a0f816048dfe254ef7a2f8edc6f788",
+  "successful_run": "verification-logs/tc-phase1-20261106/ready-r2/run-20261106-102343-292996",
+  "runtime_checksums_verified": 111,
+  "verifier_program_acceptances": 22,
+  "runtime_inputs_match_prepared_hashes": true,
+  "documentation_changes_after_execution": [
+    "tc/README.md"
+  ],
+  "prepared_manifest_sha256": "ab634a00b7b46204c48903eefda8f9aa0f4316060d7bd742663381be09ed0d4d",
+  "bpf_sha256": "b35aa5d5459c7f13a2a7e01d942cf02ac65e4e906d4b9a487e72c72ddc87ac70",
+  "independent_offline_replay": {
+    "kernel_test_run": {
+      "records": 23,
+      "tensors": 138,
+      "integers": 3128
+    },
+    "attached_ingress": {
+      "records": 1,
+      "tensors": 6,
+      "integers": 136
+    },
+    "attached_ten_flows": {
+      "records": 10,
+      "tensors": 60,
+      "integers": 1360
+    }
+  },
+  "total_stage_tensors": 204,
+  "total_integer_comparisons": 4624,
+  "kernel_cases": [
+    "all_missing_tail_slots_retry",
+    "distinct_flows",
+    "duplicate_result_immutable",
+    "fixed_mean_above_below_full_chain",
+    "flow_capacity_pass",
+    "injected_reentrancy_guard",
+    "malformed_pass_unscored",
+    "missing_model_retry",
+    "result_capacity_retry",
+    "same_flow"
+  ],
+  "same_flow": {
+    "source_port": 41000,
+    "packets": 1033,
+    "bytes": 20660,
+    "state": 2,
+    "sequence": 1,
+    "duplicates": 8,
+    "failures": 0,
+    "timestamp_reorders": 26
+  },
+  "observed_cpu_affinities": [
+    {
+      "event": "kernel_case",
+      "name": "same_flow",
+      "workers": 4,
+      "calls_per_worker": 257,
+      "cpu_affinities": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "assertions": "PASS",
+      "interleaving": "opportunity, not forced scheduling"
+    },
+    {
+      "event": "kernel_case",
+      "name": "distinct_flows",
+      "workers": 10,
+      "calls_per_worker": 65,
+      "cpu_affinities": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "assertions": "PASS",
+      "interleaving": "opportunity, not forced scheduling"
+    }
+  ],
+  "live_ten_flows": {
+    "packets": 60,
+    "bytes": 4100,
+    "predictions": 10,
+    "stages": [
+      10,
+      10,
+      10,
+      10,
+      10,
+      10
+    ],
+    "tail_failures": 0
+  },
+  "cleanup": {
+    "kernel-checks": {
+      "program_ids": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "map_ids": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "all_absent": true
+    },
+    "minimal": {
+      "program_ids": [
+        43
+      ],
+      "map_ids": [
+        22
+      ],
+      "all_absent": true
+    },
+    "inference": {
+      "program_ids": [
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53
+      ],
+      "map_ids": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "all_absent": true
+    },
+    "concurrent": {
+      "program_ids": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "map_ids": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "all_absent": true
+    }
+  },
+  "limitations": [
+    "Exact interleavings not forced",
+    "Actual interrupt nesting not forced",
+    "No flow expiry or DONE reset on tuple reuse",
+    "No accuracy, performance or arbitrary-input numerical proof"
+  ],
+  "new_privileged_tests_during_review": 0
+}

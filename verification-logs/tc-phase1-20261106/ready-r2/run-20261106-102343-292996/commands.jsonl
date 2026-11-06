@@ -1,0 +1,54 @@
+{"argv": ["ip", "netns", "list"], "exit_code": 0, "log": "namespaces-before.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--kernel-tests", "/home/arnav/research/ebpf-ids-research/tc/.output/tc_ids.bpf.o", "/home/arnav/research/ebpf-ids-research/verification-logs/tc-phase1-20261106/ready-r2/run-20261106-102343-292996/kernel-checks"], "exit_code": 0, "log": "kernel-checks.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-003.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-004.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-005.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "map"], "exit_code": 0, "log": "command-006.log"}
+{"argv": ["ip", "netns", "add", "tcids-server"], "exit_code": 0, "log": "command-007.log"}
+{"argv": ["ip", "netns", "add", "tcids-client"], "exit_code": 0, "log": "command-008.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "add", "tcids-s0", "type", "veth", "peer", "name", "tcids-c0"], "exit_code": 0, "log": "command-009.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-c0", "netns", "tcids-client"], "exit_code": 0, "log": "command-010.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "alias", "tcids-1175f4c1cc1347328d54871e27af0c78"], "exit_code": 0, "log": "command-011.log"}
+{"argv": ["ip", "-n", "tcids-server", "addr", "add", "33.33.33.1/24", "dev", "tcids-s0"], "exit_code": 0, "log": "command-012.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "tcids-s0", "up"], "exit_code": 0, "log": "command-013.log"}
+{"argv": ["ip", "-n", "tcids-server", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-014.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "alias", "tcids-1175f4c1cc1347328d54871e27af0c78"], "exit_code": 0, "log": "command-015.log"}
+{"argv": ["ip", "-n", "tcids-client", "addr", "add", "33.33.33.73/24", "dev", "tcids-c0"], "exit_code": 0, "log": "command-016.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "tcids-c0", "up"], "exit_code": 0, "log": "command-017.log"}
+{"argv": ["ip", "-n", "tcids-client", "link", "set", "lo", "up"], "exit_code": 0, "log": "command-018.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-019.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "minimal-attachment.log"}
+{"argv": ["ip", "netns", "exec", "tcids-client", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "client", "40001", "1"], "exit_code": 0, "log": "minimal-client.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "command-022.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "egress"], "exit_code": 0, "log": "command-023.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "qdisc", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-024.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "qdisc", "del", "dev", "tcids-s0", "clsact"], "exit_code": 0, "log": "command-025.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-026.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-027.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "map"], "exit_code": 0, "log": "command-028.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-029.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "inference-attachment.log"}
+{"argv": ["ip", "netns", "exec", "tcids-client", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "client", "40002", "1"], "exit_code": 0, "log": "inference-client.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "command-032.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "egress"], "exit_code": 0, "log": "command-033.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "qdisc", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-034.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "qdisc", "del", "dev", "tcids-s0", "clsact"], "exit_code": 0, "log": "command-035.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-036.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-037.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-038.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "map"], "exit_code": 0, "log": "command-039.log"}
+{"argv": ["ip", "-n", "tcids-server", "-j", "-d", "link", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-040.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "concurrent-attachment.log"}
+{"argv": ["ip", "netns", "exec", "tcids-client", "/usr/bin/python3", "/home/arnav/research/ebpf-ids-research/tc/traffic.py", "client", "41000", "10"], "exit_code": 0, "log": "concurrent-client.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "ingress"], "exit_code": 0, "log": "command-043.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "filter", "show", "dev", "tcids-s0", "egress"], "exit_code": 0, "log": "command-044.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "-j", "qdisc", "show", "dev", "tcids-s0"], "exit_code": 0, "log": "command-045.log"}
+{"argv": ["ip", "netns", "exec", "tcids-server", "tc", "qdisc", "del", "dev", "tcids-s0", "clsact"], "exit_code": 0, "log": "command-046.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-047.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-048.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "prog"], "exit_code": 0, "log": "command-049.log"}
+{"argv": ["/home/arnav/research/ebpf-ids-research/tc/.output/controller", "--list-ids", "map"], "exit_code": 0, "log": "command-050.log"}
+{"argv": ["ip", "netns", "pids", "tcids-client"], "exit_code": 0, "log": "command-051.log"}
+{"argv": ["ip", "netns", "delete", "tcids-client"], "exit_code": 0, "log": "command-052.log"}
+{"argv": ["ip", "netns", "pids", "tcids-server"], "exit_code": 0, "log": "command-053.log"}
+{"argv": ["ip", "netns", "delete", "tcids-server"], "exit_code": 0, "log": "command-054.log"}

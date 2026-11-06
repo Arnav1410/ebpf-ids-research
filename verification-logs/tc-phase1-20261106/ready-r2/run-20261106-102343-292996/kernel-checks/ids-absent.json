@@ -1,0 +1,22 @@
+{
+  "program_ids": [
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "map_ids": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "all_absent": true,
+  "method": "BPF_*_GET_NEXT_ID; no object FDs opened"
+}

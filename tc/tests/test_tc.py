@@ -2,6 +2,8 @@ import ctypes as C
 import errno
 import json
 import unittest
+from concurrent.futures import ThreadPoolExecutor
+import threading
 from reference import Model, STAGES, SIZES, tcp_packet
 from safety import require_attached_filter, require_detach_ack, require_empty_filters
 
@@ -88,6 +90,108 @@ class HostTC(unittest.TestCase):
         self.assertEqual(mask, 63)
         self.assertEqual(actual, expected)
         self.assertEqual(label, expected_label)
+
+    def flow(self):
+        value = (C.c_uint64 * 8)(); self.lib.host_flow(value)
+        return list(value)
+
+    def test_duplicate_fin_is_counted_without_reinference(self):
+        self.send(tcp_packet(flags=0x11), 1000)
+        first = self.result()
+        self.send(tcp_packet(flags=4), 2000)
+        self.assertEqual(self.result(), first)
+        self.assertEqual(self.flow()[:6], [2, 40, 2, 1, 0, 1])
+        self.assertEqual(self.lib.host_is_busy(), 0)
+
+    def test_missing_stats_value_passes_without_inference_or_owner_leak(self):
+        self.lib.host_missing_stats(1)
+        self.send(tcp_packet(flags=0x11))
+        self.assertEqual(self.flow(), [0]*8)
+        self.assertEqual(self.result()[3], 0)
+        self.assertEqual(self.lib.host_is_busy(), 0)
+        self.lib.host_missing_stats(0)
+        self.send(tcp_packet(flags=0x11), 2000)
+        self.assertEqual(self.result()[0], [20, 0, 20, 5001, 20, 1])
+        self.assert_parity()
+
+    def test_each_missing_tail_target_releases_owner_and_retries(self):
+        for slot in range(6):
+            with self.subTest(slot=slot):
+                self.lib.host_reset()
+                self.lib.host_missing_slot(slot)
+                self.send(tcp_packet(flags=0x11))
+                self.assertEqual(self.flow()[2:5], [0, 1, 1])
+                self.assertEqual(self.lib.host_is_busy(), 0)
+                self.lib.host_missing_slot(-1)
+                self.send(tcp_packet(flags=0x11), 2000)
+                self.assertEqual(self.flow()[2:5], [2, 2, 1])
+                self.assert_parity()
+
+    def test_missing_model_and_result_publication_failures_are_retryable(self):
+        for name, bad, good in (('host_model_slot', 2, 0), ('host_result_failure', 1, 0)):
+            with self.subTest(failure=name):
+                self.lib.host_reset()
+                getattr(self.lib, name)(bad)
+                self.send(tcp_packet(flags=4))
+                self.assertEqual(self.flow()[2:5], [0, 1, 1])
+                self.assertEqual(self.lib.host_is_busy(), 0)
+                getattr(self.lib, name)(good)
+                self.send(tcp_packet(flags=4), 2000)
+                self.assert_parity()
+
+    def test_creation_race_relooks_up_winning_value(self):
+        self.lib.host_creator_race()
+        self.send(tcp_packet(flags=0x11))
+        self.assertEqual(self.flow()[:4], [1, 20, 2, 1])
+        self.assert_parity()
+
+    def test_capacity_and_reentrant_workspace_rejection_pass_packets(self):
+        self.lib.host_capacity(0)
+        self.send(tcp_packet(flags=4))
+        self.assertEqual(self.result()[3], 0)
+        self.lib.host_capacity(64)
+        self.lib.host_busy(1)
+        self.send(tcp_packet(flags=4))
+        self.assertEqual(self.flow()[:4], [1, 20, 0, 0])
+        self.assertEqual(self.lib.host_is_busy(), 1)
+        self.lib.host_busy(0)
+        self.send(tcp_packet(flags=4), 2000)
+        self.assert_parity()
+
+    def test_out_of_order_helper_samples_never_underflow_iat(self):
+        self.send(tcp_packet(), 3000)
+        self.send(tcp_packet(), 1000)
+        self.send(tcp_packet(flags=0x11), 4000)
+        self.assertEqual(self.result()[0][1], 1000)
+        self.assertEqual(self.flow()[6:], [1000, 1])
+        self.assert_parity()
+
+    def test_ten_distinct_simultaneous_host_flows_keep_results(self):
+        barrier = threading.Barrier(10)
+        def worker(i):
+            packet = tcp_packet(sport=41000+i, flags=0x11, payload=b'x'*i)
+            barrier.wait()
+            self.send(packet, 1000)
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            list(pool.map(worker, range(10)))
+        for i in range(10):
+            self.lib.host_select_port(41000+i)
+            self.assertEqual(self.flow()[:4], [1, 20+i, 2, 1])
+            self.assertEqual(self.result()[0], [20+i, 0, 20+i, 5001, 20, 1])
+            self.assert_parity()
+
+    def test_same_flow_host_concurrent_updates_and_duplicate_triggers(self):
+        barrier = threading.Barrier(8)
+        def worker(i):
+            barrier.wait()
+            for j in range(50):
+                self.send(tcp_packet(), 1000+i*50+j)
+            self.send(tcp_packet(flags=0x11), 2000+i)
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            list(pool.map(worker, range(8)))
+        self.lib.host_select_port(12345)
+        self.assertEqual(self.flow()[:6], [408, 8160, 2, 1, 0, 7])
+        self.assert_parity()
 
     def test_golden_six_features_and_all_layers(self):
         self.send(tcp_packet(flags=2), 1000)

@@ -1,0 +1,3 @@
+make: Entering directory '/home/arnav/research/ebpf-ids-research/tc'
+clang-12 -g -O3 -target bpf -mcpu=v3 -I/home/arnav/research/ebpf-ids-research/tc/.output -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include -I/usr/include/x86_64-linux-gnu -c tc_ids.bpf.c -o /home/arnav/research/ebpf-ids-research/tc/.output/tc_ids.bpf.o
+make: Leaving directory '/home/arnav/research/ebpf-ids-research/tc'

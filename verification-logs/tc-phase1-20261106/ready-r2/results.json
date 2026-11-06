@@ -1,0 +1,16 @@
+{
+  "preparation": "PASS",
+  "runtime": "NOT RUN",
+  "optional_egress": "NOT IMPLEMENTED",
+  "branch": "feature/tc-concurrency-bidirectional",
+  "commit": "f06718f611a0f816048dfe254ef7a2f8edc6f788",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "nonprivileged_tests": {
+    "run": 20,
+    "failures": 0,
+    "errors": 0
+  },
+  "protected_files": "UNCHANGED",
+  "approval_command": "sudo -n /usr/bin/python3 /home/arnav/research/ebpf-ids-research/tc/demo.py --run /home/arnav/research/ebpf-ids-research/verification-logs/tc-phase1-20261106/ready-r2 --phase1",
+  "phase1_gate": "PENDING: actual kernel suite and live ingress tests required"
+}

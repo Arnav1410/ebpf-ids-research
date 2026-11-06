@@ -71,14 +71,21 @@ def branch():
 
 def finish(output, result):
     (output/'results.json').write_text(json.dumps(result, indent=2)+'\n')
-    (output/'REPORT.md').write_text('# TC ingress prototype run\n\n```json\n'+json.dumps(result,indent=2)+'\n```\n\n'
+    display=result
+    if 'kernel_checks' in result:
+        display={k:v for k,v in result.items() if not k.endswith('_snapshot')}
+        display['packet_observations']={k.removesuffix('_snapshot'):
+            {name:v[name] for name in ('packets','bytes','matched','predictions','stages','tail_failures')}
+            for k,v in result.items() if k.endswith('_snapshot')}
+        display['tensor_evidence']='Full records in results.json and each phase/snapshot.json'
+    (output/'REPORT.md').write_text('# TC ingress prototype run\n\n```json\n'+json.dumps(display,indent=2)+'\n```\n\n'
         'PASS in preparation means compilation and host tests only. Runtime evidence requires --run.\n'
         'TCP exchange, TC filter queries, per-stage counters and kernel snapshots establish the live demo.\n'
         'Reported snapshot parity uses the same captured features as the fixed-point reference; it is not an accuracy evaluation.\n'
         'Original XDP/validation/model files are unchanged. Egress is NOT IMPLEMENTED in this iteration.\n')
     files = [p for p in output.rglob('*') if p.is_file() and p.name != 'SHA256SUMS']
     (output/'SHA256SUMS').write_text(''.join(sha(p)+'  '+str(p.relative_to(output))+'\n' for p in sorted(files)))
-    print(json.dumps(result,indent=2),flush=True)
+    print(json.dumps(display,indent=2),flush=True)
     print(f'Report: {output / "REPORT.md"}',flush=True)
 
 
@@ -97,7 +104,7 @@ def prepare(args):
         for name in ('tc_min','tc_ids'):
             directory = out/name; directory.mkdir()
             log.command([ROOT/'tc/.output/controller','--inspect',ROOT/f'tc/.output/{name}.bpf.o',directory], 'inspect-'+name)
-        log.command(['clang-12','-O3','-shared','-fPIC','-I'+str(ROOT/'tc/tests/include'),
+        log.command(['clang-12','-O3','-shared','-fPIC','-pthread','-I'+str(ROOT/'tc/tests/include'),
                      '-I'+str(ROOT/'validation/include'),ROOT/'tc/tests/native.c','-o',out/'host-tc.so'],'build-host-tests')
         test_tc.CONTEXT = out/'host-tc.so', ROOT
         with (out/'tests.log').open('w') as stream:
@@ -111,6 +118,9 @@ def prepare(args):
         (out/'manifest.json').write_text(json.dumps(dict(protected=before, prototype=manifest),indent=2)+'\n')
         result['preparation'] = 'PASS'
         result['approval_command'] = f'sudo -n /usr/bin/python3 {ROOT / "tc/demo.py"} --run {out}'
+        if args.phase1:
+            result['approval_command'] += ' --phase1'
+            result['phase1_gate'] = 'PENDING: actual kernel suite and live ingress tests required'
     except Exception as e: result['error'] = str(e)
     finish(out,result)
     return int(result['preparation'] != 'PASS')
@@ -169,21 +179,65 @@ class Loader:
             require_detach_ack(self.events, self.ready['program_id'])
     def verify_ids_gone(self):
         if not self.ready: return
-        for kind, ids in (('prog',self.ready['program_ids']),('map',self.ready['map_ids'])):
-            remaining = set(ids)
-            for attempt in range(50):
-                # GET_NEXT_ID only: bpftool show opens FDs and can interfere
-                # with last-user prog-array deferred teardown on this kernel.
-                r = self.log.command([ROOT/'tc/.output/controller','--list-ids',kind],check=True)
-                live = json.loads(r.stdout)
-                need(isinstance(live,list) and all(type(i) is int and i>0 for i in live),'Invalid ID registry scan')
-                remaining = set(live).intersection(ids)
-                if not remaining: break
-                time.sleep(.1)
-            else: raise RuntimeError(f'Private {kind} IDs remain: {sorted(remaining)}')
-        (self.directory/'ids-absent.json').write_text(json.dumps(dict(
-            program_ids=self.ready['program_ids'], map_ids=self.ready['map_ids'],
-            all_absent=True, method='BPF_*_GET_NEXT_ID; no object FDs opened'), indent=2)+'\n')
+        verify_private_ids(self.log, self.directory, self.ready)
+
+
+def verify_private_ids(log, directory, identity):
+    for kind, ids in (('prog',identity['program_ids']),('map',identity['map_ids'])):
+        remaining = set(ids)
+        for attempt in range(50):
+            # GET_NEXT_ID only: bpftool show opens FDs and can interfere
+            # with last-user prog-array deferred teardown on this kernel.
+            r = log.command([ROOT/'tc/.output/controller','--list-ids',kind],check=True)
+            live = json.loads(r.stdout)
+            need(isinstance(live,list) and all(type(i) is int and i>0 for i in live),'Invalid ID registry scan')
+            remaining = set(live).intersection(ids)
+            if not remaining: break
+            time.sleep(.1)
+        else: raise RuntimeError(f'Private {kind} IDs remain: {sorted(remaining)}')
+    (directory/'ids-absent.json').write_text(json.dumps(dict(
+        program_ids=identity['program_ids'], map_ids=identity['map_ids'],
+        all_absent=True, method='BPF_*_GET_NEXT_ID; no object FDs opened'), indent=2)+'\n')
+
+def compare_records(records):
+    model=Model.load(ROOT/'src/mlp_params.bpf.h')
+    for r in records:
+        need(r['mask']==63 and r['model_slot']==0,'Incomplete six-stage prediction')
+        arithmetic=[]; expected,label=model.infer(r['features'],arithmetic)
+        need(not arithmetic,'Unsafe arithmetic on observed features')
+        need(r['tensors']==[expected[n] for n in STAGES] and r['label']==label,'TC/reference parity mismatch')
+    return dict(records=len(records), stage_tensors=len(records)*6,
+                integers=sum(sum(len(t) for t in r['tensors']) for r in records))
+
+
+def kernel_checks(log):
+    directory=log.output/'kernel-checks'; directory.mkdir()
+    r=log.command([ROOT/'tc/.output/controller','--kernel-tests',ROOT/'tc/.output/tc_ids.bpf.o',directory],
+                  'kernel-checks',check=False)
+    (directory/'events.jsonl').write_text(r.stdout)
+    (directory/'controller.log').write_text(r.stderr)
+    events=[json.loads(s) for s in r.stdout.splitlines()]
+    loaded=next((e for e in events if e['event']=='loaded'),None)
+    if loaded: verify_private_ids(log,directory,loaded)
+    need(r.returncode==0,'Kernel concurrency/failure suite failed; inspect kernel-checks.log and verifier logs')
+    cases={e['name'] for e in events if e['event']=='kernel_case' and e['assertions']=='PASS'}
+    need(cases=={'same_flow','distinct_flows','all_missing_tail_slots_retry','missing_model_retry',
+                 'duplicate_result_immutable','malformed_pass_unscored','flow_capacity_pass',
+                 'result_capacity_retry','injected_reentrancy_guard','fixed_mean_above_below_full_chain'},
+         'Kernel suite incomplete')
+    s=next(e for e in events if e['event']=='snapshot')
+    need(len(s['results'])==23 and s['predictions']==23,'Kernel result count mismatch')
+    need((s['tail_failures'],s['inference_failures'],s['flow_full'],s['workspace_busy'],s['result_failures'])
+         ==(6,8,1,1,1),'Unexpected failure accounting')
+    same=next(f for f in s['flows'] if f['source_port']==41000)
+    need(same['packets']==4*257+5 and same['bytes']==20*same['packets'] and same['duplicates']==8,
+         'Same-flow counters inconsistent')
+    need(all(f['state']==2 for f in s['flows']),'Flow left running or retry incomplete')
+    comparisons=compare_records(s['results'])
+    (directory/'comparisons.json').write_text(json.dumps(comparisons,indent=2)+'\n')
+    return dict(status='PASS', cases=sorted(cases), numerical=comparisons,
+                same_flow=same, scheduling='CPU-pinned workers; exact overlap not forced',
+                reentrancy='Injected busy guard tested; actual interrupt nesting not forced', cleanup='PASS')
 
 
 def qdisc_cleanup(log, directory):
@@ -212,11 +266,11 @@ def cleanup_namespaces(log, owned):
     need(not errors,'; '.join(errors))
 
 
-def traffic(log, mode, port):
+def traffic(log, mode, port, count=1):
     directory=log.output/mode
     marker=directory/'server.ready'
     server_log=(directory/'server.log').open('w')
-    argv=['ip','netns','exec',SERVER,sys.executable,str(ROOT/'tc/traffic.py'),'server',str(marker)]
+    argv=['ip','netns','exec',SERVER,sys.executable,str(ROOT/'tc/traffic.py'),'server',str(marker),str(count)]
     (directory/'server-command.json').write_text(json.dumps(argv)+'\n')
     server=subprocess.Popen(argv,stdout=server_log,stderr=subprocess.STDOUT)
     try:
@@ -224,7 +278,7 @@ def traffic(log, mode, port):
         while not marker.exists():
             need(server.poll() is None and time.monotonic()<deadline,'TCP server not ready')
             time.sleep(.05)
-        log.command(['ip','netns','exec',CLIENT,sys.executable,ROOT/'tc/traffic.py','client',str(port)],mode+'-client')
+        log.command(['ip','netns','exec',CLIENT,sys.executable,ROOT/'tc/traffic.py','client',str(port),str(count)],mode+'-client')
         need(server.wait(timeout=15)==0,'TCP server exchange failed')
     finally:
         if server.poll() is None: server.terminate(); server.wait(timeout=3)
@@ -245,6 +299,9 @@ def run(args):
         lock=open('/run/tcids-demo.lock','a+'); fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         names=[s.split()[0] for s in log.command(['ip','netns','list'],'namespaces-before').stdout.splitlines()]
         need(SERVER not in names and CLIENT not in names,'Demo namespace names already exist')
+        if args.phase1:
+            result['kernel_checks']='FAIL'
+            result['kernel_checks']=kernel_checks(log)
         for name in (SERVER,CLIENT):
             log.command(['ip','netns','add',name]); owned[name]=(Path('/run/netns')/name).stat().st_ino
             (out/'owned.json').write_text(json.dumps(owned,indent=2)+'\n')
@@ -256,7 +313,9 @@ def run(args):
             log.command(['ip','-n',name,'addr','add',address,'dev',iface])
             log.command(['ip','-n',name,'link','set',iface,'up'])
             log.command(['ip','-n',name,'link','set','lo','up'])
-        for mode,port in (('minimal',40001),('inference',40002)):
+        phases=[('minimal',40001,1),('inference',40002,1)]
+        if args.phase1: phases.append(('concurrent',41000,10))
+        for mode,port,count in phases:
             if mode=='inference' and args.minimal_only: break
             info=json.loads(log.command(['ip','-n',SERVER,'-j','-d','link','show','dev',SIF]).stdout)[0]
             need(info['linkinfo']['info_kind']=='veth' and info.get('ifalias')==token,'Interface ownership mismatch')
@@ -264,24 +323,37 @@ def run(args):
             loader.read('ready')
             filters=log.command(['ip','netns','exec',SERVER,'tc','-j','filter','show','dev',SIF,'ingress'],mode+'-attachment')
             require_attached_filter(filters.stdout, loader.ready['program_id'])
-            traffic(log,mode,port)
+            traffic(log,mode,port,count)
             snapshot=loader.snapshot()
+            # Read counters after traffic quiesces, rather than assuming one
+            # application write corresponds to one skb or a fixed packet count.
+            for attempt in range(50):
+                time.sleep(.02)
+                latest=loader.snapshot()
+                if latest['packets']==snapshot['packets']:
+                    snapshot=latest; break
+                snapshot=latest
+            else: raise RuntimeError('Controlled traffic did not quiesce')
             need(snapshot['packets']>0 and snapshot['bytes']>0,'Ingress counter did not observe controlled traffic')
             if mode=='minimal': result['minimal_ingress']='PASS'
             else:
-                need(snapshot['matched']>=3 and snapshot['predictions']>=1 and snapshot['tail_failures']==0,'Inference counters failed')
+                need(snapshot['matched']>=3*count and snapshot['predictions']==count and snapshot['tail_failures']==0,'Inference counters failed')
+                need(snapshot['workspace_busy']==snapshot['inference_failures']==snapshot['flow_full']==snapshot['result_failures']==0,
+                     'Unexpected live resource or inference failure')
                 need(all(v>=1 for v in snapshot['stages']),'Not all six tail-call stages executed')
-                records=[r for r in snapshot['results'] if r['source_port']==port]
-                need(records,'No prediction for controlled source port')
-                model=Model.load(ROOT/'src/mlp_params.bpf.h')
+                records=[r for r in snapshot['results'] if port<=r['source_port']<port+count]
+                need(len(records)==count,'Missing or mixed controlled-flow predictions')
+                comparisons=compare_records(records)
                 for r in records:
-                    need(r['mask']==63 and r['model_slot']==0,'Incomplete six-stage prediction')
-                    arithmetic=[]; expected,label=model.infer(r['features'],arithmetic)
-                    need(not arithmetic,'Unsafe arithmetic on observed features')
-                    need(r['tensors']==[expected[n] for n in STAGES] and r['label']==label,'TC/reference parity mismatch')
                     need(r['features'][3]==5001 and r['features'][5]>=3,'Wrong controlled-flow features')
+                    need(r['sequence']==1,'Unexpected inference repetition')
+                need(len(snapshot['flows'])==count and all(f['state']==2 and f['failures']==0 for f in snapshot['flows']),
+                     'Incomplete or mixed persistent flow state')
+                need(sum(f['packets'] for f in snapshot['flows'])==snapshot['matched'],'Lost live per-flow packet updates')
                 result['full_inference']='PASS'
-                result['reference_comparisons']=len(records)*6
+                result[mode+'_numerical']=comparisons
+                result['reference_comparisons']=result.get('reference_comparisons',0)+len(records)*6
+                if mode=='concurrent': result['concurrent_flows']='PASS'
             (out/mode/'snapshot.json').write_text(json.dumps(snapshot,indent=2)+'\n')
             result[mode+'_snapshot']=snapshot
             loader.stop()
@@ -299,9 +371,17 @@ def run(args):
         if errors: result['cleanup_errors']=errors
         need_integrity = all(sha(ROOT/name)==expected for name,expected in manifest['protected'].items())
         result['protected_files']='UNCHANGED' if need_integrity else 'CHANGED'
+        if args.phase1:
+            result['phase1_gate']='PASS' if (
+                result.get('minimal_ingress')=='PASS' and result.get('full_inference')=='PASS'
+                and result.get('concurrent_flows')=='PASS' and result['cleanup']=='PASS'
+                and result['protected_files']=='UNCHANGED' and 'error' not in result
+                and isinstance(result.get('kernel_checks'),dict) and result['kernel_checks']['status']=='PASS'
+            ) else 'FAIL'
         if lock: lock.close()
         finish(out,result)
     success=result['minimal_ingress']=='PASS' and (args.minimal_only or result['full_inference']=='PASS')
+    if args.phase1: success=success and result.get('phase1_gate')=='PASS'
     return int(not success or result['cleanup']!='PASS' or result['protected_files']!='UNCHANGED' or 'error' in result)
 
 
@@ -312,8 +392,10 @@ def main():
     g.add_argument('--run',type=Path,metavar='BUNDLE')
     g.add_argument('--cleanup',type=Path,metavar='RUN_DIRECTORY')
     p.add_argument('--minimal-only',action='store_true')
+    p.add_argument('--phase1',action='store_true',help='Run private kernel SMP/failure suite, ingress regression and ten live flows')
     p.add_argument('--output',type=Path)
     args=p.parse_args()
+    need(not(args.phase1 and args.minimal_only),'--phase1 requires full inference')
     if args.prepare: return prepare(args)
     if args.run:
         def interrupted(signum,frame): raise RuntimeError(f'Interrupted by signal {signum}')

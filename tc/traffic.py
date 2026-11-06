@@ -1,31 +1,32 @@
-"""Controlled TCP exchange, only run inside the demo network namespaces."""
+"""Controlled TCP exchanges, only inside the demo namespaces."""
 import json
 from pathlib import Path
 import socket
 import sys
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
-if sys.argv[1] == 'server':
-    with socket.socket() as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.settimeout(15)
-        s.bind(('33.33.33.1', 5001)); s.listen(1)
-        Path(sys.argv[2]).write_text('ready\n')
-        with s.accept()[0] as conn:
-            conn.settimeout(15)
-            assert conn.getpeername()[0] == '33.33.33.73'
-            data = b''
-            while True:
-                block = conn.recv(1024)
-                if not block: break
-                data += block
-                assert len(data) <= 1024
-            assert data == b'hello\n'
-            conn.sendall(b'tc-demo-ok\n')
-            print(json.dumps(dict(greeting=data.decode(), client_fin=True)), flush=True)
-else:
+
+def serve_connection(conn):
+    with conn:
+        conn.settimeout(15)
+        assert conn.getpeername()[0] == '33.33.33.73'
+        data = b''
+        while True:
+            block = conn.recv(1024)
+            if not block: break
+            data += block
+            assert len(data) <= 1024
+        assert data == b'hello\n'
+        conn.sendall(b'tc-demo-ok\n')
+        return dict(greeting=data.decode(), client_fin=True, source_port=conn.getpeername()[1])
+
+
+def client(port, barrier=None):
     with socket.socket() as s:
         s.settimeout(15)
-        s.bind(('33.33.33.73', int(sys.argv[2])))
+        s.bind(('33.33.33.73', port))
+        if barrier: barrier.wait(timeout=15)
         s.connect(('33.33.33.1', 5001))
         s.sendall(b'hello\n'); s.shutdown(socket.SHUT_WR)
         reply = b''
@@ -35,4 +36,21 @@ else:
             reply += block
             assert len(reply) <= 1024
         assert reply == b'tc-demo-ok\n'
-        print(json.dumps(dict(response=reply.decode(), source_port=int(sys.argv[2]))))
+        return dict(response=reply.decode(), source_port=port)
+
+
+if __name__ == '__main__':
+    if sys.argv[1] == 'server':
+        count = int(sys.argv[3]) if len(sys.argv)>3 else 1
+        with socket.socket() as s, ThreadPoolExecutor(max_workers=count) as pool:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.settimeout(15); s.bind(('33.33.33.1', 5001)); s.listen(max(16,count))
+            Path(sys.argv[2]).write_text('ready\n')
+            jobs = [pool.submit(serve_connection, s.accept()[0]) for _ in range(count)]
+            for job in jobs: print(json.dumps(job.result()), flush=True)
+    else:
+        count = int(sys.argv[3]) if len(sys.argv)>3 else 1
+        barrier = threading.Barrier(count) if count>1 else None
+        with ThreadPoolExecutor(max_workers=count) as pool:
+            jobs = [pool.submit(client,int(sys.argv[2])+i,barrier) for i in range(count)]
+            for job in jobs: print(json.dumps(job.result()), flush=True)

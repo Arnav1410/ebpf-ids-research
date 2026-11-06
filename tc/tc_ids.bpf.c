@@ -4,11 +4,15 @@
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
 #include "../src/params.bpf.h"
-#include "../src/common.h"
-#include "../src/handler.bpf.h"
 #include "../src/mlp.bpf.h"
 #include "abi.h"
 
+struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, TC_FLOW_CAPACITY);
+    __type(key, struct flow);
+    __type(value, struct tc_flow);
+} flow_map SEC(".maps");
 struct {
     __uint(type, BPF_MAP_TYPE_PROG_ARRAY);
     __uint(max_entries, 6);
@@ -22,11 +26,17 @@ struct {
     __type(value, struct ids_tc_stats);
 } stats SEC(".maps");
 struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, TC_FLOW_CAPACITY);
+    __type(key, struct flow);
+    __type(value, struct tc_result);
+} results SEC(".maps");
+struct {
     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
     __uint(max_entries, 1);
     __type(key, u32);
-    __type(value, struct tc_result);
-} results SEC(".maps");
+    __type(value, struct tc_workspace);
+} workspace SEC(".maps");
 
 static __always_inline struct ids_tc_stats *tc_counters(void)
 {
@@ -58,136 +68,217 @@ static __always_inline int tc_parse(struct __sk_buff *skb, struct flow *f,
     return 0;
 }
 
-static __always_inline struct flow_attribute *tc_attribute(struct __sk_buff *skb, struct flow *f)
+/* No map lookup or other helper is performed inside any locked region. */
+static __always_inline void tc_release(struct tc_workspace *w)
 {
-    struct tcphdr tcp;
-    u64 length;
-    if (tc_parse(skb, f, &tcp, &length)) return NULL;
-    return bpf_map_lookup_elem(&flow_map, f);
+    __sync_lock_test_and_set(&w->busy, 0);
 }
 
-static __always_inline struct tc_result *tc_record(struct flow *f)
+static __always_inline int tc_finish(struct tc_workspace *w, int success)
+{
+    struct ids_tc_stats *s = tc_counters();
+    struct tc_flow *f = bpf_map_lookup_elem(&flow_map, &w->record.key);
+    u64 completed = success ? bpf_ktime_get_ns() : 0;
+    if (success) {
+        w->record.completed_ns = completed;
+        if (bpf_map_update_elem(&results, &w->record.key, &w->record, BPF_ANY)) {
+            success = 0;
+            if (s) __sync_fetch_and_add(&s->result_failures, 1);
+        }
+    }
+    if (f) {
+        bpf_spin_lock(&f->lock);
+        if (f->state == TC_RUNNING && f->sequence == w->record.sequence) {
+            f->state = success ? TC_DONE : TC_IDLE;
+            if (success) f->completed_ns = completed;
+            else f->failures++;
+        }
+        bpf_spin_unlock(&f->lock);
+    }
+    if (s) {
+        if (success) __sync_fetch_and_add(&s->predictions, 1);
+        else __sync_fetch_and_add(&s->inference_failures, 1);
+    }
+    tc_release(w);
+    return TC_ACT_OK;
+}
+
+static __always_inline struct tc_workspace *tc_stage(u32 expected)
 {
     u32 zero = 0;
-    struct tc_result *r = bpf_map_lookup_elem(&results, &zero);
-    if (!r || r->key.saddr != f->saddr || r->key.daddr != f->daddr
-        || r->key.sport != f->sport || r->key.dport != f->dport) return NULL;
-    return r;
+    struct tc_workspace *w = bpf_map_lookup_elem(&workspace, &zero);
+    if (!w || !w->busy) return NULL;
+    if (w->next_stage != expected) {
+        tc_finish(w, 0);
+        return NULL;
+    }
+    return w;
 }
 
-static __always_inline void tc_capture(struct flow *f, struct flow_attribute *a, int stage)
+static __always_inline void tc_capture(struct tc_workspace *w, int stage)
 {
-    struct tc_result *r = tc_record(f);
     struct ids_tc_stats *s = tc_counters();
     if (s) __sync_fetch_and_add(&s->stages[stage], 1);
-    if (!r) return;
-    s32 *tensor = (stage == 0 || stage == 3 || stage == 4) ? a->hidden2 : a->hidden1;
+    s32 *tensor = (stage == 0 || stage == 3 || stage == 4) ? w->hidden2 : w->hidden1;
     int count = stage == 0 ? 6 : (stage == 5 ? 2 : 32);
     #pragma clang loop unroll(full)
     for (int j = 0; j < 32; ++j)
-        if (j < count) r->tensors[stage][j] = tensor[j];
-    r->stage_mask |= 1U << stage;
-    if (stage == 5) {
-        r->label = a->hidden1[0] > a->hidden1[1] ? 0 : 1;
-        r->completed_ns = bpf_ktime_get_ns();
-        if (s) __sync_fetch_and_add(&s->predictions, 1);
-    }
+        if (j < count) w->record.tensors[stage][j] = tensor[j];
+    w->record.stage_mask |= 1U << stage;
 }
 
-static __always_inline int tc_next(struct __sk_buff *skb, u32 index)
+static __always_inline int tc_next(struct __sk_buff *skb, struct tc_workspace *w, u32 index)
 {
+    w->next_stage = index;
     bpf_tail_call(skb, &progs, index);
     struct ids_tc_stats *s = tc_counters();
     if (s) __sync_fetch_and_add(&s->tail_failures, 1);
-    return TC_ACT_OK;
+    return tc_finish(w, 0);
 }
 
 SEC("tc")
 int tc_entry(struct __sk_buff *skb)
 {
     struct ids_tc_stats *s = tc_counters();
-    if (s) { __sync_fetch_and_add(&s->packets, 1); __sync_fetch_and_add(&s->bytes, skb->len); }
-    struct flow f = {};
+    /* Keep the pointer non-null on every continuation path. Compound optional
+     * stats guards after the lock can lose verifier refinement when clang
+     * lowers the trigger booleans. Key zero is valid in this fixed-size array;
+     * the defensive null path still passes the packet without inference.
+     */
+    if (!s) return TC_ACT_OK;
+    __sync_fetch_and_add(&s->packets, 1);
+    __sync_fetch_and_add(&s->bytes, skb->len);
+    struct flow key = {};
     struct tcphdr tcp;
     u64 length;
-    if (tc_parse(skb, &f, &tcp, &length)) {
+    if (tc_parse(skb, &key, &tcp, &length)) {
         if (s) __sync_fetch_and_add(&s->rejected, 1);
         return TC_ACT_OK;
     }
-    if (bpf_ntohl(f.saddr) != 555819337) return TC_ACT_OK; /* Original 33.33.33.73 gate. */
+    if (bpf_ntohl(key.saddr) != 555819337) return TC_ACT_OK;
     if (s) __sync_fetch_and_add(&s->matched, 1);
-    update_flow_attribute(&f, &tcp, length);
-    if (!(tcp.fin || tcp.rst)) return TC_ACT_OK;
-    struct flow_attribute *a = bpf_map_lookup_elem(&flow_map, &f);
-    u32 zero = 0;
-    s32 *index = bpf_map_lookup_elem(&nn_idx, &zero);
-    struct tc_result *r = bpf_map_lookup_elem(&results, &zero);
-    if (!a || !index || !r) return TC_ACT_OK;
-    a->nn_idx = *index;
-    r->key = f; r->stage_mask = 0; r->completed_ns = 0; r->model_slot = *index;
-    r->features[0] = a->max_packet_length; r->features[1] = a->max_duration;
-    r->features[2] = a->min_packet_length; r->features[3] = a->dst_port;
-    r->features[4] = a->header_length; r->features[5] = a->num_packet;
-    return tc_next(skb, 0);
+    /* Helpers and context loads precede the spin lock. */
+    u64 now = bpf_ktime_get_ns();
+    u32 zero = 0, cpu = bpf_get_smp_processor_id();
+    u32 flags = (tcp.syn ? 2 : 0) | (tcp.fin ? 1 : 0) | (tcp.rst ? 4 : 0);
+    u32 header = tcp.doff * 4;
+    u32 destination_port = bpf_ntohs((unsigned short)key.dport);
+    s32 *idx = bpf_map_lookup_elem(&nn_idx, &zero);
+    s32 slot = idx ? *idx : -1;
+    struct tc_workspace *w = bpf_map_lookup_elem(&workspace, &zero);
+    if (!w) {
+        if (s) __sync_fetch_and_add(&s->workspace_busy, 1);
+        return TC_ACT_OK;
+    }
+    struct tc_flow *f = bpf_map_lookup_elem(&flow_map, &key);
+    if (!f) {
+        struct tc_flow initial = {};
+        initial.min_length = 0x3fffffffffffffffULL;
+        /* A losing BPF_NOEXIST insertion must still use the winning value. */
+        bpf_map_update_elem(&flow_map, &key, &initial, BPF_NOEXIST);
+        f = bpf_map_lookup_elem(&flow_map, &key);
+        if (!f) {
+            if (s) __sync_fetch_and_add(&s->flow_full, 1);
+            return TC_ACT_OK;
+        }
+    }
+    int closing = tcp.fin || tcp.rst;
+    int owned = closing && __sync_val_compare_and_swap(&w->busy, 0, 1) == 0;
+    int start = 0, duplicate = 0, reordered = 0;
+    bpf_spin_lock(&f->lock);
+    f->packets++; f->bytes += length; f->header_length += header;
+    if (length < f->min_length) f->min_length = length;
+    if (length > f->max_length) f->max_length = length;
+    if (f->packets == 1) { f->first_ns = now; f->last_ns = now; }
+    if (now >= f->last_ns) {
+        u64 elapsed = now - f->last_ns;
+        if (elapsed > f->max_duration) f->max_duration = elapsed;
+        f->last_ns = now;
+    } else {
+        /* Cross-CPU samples can arrive at the lock out of timestamp order.
+         * Clamp the late interval to zero, never unsigned-underflow the IAT. */
+        f->timestamp_reorders++; reordered = 1;
+    }
+    f->tcp_flags |= flags;
+    if (closing) {
+        if (f->state != TC_IDLE) { f->duplicates++; duplicate = 1; }
+        else if (owned) {
+            f->state = TC_RUNNING; f->sequence++;
+            w->record.key = key;
+            w->record.sequence = f->sequence;
+            w->record.features[0] = f->max_length;
+            w->record.features[1] = f->max_duration;
+            w->record.features[2] = f->min_length;
+            w->record.features[3] = destination_port;
+            w->record.features[4] = f->header_length;
+            w->record.features[5] = f->packets;
+            start = 1;
+        }
+    }
+    bpf_spin_unlock(&f->lock);
+    if (s && reordered) __sync_fetch_and_add(&s->timestamp_reorders, 1);
+    if (s && duplicate) __sync_fetch_and_add(&s->duplicate_triggers, 1);
+    if (s && closing && !owned && !duplicate) __sync_fetch_and_add(&s->workspace_busy, 1);
+    if (!start) { if (owned) tc_release(w); return TC_ACT_OK; }
+    w->record.stage_mask = 0; w->record.completed_ns = 0;
+    w->record.model_slot = slot; w->record.cpu = cpu;
+    return tc_next(skb, w, 0);
 }
 
 SEC("tc")
 int tc_preprocessing(struct __sk_buff *skb)
 {
-    struct flow f = {};
-    struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &a->nn_idx);
-    if (!net) return TC_ACT_OK;
-    s64 x[6] = {a->max_packet_length, a->max_duration, a->min_packet_length,
-                a->dst_port, a->header_length, a->num_packet};
-    standard_scaler(x, a->hidden2, net->mean, net->scale, 6);
-    tc_capture(&f, a, 0);
-    return tc_next(skb, 1);
+    struct tc_workspace *w = tc_stage(0);
+    if (!w) return TC_ACT_OK;
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    if (!net) return tc_finish(w, 0);
+    standard_scaler(w->record.features, w->hidden2, net->mean, net->scale, 6);
+    tc_capture(w, 0); return tc_next(skb, w, 1);
 }
 SEC("tc")
 int tc_input_linear(struct __sk_buff *skb)
 {
-    struct flow f = {}; struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &a->nn_idx);
-    if (!net) return TC_ACT_OK;
-    linear_layer(net->layer_0_weight, a->hidden2, a->hidden1, 32, 6);
-    tc_capture(&f, a, 1); return tc_next(skb, 2);
+    struct tc_workspace *w = tc_stage(1);
+    if (!w) return TC_ACT_OK;
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    if (!net) return tc_finish(w, 0);
+    linear_layer(net->layer_0_weight, w->hidden2, w->hidden1, 32, 6);
+    tc_capture(w, 1); return tc_next(skb, w, 2);
 }
 SEC("tc")
 int tc_input_relu(struct __sk_buff *skb)
 {
-    struct flow f = {}; struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    relu(a->hidden1, 32); tc_capture(&f, a, 2); return tc_next(skb, 3);
+    struct tc_workspace *w = tc_stage(2);
+    if (!w) return TC_ACT_OK;
+    relu(w->hidden1, 32); tc_capture(w, 2); return tc_next(skb, w, 3);
 }
 SEC("tc")
 int tc_hidden_linear(struct __sk_buff *skb)
 {
-    struct flow f = {}; struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &a->nn_idx);
-    if (!net) return TC_ACT_OK;
-    linear_layer(net->layer_1_weight, a->hidden1, a->hidden2, 32, 32);
-    tc_capture(&f, a, 3); return tc_next(skb, 4);
+    struct tc_workspace *w = tc_stage(3);
+    if (!w) return TC_ACT_OK;
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    if (!net) return tc_finish(w, 0);
+    linear_layer(net->layer_1_weight, w->hidden1, w->hidden2, 32, 32);
+    tc_capture(w, 3); return tc_next(skb, w, 4);
 }
 SEC("tc")
 int tc_hidden_relu(struct __sk_buff *skb)
 {
-    struct flow f = {}; struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    relu(a->hidden2, 32); tc_capture(&f, a, 4); return tc_next(skb, 5);
+    struct tc_workspace *w = tc_stage(4);
+    if (!w) return TC_ACT_OK;
+    relu(w->hidden2, 32); tc_capture(w, 4); return tc_next(skb, w, 5);
 }
 SEC("tc")
 int tc_output_linear(struct __sk_buff *skb)
 {
-    struct flow f = {}; struct flow_attribute *a = tc_attribute(skb, &f);
-    if (!a) return TC_ACT_OK;
-    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &a->nn_idx);
-    if (!net) return TC_ACT_OK;
-    linear_layer(net->layer_2_weight, a->hidden2, a->hidden1, 2, 32);
-    tc_capture(&f, a, 5);
-    return TC_ACT_OK;
+    struct tc_workspace *w = tc_stage(5);
+    if (!w) return TC_ACT_OK;
+    struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    if (!net) return tc_finish(w, 0);
+    linear_layer(net->layer_2_weight, w->hidden2, w->hidden1, 2, 32);
+    tc_capture(w, 5);
+    w->record.label = w->hidden1[0] > w->hidden1[1] ? 0 : 1;
+    return tc_finish(w, 1);
 }
 char __license[] SEC("license") = "GPL";
