@@ -1,0 +1,62 @@
+{
+  "stage": "00",
+  "observed_utc": "2026-11-06T18:20:12.302037+00:00",
+  "os_release": {
+    "pretty_name": "Ubuntu 22.04.5 LTS",
+    "version_id": "22.04"
+  },
+  "kernel_version_signature": "Ubuntu 6.8.0-138.138~22.04.1-generic 6.8.12",
+  "dmi": {
+    "sys_vendor": "QEMU",
+    "product_name": "Standard PC (Q35 + ICH9, 2009)",
+    "product_version": "pc-q35-11.1",
+    "bios_vendor": "SeaBIOS"
+  },
+  "read_sources": [
+    "/etc/os-release",
+    "/proc/version_signature",
+    "/sys/devices/virtual/dmi/id/sys_vendor",
+    "/sys/devices/virtual/dmi/id/product_name",
+    "/sys/devices/virtual/dmi/id/product_version",
+    "/sys/devices/virtual/dmi/id/bios_vendor"
+  ],
+  "kernel_config_source": "/boot/config-6.8.0-138-generic",
+  "kernel_config_inspection": "Exact key search through grep tool; configuration does not prove successful program loading or attachment",
+  "kernel_config": {
+    "CONFIG_BPF": "y",
+    "CONFIG_BPF_SYSCALL": "y",
+    "CONFIG_BPF_JIT": "y",
+    "CONFIG_HAVE_EBPF_JIT": "y",
+    "CONFIG_BPF_EVENTS": "y",
+    "CONFIG_CGROUP_BPF": "y",
+    "CONFIG_NET_CLS_BPF": "m",
+    "CONFIG_NET_ACT_BPF": "m",
+    "CONFIG_NET_SCH_INGRESS": "m",
+    "CONFIG_DEBUG_INFO_BTF": "y",
+    "CONFIG_XDP_SOCKETS": "y",
+    "CONFIG_NET_NS": "y",
+    "CONFIG_VETH": "m",
+    "CONFIG_NET_CLS_ACT": "y",
+    "CONFIG_BPF_UNPRIV_DEFAULT_OFF": "y"
+  },
+  "hypervisor_host_bridge_configuration": "NOT VERIFIED: only guest-side KVM/QEMU and virtio configuration observable; guest IP/gateway do not establish bridged versus NAT mode",
+  "command_evidence": "commands.json",
+  "privileged_feature_probe": {
+    "status": "PASS",
+    "started_utc": "2026-11-06T18:39:19.843090+00:00",
+    "exit_code": 0,
+    "features": {
+      "bpf_syscall": true,
+      "xdp": true,
+      "sched_cls": true,
+      "map_hash": true,
+      "map_array": true,
+      "map_prog_array": true,
+      "map_perf_event_array": true,
+      "map_ringbuf": true
+    },
+    "stdout": "privileged-feature-probe.stdout.log",
+    "stderr": "privileged-feature-probe.stderr.log",
+    "scope": "Minimal kernel capability probes, not the baseline detector verifier/attach/packet checks"
+  }
+}

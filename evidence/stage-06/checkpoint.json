@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "accepted_stages": [
+    "00",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06"
+  ],
+  "history": "Single honest checkpoint; no fabricated per-stage historical commits",
+  "status": "pass",
+  "latest_gate": {
+    "tests_passed": 48,
+    "tests_skipped": 0,
+    "original_fingerprints_unchanged": 20
+  },
+  "approved_exceptions": [
+    "Stage00 legacy attack-tool gitlink metadata",
+    "Stage02 original XDP map76 retention assigned to teammate"
+  ],
+  "new_TC_exceptions": [],
+  "raw_artifacts": {
+    "evidence/stage-06/root-full.stderr.log": {
+      "bytes": 4894,
+      "sha256": "4f73a8f87c2022c11c935186fe3fcee05d019d82acb4c01295b9fde6157eba06",
+      "storage": "retained locally, excluded from Git"
+    },
+    "evidence/stage-06/safety/test_live_event_parity_overflows_restart_and_owned_release/events.json": {
+      "bytes": 205672,
+      "sha256": "388b0877619544aea47616873ab2d6bc7d26d36d8e943817471ab54c6fbbcbaa",
+      "storage": "retained locally, excluded from Git"
+    },
+    "evidence/stage-06/safety/test_live_event_parity_overflows_restart_and_owned_release/sample-live-events.jsonl": {
+      "bytes": 18444,
+      "sha256": "2cac410af6e33025f02a718fd35cb9723d07e16913e68b0e05a0cfae910c7764",
+      "storage": "retained locally, excluded from Git"
+    },
+    "evidence/stage-05/safety-accounted/test_original_pair_packets_faults_concurrency_and_owned_release/inference.json": {
+      "bytes": 560411,
+      "sha256": "e79b035ff2786c223a5b23c8d7ba2a424714577073f79258133b85b16c95fe57",
+      "storage": "retained locally, excluded from Git"
+    }
+  },
+  "event_sessions": [
+    {
+      "kind": "parity",
+      "status": "pass",
+      "cleanup_complete": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      },
+      "inference_delta": null,
+      "event_count": 14
+    },
+    {
+      "kind": "kernel-pressure",
+      "status": "pass",
+      "cleanup_complete": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      },
+      "inference_delta": {
+        "bad_params": 0,
+        "bad_stage": 0,
+        "complete": 64,
+        "event_dropped": 49,
+        "event_emitted": 15,
+        "event_missing_counts": 0,
+        "job_full": 0,
+        "missing_job": 0,
+        "result_full": 0,
+        "rx_full": 0,
+        "tail_missing": 0,
+        "trace_full": 0,
+        "trigger": 64,
+        "unready": 0
+      },
+      "event_count": null
+    },
+    {
+      "kind": "python-pressure",
+      "status": "pass",
+      "cleanup_complete": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      },
+      "inference_delta": {
+        "bad_params": 0,
+        "bad_stage": 0,
+        "complete": 64,
+        "event_dropped": 0,
+        "event_emitted": 64,
+        "event_missing_counts": 0,
+        "job_full": 0,
+        "missing_job": 0,
+        "result_full": 0,
+        "rx_full": 0,
+        "tail_missing": 0,
+        "trace_full": 0,
+        "trigger": 64,
+        "unready": 0
+      },
+      "event_count": null
+    }
+  ]
+}

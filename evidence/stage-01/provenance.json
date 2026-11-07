@@ -1,0 +1,31 @@
+{
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "branch": "test-env",
+  "build_output": "/home/poggers/NN-eBPF/.output/test-env-stage-01/build",
+  "compiler": "clang-12 12.0.1; exact flags and dependency overrides in commands.json",
+  "dataset_identity": {
+    "data_sha256": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+    "labels_sha256": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924"
+  },
+  "original_model_identity": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756",
+  "paired_model_identity": "93c43d06491da28519ab0de2d5a778de48974e060eac810a62ed32a154e7e54c",
+  "files": {
+    ".output/test-env-stage-01/kernel-driver": "54b3ba284dfa8d0226541c873624fad119289ab2eb32f7b9b752d56015df4c41",
+    ".output/test-env-stage-01/vectors.bin": "5a0052f5a3aa4ca8c81a6e6bec0439a060fa9658ad34676502b8e14b474595ee",
+    ".output/test-env-stage-01/small-vector.bin": "6c7050351e2056282e5526d80a1b34937b0dcd008e5d493cab97ee5ad370d615",
+    ".output/test-env-stage-01/native-original/model.bin": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8",
+    ".output/test-env-stage-01/model-trained.bin": "ef4da8d5ee4772abde75f6ad4b64b81d0a3078b085e84af70d82fba2daf8fcfb",
+    "evaluation/kernel_driver.c": "d20e701ddcdebb84851511afa9e3b5245afcd7b360e63aa0987ba2335c99ad33",
+    "evaluation/kernel.py": "b0f4c4855e0f696137d0a98f6f0c521ffea79a64f85a9a543ecd23d8a35b87be",
+    "evaluation/model.py": "4fa5454b1f1d9314829e465dccdcd04e376b319c8a49d7a7a503772c15619b99",
+    "evaluation/training.py": "ac730ffacb27c66d4071607cbe19d89fdace87eaea92c99a0c98d85614cf3187",
+    "src/mlp_params.bpf.h": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11"
+  },
+  "original_artifacts_preserved": true,
+  "limits": [
+    "No live interface attachment/traffic; deferred to Stage 02",
+    "Original floating checkpoint unavailable; portable M3 float/quantized pair explicitly separate",
+    "No semantic benign/attack mapping or paper-reproduction claim",
+    "Initial output-override invocation error retained and corrected without source changes"
+  ]
+}

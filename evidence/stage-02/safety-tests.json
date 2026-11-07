@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-n",
+    "env",
+    "NN_EBPF_RUN_LAB_TESTS=1",
+    "NN_EBPF_LAB_EVIDENCE_ROOT=/home/poggers/NN-eBPF/evidence/stage-02/safety",
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "test_env/tests",
+    "-v"
+  ],
+  "exit_code": 0,
+  "stdout": "safety-tests.stdout.log",
+  "stderr": "safety-tests.stderr.log"
+}

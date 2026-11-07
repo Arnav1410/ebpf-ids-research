@@ -245,3 +245,72 @@ This does not change the baseline runner's smoke-test scope. The separate
 privileged M4 stage/chain and packet-feature validation has now passed its
 defined checks. Local numeric-label metrics and these bounded kernel checks
 are not paper reproduction or proof of production intrusion-detection accuracy.
+
+## Gated isolated VM validation
+
+The separate `test_env` Python package isolates disposable namespace/veth
+lifecycle and command evidence from the original-detector adapter. Detector ABI,
+model pins, program names and live inference inspection are confined to
+`test_env/baseline.py`; the original `src/` detector, updater, model header and
+`run-baseline.sh` remain unchanged.
+
+See [the stage evidence index](evidence/INDEX.md) and
+[Stage 02 report and CLI usage](evidence/stage-02/gate.md).
+Stage 01 rebuilt the original implementation reproducibly and passed its
+offline/native/kernel checks. Stage 02 demonstrated real driver-mode XDP,
+controlled TCP and exact live kernel/oracle logits. Its raw cleanup check failed
+because an owned empty, unpinned program-array map remained after loader exit.
+Namespaces, interfaces, global model pins and attachment were cleaned up.
+The user approved a narrow continuation exception and assigned the unresolved
+lifecycle issue to their teammate; see the Stage 02 gate and exception record.
+
+This is not a cleanup fix or permission to suppress checks. The original
+adapter retains strict failure reporting, and new TC/collector/UI work must
+pass its own gates. Avoid additional original-detector runs just to bypass
+the known failure.
+The opt-in real namespace ownership regressions are in `test_env/tests/`;
+they do not load the detector or require a UI.
+
+The additive [Stage 03 TC probe](evidence/stage-03/gate.md) now passes its
+independent build, verifier, ingress/egress attachment, live counter and cleanup
+checks, including repeated lifecycle and foreign-qdisc preservation tests.
+Its CLI is `python3 -m test_env probe` with explicit object/loader/evidence paths.
+This minimal all-pass counter probe is not TC neural-network inference or
+bidirectional flow tracking; those retain separate later-stage gates.
+
+The modular [Stage 04 flow backend](evidence/stage-04/gate.md) also passes:
+canonical bidirectional IPv4/TCP tracking, explicit unknown orientation, locked
+per-direction statistics, FIN/RST state, generation-safe expiration, and
+read-only inspection. Two authoritative cycles each matched 95 actual TC packet
+headers to independent AF_PACKET capture, with eight simultaneous TCP
+connections per cycle and no capture loss. All 17 regressions passed, including
+seven privileged cases; original counter-probe compatibility also passed.
+Use `python3 -B -m test_env flows` for isolated acceptance, not production service.
+Diagnostics are opt-in and no offloads were disabled. That flow-only profile does not run NN inference.
+
+The additive [Stage 05 inference backend](evidence/stage-05/gate.md) now passes:
+the original six RX features, every matching RX FIN/RST trigger, six actual
+integer tail-call stages, model identity/readiness, private per-trigger scratch,
+and strict object release. All 40 regressions passed, including real live flows,
+fault injection and an ordinary profile without packet/intermediate diagnostics.
+This establishes isolated TC+NN functionality, not an accuracy improvement.
+
+On the same balanced 512-row subset, the original checked-in Q16 model achieved
+89.4531% accuracy and 0.893345 macro F1; the separate actual M3 float checkpoint
+and its Q16 TC version each achieved 99.6094% and 0.996094. Every TC integer stage
+matched its oracle exactly. These are different models and a selected population,
+not interchangeable with earlier full M3 scores. The original float checkpoint,
+numeric label meanings and original training overlap remain unverified/absent.
+The acceptance command is `python -B -m test_env inference` using the existing
+evaluation virtual environment and explicit build/evidence/model paths.
+
+The independent [Stage 06 event pipeline](evidence/stage-06/gate.md) passes:
+fixed versioned kernel ring-buffer records, a native namespace/FD/model-bound
+reader, bounded Python collection and separate kernel/consumer loss accounting.
+Fourteen ordinary completions matched real kernel results, exact integer
+inference and independent packet-derived count prefixes; restart recovered a
+completion generated with no reader. Paused-reader and paused-aggregation tests
+proved forwarding/inference continue while real ring/queue losses remain visible.
+All 48 regressions passed with strict release of the new owned resources.
+Use `python -B -m test_env events` for isolated acceptance. Genuine live JSONL
+is retained for a separately gated, explicitly simulated dashboard replay.

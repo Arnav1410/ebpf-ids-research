@@ -1,0 +1,32 @@
+{
+  "stage": "02",
+  "authorization": {
+    "source": "Explicit user instruction in this conversation",
+    "instruction": "Move forward noting the problem and assume the teammate will resolve it in their implementation"
+  },
+  "owner": "User's teammate; resolution is assigned, not verified",
+  "scope": "Accept only the original XDP Stage 02 retained program-array-map cleanup failure as nonblocking for progression",
+  "retained_object": {
+    "last_observed_map_id": 76,
+    "name": "progs",
+    "type": "prog_array",
+    "state": "empty, unpinned; no userspace FD holder or remaining program reference discovered",
+    "root_cause": "unresolved; not a confirmed IDS-code defect or permanent kernel leak"
+  },
+  "raw_validation": {
+    "report": "live-private/report.json",
+    "status": "fail",
+    "cleanup": "live-private/baseline-cleanup.json",
+    "provenance": "provenance.json",
+    "rewritten": false
+  },
+  "gate_effect": "Stage 02 PASS with this explicitly approved exception",
+  "constraints": [
+    "Do not mark original BPF object release as successful or fixed",
+    "Do not suppress the original adapter's strict cleanup check",
+    "Do not rerun the original detector merely to bypass the failure",
+    "Do not force-delete or manipulate retained or unrelated kernel objects",
+    "Keep load, attachment, execution, correctness and cleanup checks mandatory for the new TC backend and every later stage",
+    "Keep original XDP source/model unchanged, DETECT ONLY, and management networking protected"
+  ]
+}

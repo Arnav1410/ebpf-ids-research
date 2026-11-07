@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "stage": "stage06",
+  "status": "predeclared",
+  "scope": "Private owned ids_client/ids_server namespaces only; detect-only TC; original checked-in model; no management interface changes",
+  "required": [
+    "Build the actual native event reader and all TC profiles with warnings as errors",
+    "Load and attach the versioned event-producing inference chain in the real kernel",
+    "Bind reader identity to actual owner PID, private namespace, held map FDs, model identity and interface",
+    "Compare every public completion against the kernel result ledger and exact integer oracle; compare coherent direction counts against independently parsed packet prefixes",
+    "Exercise repeated FIN/RST triggers and eight simultaneous real TCP connections",
+    "Refuse a second reader; restart the first reader against the same live producer without resetting sequence or counters",
+    "Pause a confirmed-stopped reader against a 4096-byte ring; observe actual ring drops while inference and TCP forwarding continue",
+    "Pause Python aggregation with a four-record queue; observe bounded drop-newest behavior separately from kernel drops",
+    "Retain a genuine live JSONL sample with no payload, private skb context or fabricated classifications",
+    "Pass existing probe, flow, inference and ownership regression scenarios",
+    "Close every reader before the producer; prove owned program/map release, filter removal, namespace cleanup and preserved host network"
+  ],
+  "loss_semantics": "Kernel ring drops, Python queue drops, journal capacity and retention are separate. Sequence holes are reorder-aware observations, never summed into an invented loss total.",
+  "advance_only_after": "All required checks pass; no new lifecycle exceptions"
+}

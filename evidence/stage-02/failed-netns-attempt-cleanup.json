@@ -1,0 +1,79 @@
+{
+  "owned_pair": [
+    {
+      "ifindex": 8,
+      "link": "veth-idss",
+      "ifname": "veth-idsc",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "M-DOWN"
+      ],
+      "mtu": 1500,
+      "qdisc": "noop",
+      "operstate": "DOWN",
+      "linkmode": "DEFAULT",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "b2:c1:11:6a:81:99",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "promiscuity": 0,
+      "min_mtu": 68,
+      "max_mtu": 65535,
+      "linkinfo": {
+        "info_kind": "veth"
+      },
+      "inet6_addr_gen_mode": "eui64",
+      "num_tx_queues": 4,
+      "num_rx_queues": 4,
+      "gso_max_size": 65536,
+      "gso_max_segs": 65535
+    },
+    {
+      "ifindex": 7,
+      "link": "veth-idsc",
+      "ifname": "veth-idss",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "M-DOWN"
+      ],
+      "mtu": 1500,
+      "qdisc": "noop",
+      "operstate": "DOWN",
+      "linkmode": "DEFAULT",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "92:ac:0b:fa:be:c4",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "promiscuity": 0,
+      "min_mtu": 68,
+      "max_mtu": 65535,
+      "linkinfo": {
+        "info_kind": "veth"
+      },
+      "inet6_addr_gen_mode": "eui64",
+      "num_tx_queues": 4,
+      "num_rx_queues": 4,
+      "gso_max_size": 65536,
+      "gso_max_segs": 65535
+    }
+  ],
+  "recorded_creation_ifindices_match": true,
+  "post_failure_mac_and_peer_identity_match": true,
+  "argv": [
+    "/usr/bin/sudo",
+    "-n",
+    "ip",
+    "link",
+    "del",
+    "dev",
+    "veth-idsc"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "host_links_restored": true
+}

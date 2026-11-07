@@ -1,0 +1,120 @@
+{
+  "purpose": "Owned temporary serialization inputs from earlier attempts; not original assets. Current runner uses private temporary directories and removes them on close.",
+  "files": [
+    {
+      "path": "evidence/stage-05/live-context-size/inference-synthetic-overflow-vectors-1.bin",
+      "bytes": 192,
+      "sha256": "197526a61121dce8371ec8422ff44d866ff78e87bb6c8527e0655fd319e3130b"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-synthetic-overflow-params.bin",
+      "bytes": 5216,
+      "sha256": "90acd7a31e0f0fe46ebb171acb55806bd93468a9ee400731b7218564a39678dc"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-synthetic-near-zero-vectors-1.bin",
+      "bytes": 240,
+      "sha256": "43be5e5859a499fcf5dbfce07b16d525902a526abaa59db759fd17a2b52e5205"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-synthetic-near-zero-params.bin",
+      "bytes": 5216,
+      "sha256": "7b7f184ca1242b1716313511bc167ded08feccd8b2d675a22bf52e0dad5d76f2"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-paired-M3-vectors-1.bin",
+      "bytes": 26592,
+      "sha256": "d59a26585b54b871316bf007f45005e6f2368e28a7888119db6a310508debb5a"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-paired-M3-params.bin",
+      "bytes": 5216,
+      "sha256": "ef4da8d5ee4772abde75f6ad4b64b81d0a3078b085e84af70d82fba2daf8fcfb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-2-vectors-1.bin",
+      "bytes": 26592,
+      "sha256": "647b5072afd3888c804cdacb94ca9091d053d7dfb052cc326a011592598eee89"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-2-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-1.bin",
+      "bytes": 26592,
+      "sha256": "647b5072afd3888c804cdacb94ca9091d053d7dfb052cc326a011592598eee89"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-2.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-3.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-4.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-5.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-6.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-7.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-8.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-vectors-9.bin",
+      "bytes": 48,
+      "sha256": "4b3fccd6697dfed4054e61b36c063d413d8532b34488031448afe30171cbc6fb"
+    },
+    {
+      "path": "evidence/stage-05/live-context-size/inference-original-1-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    },
+    {
+      "path": "evidence/stage-05/live-entry-tailcall/inference-original-1-vectors-1.bin",
+      "bytes": 26592,
+      "sha256": "647b5072afd3888c804cdacb94ca9091d053d7dfb052cc326a011592598eee89"
+    },
+    {
+      "path": "evidence/stage-05/live-entry-tailcall/inference-original-1-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    },
+    {
+      "path": "evidence/stage-05/live-uapi-context/inference-original-1-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    },
+    {
+      "path": "evidence/stage-05/live-direct-context/inference-original-1-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    },
+    {
+      "path": "evidence/stage-05/live-initial/inference-original-1-params.bin",
+      "bytes": 5216,
+      "sha256": "e314b94e678c96319d9e9a3462f80a88ec333fb7f5a8861e421ffa0b733203d8"
+    }
+  ]
+}

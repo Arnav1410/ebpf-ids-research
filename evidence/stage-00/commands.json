@@ -1,0 +1,877 @@
+{
+  "stage": "00",
+  "mode": "Inventory and kernel capability probes only; no baseline build, detector attachment, model training or traffic generation. Authentication input excluded.",
+  "branch_creation": {
+    "shell_command": "git status --short --branch && sha256sum UBUNTU_VM_IDS_AGENT_PLAN.md && git switch -c test-env && sha256sum UBUNTU_VM_IDS_AGENT_PLAN.md",
+    "exit_code": 0,
+    "combined_output": "## baseline-reproduction\n?? UBUNTU_VM_IDS_AGENT_PLAN.md\n793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400  UBUNTU_VM_IDS_AGENT_PLAN.md\nSwitched to a new branch 'test-env'\n793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400  UBUNTU_VM_IDS_AGENT_PLAN.md\n",
+    "capture": "Combined output from the original branch-creation bash tool call; stdout/stderr not separately exposed"
+  },
+  "commands": [
+    {
+      "argv": [
+        "pwd"
+      ],
+      "started_utc": "2026-11-06T18:14:00.304060+00:00",
+      "exit_code": 0,
+      "stdout": "/home/poggers/NN-eBPF\n",
+      "stderr": "",
+      "duration_seconds": 0.00293
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "started_utc": "2026-11-06T18:14:00.307052+00:00",
+      "exit_code": 0,
+      "stdout": "## test-env\n?? UBUNTU_VM_IDS_AGENT_PLAN.md\n",
+      "stderr": "",
+      "duration_seconds": 0.002216
+    },
+    {
+      "argv": [
+        "git",
+        "log",
+        "-1",
+        "--oneline"
+      ],
+      "started_utc": "2026-11-06T18:14:00.309322+00:00",
+      "exit_code": 0,
+      "stdout": "65c49c7 Set up evaluation pipeline for baseline\n",
+      "stderr": "",
+      "duration_seconds": 0.001013
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "started_utc": "2026-11-06T18:14:00.310370+00:00",
+      "exit_code": 0,
+      "stdout": "origin\tgit@github.com:Arnav1410/ebpf-ids-research.git (fetch)\norigin\tgit@github.com:Arnav1410/ebpf-ids-research.git (push)\n",
+      "stderr": "",
+      "duration_seconds": 0.000622
+    },
+    {
+      "argv": [
+        "git",
+        "submodule",
+        "status"
+      ],
+      "started_utc": "2026-11-06T18:14:00.311027+00:00",
+      "exit_code": 128,
+      "stdout": "",
+      "stderr": "fatal: no submodule mapping found in .gitmodules for path 'dataset-instance/intrusion/DVMA/brute-force'\n",
+      "duration_seconds": 0.019869
+    },
+    {
+      "argv": [
+        "git",
+        "log",
+        "-3",
+        "--oneline"
+      ],
+      "started_utc": "2026-11-06T18:14:00.331188+00:00",
+      "exit_code": 0,
+      "stdout": "65c49c7 Set up evaluation pipeline for baseline\n18f855b Set up baseline reproduction\n4fe55dd update\n",
+      "stderr": "",
+      "duration_seconds": 0.000984
+    },
+    {
+      "argv": [
+        "id"
+      ],
+      "started_utc": "2026-11-06T18:14:00.332223+00:00",
+      "exit_code": 0,
+      "stdout": "uid=1000(poggers) gid=1000(poggers) groups=1000(poggers),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),122(lpadmin),135(lxd),136(sambashare)\n",
+      "stderr": "",
+      "duration_seconds": 0.002399
+    },
+    {
+      "argv": [
+        "uname",
+        "-a"
+      ],
+      "started_utc": "2026-11-06T18:14:00.334661+00:00",
+      "exit_code": 0,
+      "stdout": "Linux poggers-Standard-PC-Q35-ICH9-2009 6.8.0-138-generic #138~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug  7 13:43:15 UTC  x86_64 x86_64 x86_64 GNU/Linux\n",
+      "stderr": "",
+      "duration_seconds": 0.002026
+    },
+    {
+      "argv": [
+        "systemd-detect-virt"
+      ],
+      "started_utc": "2026-11-06T18:14:00.336731+00:00",
+      "exit_code": 0,
+      "stdout": "kvm\n",
+      "stderr": "",
+      "duration_seconds": 0.001641
+    },
+    {
+      "argv": [
+        "ip",
+        "-br",
+        "address"
+      ],
+      "started_utc": "2026-11-06T18:14:00.338475+00:00",
+      "exit_code": 0,
+      "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nenp1s0           UP             192.168.122.20/24 fe80::471c:d5f6:2d72:7fc/64 \n",
+      "stderr": "",
+      "duration_seconds": 0.00078
+    },
+    {
+      "argv": [
+        "ip",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:14:00.339294+00:00",
+      "exit_code": 0,
+      "stdout": "default via 192.168.122.1 dev enp1s0 proto dhcp metric 100 \n169.254.0.0/16 dev enp1s0 scope link metric 1000 \n192.168.122.0/24 dev enp1s0 proto kernel scope link src 192.168.122.20 metric 100 \n",
+      "stderr": "",
+      "duration_seconds": 0.000639
+    },
+    {
+      "argv": [
+        "ip",
+        "-6",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:14:00.340041+00:00",
+      "exit_code": 0,
+      "stdout": "::1 dev lo proto kernel metric 256 pref medium\nfe80::/64 dev enp1s0 proto kernel metric 1024 pref medium\n",
+      "stderr": "",
+      "duration_seconds": 0.001035
+    },
+    {
+      "argv": [
+        "ip",
+        "-d",
+        "-j",
+        "link",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:14:00.341195+00:00",
+      "exit_code": 0,
+      "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"promiscuity\":0,\"min_mtu\":0,\"max_mtu\":0,\"inet6_addr_gen_mode\":\"eui64\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535},{\"ifindex\":2,\"ifname\":\"enp1s0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"52:54:00:73:34:a0\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"promiscuity\":0,\"min_mtu\":68,\"max_mtu\":65535,\"inet6_addr_gen_mode\":\"none\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535,\"parentbus\":\"virtio\",\"parentdev\":\"virtio0\"}]\n",
+      "stderr": "",
+      "duration_seconds": 0.000717
+    },
+    {
+      "argv": [
+        "ip",
+        "netns",
+        "list"
+      ],
+      "started_utc": "2026-11-06T18:14:00.341954+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.001439
+    },
+    {
+      "argv": [
+        "tc",
+        "qdisc",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:14:00.343434+00:00",
+      "exit_code": 0,
+      "stdout": "qdisc noqueue 0: dev lo root refcnt 2 \nqdisc fq_codel 0: dev enp1s0 root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64 \n",
+      "stderr": "",
+      "duration_seconds": 0.007973
+    },
+    {
+      "argv": [
+        "bash",
+        "-c",
+        "for tool in clang llvm-config bpftool ip tc make cc gcc python3 sudo capsh ethtool iperf3 nc; do printf \"%s: \" \"$tool\"; command -v \"$tool\"; done"
+      ],
+      "started_utc": "2026-11-06T18:14:00.351467+00:00",
+      "exit_code": 0,
+      "stdout": "clang: llvm-config: bpftool: /usr/sbin/bpftool\nip: /usr/sbin/ip\ntc: /usr/sbin/tc\nmake: /usr/bin/make\ncc: /usr/bin/cc\ngcc: /usr/bin/gcc\npython3: /usr/bin/python3\nsudo: /usr/bin/sudo\ncapsh: /usr/sbin/capsh\nethtool: iperf3: nc: /usr/bin/nc\n",
+      "stderr": "",
+      "duration_seconds": 0.003305
+    },
+    {
+      "argv": [
+        "clang",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.354842+00:00",
+      "exit_code": 127,
+      "stdout": "",
+      "stderr": "[Errno 2] No such file or directory: 'clang'",
+      "duration_seconds": 0.00035
+    },
+    {
+      "argv": [
+        "llvm-config",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.355240+00:00",
+      "exit_code": 127,
+      "stdout": "",
+      "stderr": "[Errno 2] No such file or directory: 'llvm-config'",
+      "duration_seconds": 0.001204
+    },
+    {
+      "argv": [
+        "bpftool",
+        "version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.356488+00:00",
+      "exit_code": 0,
+      "stdout": "bpftool v7.4.0\nusing libbpf v1.4\nfeatures:\n",
+      "stderr": "",
+      "duration_seconds": 0.008239
+    },
+    {
+      "argv": [
+        ".output/bpftool/bpftool",
+        "version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.364787+00:00",
+      "exit_code": 0,
+      "stdout": "bpftool v7.3.0\nusing libbpf v1.3\nfeatures:\n",
+      "stderr": "",
+      "duration_seconds": 0.002285
+    },
+    {
+      "argv": [
+        "ip",
+        "-V"
+      ],
+      "started_utc": "2026-11-06T18:14:00.367121+00:00",
+      "exit_code": 0,
+      "stdout": "ip utility, iproute2-5.15.0, libbpf 0.5.0\n",
+      "stderr": "",
+      "duration_seconds": 0.000713
+    },
+    {
+      "argv": [
+        "tc",
+        "-V"
+      ],
+      "started_utc": "2026-11-06T18:14:00.367874+00:00",
+      "exit_code": 0,
+      "stdout": "tc utility, iproute2-5.15.0, libbpf 0.5.0\n",
+      "stderr": "",
+      "duration_seconds": 0.000725
+    },
+    {
+      "argv": [
+        "make",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.368669+00:00",
+      "exit_code": 0,
+      "stdout": "GNU Make 4.3\nBuilt for x86_64-pc-linux-gnu\nCopyright (C) 1988-2020 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": "",
+      "duration_seconds": 0.002522
+    },
+    {
+      "argv": [
+        "cc",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.371234+00:00",
+      "exit_code": 0,
+      "stdout": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": "",
+      "duration_seconds": 0.004174
+    },
+    {
+      "argv": [
+        "python3",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:00.375453+00:00",
+      "exit_code": 0,
+      "stdout": "Python 3.10.12\n",
+      "stderr": "",
+      "duration_seconds": 0.000844
+    },
+    {
+      "argv": [
+        "stat",
+        "-c",
+        "%n %F %s bytes %A",
+        "/sys/kernel/btf/vmlinux"
+      ],
+      "started_utc": "2026-11-06T18:14:00.376335+00:00",
+      "exit_code": 0,
+      "stdout": "/sys/kernel/btf/vmlinux regular file 6099393 bytes -r--r--r--\n",
+      "stderr": "",
+      "duration_seconds": 0.001666
+    },
+    {
+      "argv": [
+        "findmnt",
+        "-n",
+        "-o",
+        "TARGET,FSTYPE,OPTIONS",
+        "/sys/fs/bpf"
+      ],
+      "started_utc": "2026-11-06T18:14:00.378049+00:00",
+      "exit_code": 0,
+      "stdout": "/sys/fs/bpf bpf    rw,nosuid,nodev,noexec,relatime,mode=700\n",
+      "stderr": "",
+      "duration_seconds": 0.004031
+    },
+    {
+      "argv": [
+        "findmnt",
+        "-n",
+        "-o",
+        "TARGET,FSTYPE,OPTIONS",
+        "/sys/kernel/tracing"
+      ],
+      "started_utc": "2026-11-06T18:14:00.382126+00:00",
+      "exit_code": 0,
+      "stdout": "/sys/kernel/tracing tracefs rw,nosuid,nodev,noexec,relatime\n",
+      "stderr": "",
+      "duration_seconds": 0.001097
+    },
+    {
+      "argv": [
+        "sysctl",
+        "kernel.unprivileged_bpf_disabled",
+        "kernel.perf_event_paranoid",
+        "net.core.bpf_jit_enable"
+      ],
+      "started_utc": "2026-11-06T18:14:00.383265+00:00",
+      "exit_code": 0,
+      "stdout": "kernel.unprivileged_bpf_disabled = 2\nkernel.perf_event_paranoid = 4\nnet.core.bpf_jit_enable = 1\n",
+      "stderr": "",
+      "duration_seconds": 0.005845
+    },
+    {
+      "argv": [
+        "capsh",
+        "--print"
+      ],
+      "started_utc": "2026-11-06T18:14:00.389181+00:00",
+      "exit_code": 0,
+      "stdout": "Current: =\nBounding set =cap_chown,cap_dac_override,cap_dac_read_search,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_linux_immutable,cap_net_bind_service,cap_net_broadcast,cap_net_admin,cap_net_raw,cap_ipc_lock,cap_ipc_owner,cap_sys_module,cap_sys_rawio,cap_sys_chroot,cap_sys_ptrace,cap_sys_pacct,cap_sys_admin,cap_sys_boot,cap_sys_nice,cap_sys_resource,cap_sys_time,cap_sys_tty_config,cap_mknod,cap_lease,cap_audit_write,cap_audit_control,cap_setfcap,cap_mac_override,cap_mac_admin,cap_syslog,cap_wake_alarm,cap_block_suspend,cap_audit_read,cap_perfmon,cap_bpf,cap_checkpoint_restore\nAmbient set =\nCurrent IAB: \nSecurebits: 00/0x0/1'b0\n secure-noroot: no (unlocked)\n secure-no-suid-fixup: no (unlocked)\n secure-keep-caps: no (unlocked)\n secure-no-ambient-raise: no (unlocked)\nuid=1000(poggers) euid=1000(poggers)\ngid=1000(poggers)\ngroups=4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),122(lpadmin),135(lxd),136(sambashare),1000(poggers)\nGuessed mode: UNCERTAIN (0)\n",
+      "stderr": "",
+      "duration_seconds": 0.003781
+    },
+    {
+      "argv": [
+        "sudo",
+        "-n",
+        "bpftool",
+        "feature",
+        "probe",
+        "kernel"
+      ],
+      "started_utc": "2026-11-06T18:14:00.393036+00:00",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sudo: a password is required\n",
+      "duration_seconds": 0.008531
+    },
+    {
+      "argv": [
+        "sudo",
+        "-n",
+        "/home/poggers/NN-eBPF/.output/bpftool/bpftool",
+        "feature",
+        "probe",
+        "kernel"
+      ],
+      "started_utc": "2026-11-06T18:14:00.401628+00:00",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sudo: a password is required\n",
+      "duration_seconds": 0.005753
+    },
+    {
+      "argv": [
+        "/home/poggers/NN-eBPF/.output/bpftool/bpftool",
+        "feature",
+        "probe",
+        "kernel",
+        "unprivileged"
+      ],
+      "started_utc": "2026-11-06T18:14:00.407443+00:00",
+      "exit_code": 255,
+      "stdout": "",
+      "stderr": "Error: unprivileged run not supported, recompile bpftool with libcap\n",
+      "duration_seconds": 0.000814
+    },
+    {
+      "argv": [
+        "/usr/bin/clang-12",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:48.309485+00:00",
+      "exit_code": 0,
+      "stdout": "Ubuntu clang version 12.0.1-19ubuntu3\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+      "stderr": "",
+      "duration_seconds": 0.204265
+    },
+    {
+      "argv": [
+        "/usr/bin/clang-12",
+        "-print-targets"
+      ],
+      "started_utc": "2026-11-06T18:14:48.513825+00:00",
+      "exit_code": 0,
+      "stdout": "  Registered Targets:\n    aarch64    - AArch64 (little endian)\n    aarch64_32 - AArch64 (little endian ILP32)\n    aarch64_be - AArch64 (big endian)\n    amdgcn     - AMD GCN GPUs\n    arm        - ARM\n    arm64      - ARM64 (little endian)\n    arm64_32   - ARM64 (little endian ILP32)\n    armeb      - ARM (big endian)\n    avr        - Atmel AVR Microcontroller\n    bpf        - BPF (host endian)\n    bpfeb      - BPF (big endian)\n    bpfel      - BPF (little endian)\n    hexagon    - Hexagon\n    lanai      - Lanai\n    mips       - MIPS (32-bit big endian)\n    mips64     - MIPS (64-bit big endian)\n    mips64el   - MIPS (64-bit little endian)\n    mipsel     - MIPS (32-bit little endian)\n    msp430     - MSP430 [experimental]\n    nvptx      - NVIDIA PTX 32-bit\n    nvptx64    - NVIDIA PTX 64-bit\n    ppc32      - PowerPC 32\n    ppc32le    - PowerPC 32 LE\n    ppc64      - PowerPC 64\n    ppc64le    - PowerPC 64 LE\n    r600       - AMD GPUs HD2XXX-HD6XXX\n    riscv32    - 32-bit RISC-V\n    riscv64    - 64-bit RISC-V\n    sparc      - Sparc\n    sparcel    - Sparc LE\n    sparcv9    - Sparc V9\n    systemz    - SystemZ\n    thumb      - Thumb\n    thumbeb    - Thumb (big endian)\n    wasm32     - WebAssembly 32-bit\n    wasm64     - WebAssembly 64-bit\n    x86        - 32-bit X86: Pentium-Pro and above\n    x86-64     - 64-bit X86: EM64T and AMD64\n    xcore      - XCore\n",
+      "stderr": "",
+      "duration_seconds": 0.018727
+    },
+    {
+      "argv": [
+        "/usr/bin/llvm-config-12",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:48.532631+00:00",
+      "exit_code": 0,
+      "stdout": "12.0.1\n",
+      "stderr": "",
+      "duration_seconds": 0.015222
+    },
+    {
+      "argv": [
+        "dpkg-query",
+        "-W",
+        "-f=${Package} ${Version} ${db:Status-Abbrev}\n",
+        "clang*",
+        "llvm*",
+        "libelf*",
+        "zlib1g*",
+        "linux-tools*"
+      ],
+      "started_utc": "2026-11-06T18:14:48.547925+00:00",
+      "exit_code": 0,
+      "stdout": "clang-12 1:12.0.1-19ubuntu3 ii \nclang-12-doc  un \nlibelf-dev 0.186-1ubuntu0.1 ii \nlibelf1 0.186-1ubuntu0.1 ii \nlibelfg0-dev  un \nlinux-tools-6.8.0-138-generic 6.8.0-138.138~22.04.1 ii \nlinux-tools-6.8.0-40-generic 6.8.0-40.40~22.04.3 ii \nlinux-tools-common 5.15.0-198.208 ii \nllvm-12 1:12.0.1-19ubuntu3 ii \nllvm-12-dev 1:12.0.1-19ubuntu3 ii \nllvm-12-doc  un \nllvm-12-linker-tools 1:12.0.1-19ubuntu3 ii \nllvm-12-runtime 1:12.0.1-19ubuntu3 ii \nllvm-12-tools 1:12.0.1-19ubuntu3 ii \nzlib1g 1:1.2.11.dfsg-2ubuntu9.2 ii \nzlib1g-dev 1:1.2.11.dfsg-2ubuntu9.2 ii \n",
+      "stderr": "",
+      "duration_seconds": 0.010972
+    },
+    {
+      "argv": [
+        "dpkg",
+        "-S",
+        "/usr/sbin/bpftool"
+      ],
+      "started_utc": "2026-11-06T18:14:48.559000+00:00",
+      "exit_code": 0,
+      "stdout": "linux-tools-common: /usr/sbin/bpftool\n",
+      "stderr": "",
+      "duration_seconds": 0.087906
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "--stage",
+        "dataset-instance/intrusion/DVMA/brute-force",
+        "dataset-instance/intrusion/GoldenEye",
+        "dataset-instance/intrusion/slowloris"
+      ],
+      "started_utc": "2026-11-06T18:14:48.646980+00:00",
+      "exit_code": 0,
+      "stdout": "160000 c3f5b472182cb1e149769e20fa646ecdc49a5ea6 0\tdataset-instance/intrusion/DVMA/brute-force\n160000 792862f5c8cb98f9ffcb9fab245e2c663e3a1026 0\tdataset-instance/intrusion/GoldenEye\n100644 96ed4440ebd82c39296de5e8880be1977fc9a843 0\tdataset-instance/intrusion/slowloris/index.html\n100755 69a32624bb18233f192bbcc56e55d2baf9f54292 0\tdataset-instance/intrusion/slowloris/run.sh\n",
+      "stderr": "",
+      "duration_seconds": 0.001167
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "4fe55dd:.gitmodules"
+      ],
+      "started_utc": "2026-11-06T18:14:48.648203+00:00",
+      "exit_code": 0,
+      "stdout": "[submodule \"libbpf\"]\n\tpath = libbpf\n\turl = https://github.com/libbpf/libbpf.git\n[submodule \"bpftool\"]\n\tpath = bpftool\n\turl = https://github.com/libbpf/bpftool.git\n",
+      "stderr": "",
+      "duration_seconds": 0.001123
+    },
+    {
+      "argv": [
+        ".output/evaluation-venv/bin/python",
+        "--version"
+      ],
+      "started_utc": "2026-11-06T18:14:48.649366+00:00",
+      "exit_code": 0,
+      "stdout": "Python 3.10.12\n",
+      "stderr": "",
+      "duration_seconds": 0.000849
+    },
+    {
+      "argv": [
+        "file",
+        "src/.output/xdp",
+        "src/.output/hot_updating",
+        "src/.output/xdp.bpf.o",
+        ".output/evaluation/m4-root-context/kernel-driver"
+      ],
+      "started_utc": "2026-11-06T18:18:30.725257+00:00",
+      "exit_code": 0,
+      "stdout": "src/.output/xdp:                                  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=38bd8b93644135afdef4cea2052135c2204cefb6, for GNU/Linux 3.2.0, with debug_info, not stripped\nsrc/.output/hot_updating:                         ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ccd249d7a8d0e236ef730c4f2c6c0f46ef685a7d, for GNU/Linux 3.2.0, with debug_info, not stripped\nsrc/.output/xdp.bpf.o:                            ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped\n.output/evaluation/m4-root-context/kernel-driver: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1cc590888a183d2a55f774ffdccd4d58b8ada247, for GNU/Linux 3.2.0, with debug_info, not stripped\n",
+      "stderr": "",
+      "duration_seconds": 0.021551
+    },
+    {
+      "argv": [
+        "readelf",
+        "-h",
+        "src/.output/xdp.bpf.o"
+      ],
+      "started_utc": "2026-11-06T18:18:30.746918+00:00",
+      "exit_code": 0,
+      "stdout": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 \n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              REL (Relocatable file)\n  Machine:                           Linux BPF\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          0 (bytes into file)\n  Start of section headers:          141080 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           0 (bytes)\n  Number of program headers:         0\n  Size of section headers:           64 (bytes)\n  Number of section headers:         26\n  Section header string table index: 1\n",
+      "stderr": "readelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 10 to section .debug_info\nreadelf: Warning: unable to apply unsupported reloc type 1 to section .debug_info\n",
+      "duration_seconds": 0.004208
+    },
+    {
+      "argv": [
+        "pkg-config",
+        "--modversion",
+        "libelf",
+        "zlib"
+      ],
+      "started_utc": "2026-11-06T18:18:30.751234+00:00",
+      "exit_code": 0,
+      "stdout": "0.186\n1.2.11\n",
+      "stderr": "",
+      "duration_seconds": 0.00259
+    },
+    {
+      "argv": [
+        "modinfo",
+        "-F",
+        "filename",
+        "cls_bpf"
+      ],
+      "started_utc": "2026-11-06T18:18:30.753889+00:00",
+      "exit_code": 0,
+      "stdout": "/lib/modules/6.8.0-138-generic/kernel/net/sched/cls_bpf.ko\n",
+      "stderr": "",
+      "duration_seconds": 0.000793
+    },
+    {
+      "argv": [
+        "modinfo",
+        "-F",
+        "filename",
+        "sch_ingress"
+      ],
+      "started_utc": "2026-11-06T18:18:30.754719+00:00",
+      "exit_code": 0,
+      "stdout": "/lib/modules/6.8.0-138-generic/kernel/net/sched/sch_ingress.ko\n",
+      "stderr": "",
+      "duration_seconds": 0.001392
+    },
+    {
+      "argv": [
+        "modinfo",
+        "-F",
+        "filename",
+        "veth"
+      ],
+      "started_utc": "2026-11-06T18:18:30.756148+00:00",
+      "exit_code": 0,
+      "stdout": "/lib/modules/6.8.0-138-generic/kernel/drivers/net/veth.ko\n",
+      "stderr": "",
+      "duration_seconds": 0.002451
+    },
+    {
+      "argv": [
+        ".output/evaluation-venv/bin/python",
+        "-m",
+        "pip",
+        "freeze",
+        "--all"
+      ],
+      "started_utc": "2026-11-06T18:18:30.758634+00:00",
+      "exit_code": 0,
+      "stdout": "filelock==4.1.0\nfsspec==2026.9.0\nJinja2==3.1.6\nMarkupSafe==3.0.4\nmpmath==1.3.0\nnetworkx==3.4.2\nnumpy==2.1.3\npip==22.0.2\nsetuptools==59.6.0\nsympy==1.13.1\ntorch==2.5.1+cpu\ntyping_extensions==4.16.0\n",
+      "stderr": "",
+      "duration_seconds": 0.299479
+    },
+    {
+      "argv": [
+        "lscpu",
+        "-J"
+      ],
+      "started_utc": "2026-11-06T18:18:31.058181+00:00",
+      "exit_code": 0,
+      "stdout": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"39 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"GenuineIntel\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"Intel(R) Core(TM) i7-14700HX\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"6\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"183\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"4608.00\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves user_shstk avx_vnni arat vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize ibt flush_l1d arch_capabilities\"\n      },{\n         \"field\": \"Virtualization:\",\n         \"data\": \"VT-x\"\n      },{\n         \"field\": \"Hypervisor vendor:\",\n         \"data\": \"KVM\"\n      },{\n         \"field\": \"Virtualization type:\",\n         \"data\": \"full\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"16 MiB (4 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"64 MiB (4 instances)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Mitigation; Clear Register File\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Not affected\"\n      }\n   ]\n}\n",
+      "stderr": "",
+      "duration_seconds": 0.0029
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "--stage"
+      ],
+      "started_utc": "2026-11-06T18:20:12.277303+00:00",
+      "exit_code": 0,
+      "stdout": "100644 16ad0796e119cf7f8a6ba0148eef95a640ff44d7 0\t.gitignore\n100644 3ae0a48deef597f7207664fb6c1c83386cb21f40 0\t.gitmodules\n100644 b3bb54474655be5f68a0e00941b26e82bc90ed75 0\tBASELINE_SUMMARY.md\n100644 8e9524b98c179a5d998e16c1de0df4771da18702 0\tMakefile\n100644 05e03be4c4a5fdfa0c56bfec293474fc02cbb47a 0\tbpftool/.gitattributes\n100644 6d24cf6aa8d8ca7dd0cf398b28b671beb360722b 0\tbpftool/.github/workflows/build.yaml\n100644 9e6283064c6d826ebaf4eaf5fa70c17f07c1ca78 0\tbpftool/.github/workflows/docker.yaml\n100644 82203137cd09ac23ebd3c2e2ad5f2ec748cb4216 0\tbpftool/.github/workflows/lint-commits.yaml\n100644 68d1c0c2af77236a5b9b4cc0d8f9b67879532179 0\tbpftool/.github/workflows/lint-shell.yaml\n100644 69c00a490baf4e3120d13734a09b622a4337695f 0\tbpftool/.github/workflows/release.yaml\n100644 5190295a0ea77f6e55206ab324d0dfb33f02f442 0\tbpftool/.github/workflows/static-build.yaml\n100644 1706b4a8fc8bf121f9fda22afa9f514f66e5575b 0\tbpftool/.gitmodules\n100644 ec5e4be249bfb69656ed65a19afbcdc58657ff27 0\tbpftool/BPF-CHECKPOINT-COMMIT\n100644 130cfa6ba8f97a6f30d9d395cb6fb69743d354de 0\tbpftool/CHECKPOINT-COMMIT\n100644 730319c634cdc6e816922d7e0c35c77553f7ffb3 0\tbpftool/Dockerfile\n100644 00c68fe05996a71e7b7cf138e5147b9d797dc81a 0\tbpftool/LICENSE\n100644 da366e2ce50be9b4ec250cad773677bee7fc1d9d 0\tbpftool/LICENSE.BSD-2-Clause\n100644 d159169d1050894d3ea3b98e1c965c4058208fe1 0\tbpftool/LICENSE.GPL-2.0\n100644 4b59484d51d7c283f00686cc45766ce0ca71d31c 0\tbpftool/README.md\n100644 085bf18f3659ab901b3ca1061cf5e8be142b2f9b 0\tbpftool/bash-completion/bpftool\n100644 3c99250cbd207e950b4950c2fc425ae4e9193460 0\tbpftool/docs/.gitignore\n100644 8355aea03ec0911e9f3b1c00788c65fbace662dd 0\tbpftool/docs/Makefile\n100644 342716f74ec4844532cd11b8e228b745191f12d8 0\tbpftool/docs/bpftool-btf.rst\n100644 bd015ec9847b4c1dab35ce1f7fe49b3fcdd948c8 0\tbpftool/docs/bpftool-cgroup.rst\n100644 e44039f89be7f529abe84b9dd8e761e33f7917e3 0\tbpftool/docs/bpftool-feature.rst\n100644 5006e724d1bc01c1afe5e13fb4ca29a33725a3ea 0\tbpftool/docs/bpftool-gen.rst\n100644 84839d488621e6dbf8736f13b40dc629b9496067 0\tbpftool/docs/bpftool-iter.rst\n100644 52a4eee4af546fcb1c368ec7c1e06c12ecbe368e 0\tbpftool/docs/bpftool-link.rst\n100644 3b7ba037af95da0a05d2b9ed137e429aa88fe725 0\tbpftool/docs/bpftool-map.rst\n100644 f4e0a516335acdaebbf345bc883c020b6cd0a57b 0\tbpftool/docs/bpftool-net.rst\n100644 5fea633a82f171fc18455ad7e47cea90a9f686c9 0\tbpftool/docs/bpftool-perf.rst\n100644 dcae81bd27ed2e48e68cd62e60959fec55a99f5c 0\tbpftool/docs/bpftool-prog.rst\n100644 8022b5321dbe6f29b6bb00b787b00c18c69bce7c 0\tbpftool/docs/bpftool-struct_ops.rst\n100644 6965c94dfdafe019313749554b0bc95454b17642 0\tbpftool/docs/bpftool.rst\n100644 30df7a707f02405060c36acf5103e14b3acf7036 0\tbpftool/docs/common_options.rst\n100644 827e3ffb176607d180147317915ec65a9ab4a210 0\tbpftool/docs/substitutions.rst\n100644 b4d3926d35cda984392f4807b2d48735574c4c4f 0\tbpftool/include/linux/bitops.h\n100644 f26967c6ade27108c5a89719539237e99771ea90 0\tbpftool/include/linux/build_bug.h\n100644 652467589bf1352c57170a9fe991384be22cd036 0\tbpftool/include/linux/compiler-gcc.h\n100644 8a9ac8576070600723dc2d5ba83cc5b212854bb3 0\tbpftool/include/linux/compiler.h\n100644 0655f12cd0041ee40c41a83e7c9ff3ef328eb9cd 0\tbpftool/include/linux/compiler_types.h\n100644 d5b7211505793532dba2a948d8022546df85e9de 0\tbpftool/include/linux/err.h\n100644 f256caf7c3a92cfbaad055cfccf5984e142b1be1 0\tbpftool/include/linux/filter.h\n100644 48d23ea5c476c684907f74240bf880fa50baa9d2 0\tbpftool/include/linux/kernel.h\n100644 1113376f727e380931f2cee2c006211a9969f1d2 0\tbpftool/include/linux/list.h\n100644 95e51ac095ba4cd58d154d62abc10d54b62279e6 0\tbpftool/include/linux/sizes.h\n100644 d7cb093daf6ede569de8794793a961748a31fccf 0\tbpftool/include/linux/stringify.h\n100644 f991d117c49bd322e68fd7fdcc349f8fcfb73c2d 0\tbpftool/include/linux/types.h\n100644 70f331e23ed3d0785201dc5a357301a4e0fc38c1 0\tbpftool/include/tools/dis-asm-compat.h\n100644 23e6c416b85fc14e67470ee46e0b6b4f42f2820e 0\tbpftool/include/uapi/asm-generic/bitsperlong.h\n100644 60a9d59beeabba9bdbaa94946aa0c28e3f435463 0\tbpftool/include/uapi/linux/bpf.h\n100644 ee97668bdadb31585815e271af40667b6dea8b53 0\tbpftool/include/uapi/linux/bpf_common.h\n100644 ec1798b6d3ffb4e80ea43e9113b09e1363672df5 0\tbpftool/include/uapi/linux/btf.h\n100644 a429381e7ca507fe7f4d86f4e7fa229cdcda078b 0\tbpftool/include/uapi/linux/const.h\n100644 39e659c83cfd21a4c6f7ff5fa5235d01ba20dc19 0\tbpftool/include/uapi/linux/if_link.h\n100644 0a4d73317759c9ee523d7d5482548b3171c821e6 0\tbpftool/include/uapi/linux/netlink.h\n100644 39c6a250dd1b92af18e3b4a72a047d2784f89382 0\tbpftool/include/uapi/linux/perf_event.h\n100644 3faee0199a9b972c2036882a607cf70cf83c2626 0\tbpftool/include/uapi/linux/pkt_cls.h\n100644 5c903abc9fa52a52477547b8ca0ce52dcab88b62 0\tbpftool/include/uapi/linux/pkt_sched.h\n100644 fe6c8f8f3e8c60961135609d5bce024979064ccc 0\tbpftool/include/uapi/linux/tc_act/tc_bpf.h\n100644 c899af4ee617f6335149e50c5af5076c8273e0c4 0\tbpftool/libbpf/.gitattributes\n100644 c677fe03ddf3d2e5db0d5e9e982d86252be1dfb8 0\tbpftool/libbpf/.github/actions/build-selftests/action.yml\n100755 31094c464d5ab9b7f3f0ae28f2bc972a7ea5cc62 0\tbpftool/libbpf/.github/actions/build-selftests/build_selftests.sh\n100644 c44d0983156d06848bc4aee8ae4e855dc084d30d 0\tbpftool/libbpf/.github/actions/build-selftests/helpers.sh\n100755 cb5555256a28c3b7f2841ecf7e2aa948ed8c0562 0\tbpftool/libbpf/.github/actions/build-selftests/prepare_selftests-4.9.0.sh\n100755 cb5555256a28c3b7f2841ecf7e2aa948ed8c0562 0\tbpftool/libbpf/.github/actions/build-selftests/prepare_selftests-5.5.0.sh\n100644 23e735ca8b98acf468bd3dde4c76d6d44160d007 0\tbpftool/libbpf/.github/actions/build-selftests/vmlinux.h\n100644 23d48ec01ba0419f661652c41d085f5bbe4925b3 0\tbpftool/libbpf/.github/actions/debian/action.yml\n100644 1776b1533c05344997655a75777df05e0906c60f 0\tbpftool/libbpf/.github/actions/setup/action.yml\n100644 d86c872eb399ecc9971dab9b6d04ee2bb847531e 0\tbpftool/libbpf/.github/actions/vmtest/action.yml\n100644 d9697bad1007ad623b405ef1adef1d00193f5532 0\tbpftool/libbpf/.github/workflows/build.yml\n100644 bcada62f60187c575915d2bd82c1ced5da0d533a 0\tbpftool/libbpf/.github/workflows/cifuzz.yml\n100644 5d3ecf36afad933da398baea276d2ca4011885ed 0\tbpftool/libbpf/.github/workflows/codeql.yml\n100644 8caa8ad9581c76eb6cfadc0b5d67cfa8803483b9 0\tbpftool/libbpf/.github/workflows/coverity.yml\n100644 35e709187abfb4a996c05583a1f031077afcb943 0\tbpftool/libbpf/.github/workflows/lint.yml\n100644 6cd46e5bb34a56e56827ca3823b6e15a1ac44fca 0\tbpftool/libbpf/.github/workflows/ondemand.yml\n100644 37840ff0079bcfdb87d08114a09c069a8a68a65c 0\tbpftool/libbpf/.github/workflows/pahole.yml\n100644 1e7224c7ab70b5da31b99fdfc482008de991adf6 0\tbpftool/libbpf/.github/workflows/test.yml\n100644 803dfa298a2b31818820d7cd117ba85d5239b479 0\tbpftool/libbpf/.readthedocs.yaml\n100644 ec5e4be249bfb69656ed65a19afbcdc58657ff27 0\tbpftool/libbpf/BPF-CHECKPOINT-COMMIT\n100644 130cfa6ba8f97a6f30d9d395cb6fb69743d354de 0\tbpftool/libbpf/CHECKPOINT-COMMIT\n100644 d38fed3cd0c4d8d07a694c636d5aa336d2a00b83 0\tbpftool/libbpf/LICENSE\n100644 bce40aa98c5e77b47803d4676bbe7c1d4250cb6b 0\tbpftool/libbpf/LICENSE.BSD-2-Clause\n100644 27bb4342a3e8dedd312a044ec3e59e295ac5e4d2 0\tbpftool/libbpf/LICENSE.LGPL-2.1\n100644 46422940d437d7b09a7f6ff5e3ce13ed0b264160 0\tbpftool/libbpf/README.md\n100644 14a44a786a01df6d0286ef80cf601e923e8cb36d 0\tbpftool/libbpf/SYNC.md\n100644 aaef60ebbd9f4447bf7986833189b1d48d3129c9 0\tbpftool/libbpf/assets/libbpf-logo-compact-darkbg.png\n100644 51daed11fdb6df4f2b73c4a4e1aa6804969d8e5d 0\tbpftool/libbpf/assets/libbpf-logo-compact-mono.png\n100644 99ae3aba6f4455c08125e7ea8387cdd425e566b2 0\tbpftool/libbpf/assets/libbpf-logo-compact.png\n100644 00d6d83622de74d14ce55b916557344dc9355a8b 0\tbpftool/libbpf/assets/libbpf-logo-sideways-darkbg.png\n100644 82f1ce555b848724cf289a0cefcdba28fe49e980 0\tbpftool/libbpf/assets/libbpf-logo-sideways-mono.png\n100644 48186c317133564a1a2f8503cf13a456c34f91eb 0\tbpftool/libbpf/assets/libbpf-logo-sideways.png\n100644 5e5743087ed4d788941829cb48421a385471cd1e 0\tbpftool/libbpf/assets/libbpf-logo-sparse-darkbg.png\n100644 b02d432f21ea2ad0d6dcf97d62ae8e7bbb7b920d 0\tbpftool/libbpf/assets/libbpf-logo-sparse-mono.png\n100644 a3065883567511906cd32a50735a9c1daf29f496 0\tbpftool/libbpf/assets/libbpf-logo-sparse.png\n100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0\tbpftool/libbpf/ci/diffs/.keep\n100644 2f8d84f23f420b31859257713a2898f0920e2d36 0\tbpftool/libbpf/ci/diffs/0001-s390-define-RUNTIME_DISCARD_EXIT-to-fix-link-error-w.patch\n100644 64bf9ff3057b837e048cb7133a9438d467089592 0\tbpftool/libbpf/ci/diffs/0001-selftests-bpf-Check-whether-to-run-selftest.patch\n100644 3ee42c6dae29c1049807581ee975a8212c8adacb 0\tbpftool/libbpf/ci/diffs/0001-selftests-bpf-Select-CONFIG_FUNCTION_ERROR_INJECTION.patch\n100644 9547c62c40bf9cc9f44392b24f8f63f45cd998b6 0\tbpftool/libbpf/ci/diffs/0001-tracing-fprobe-Initialize-ret-valiable-to-fix-smatch.patch\n100644 b97dba0accaeedc46863a6d672b90c4e564450f1 0\tbpftool/libbpf/ci/diffs/0001-veth-take-into-account-peer-device-for-NETDEV_XDP_AC.patch\n100755 3d3f8603e7ff562f1c3791431f2db891b15e0a29 0\tbpftool/libbpf/ci/managers/debian.sh\n100755 094ba3e901468331beb538e5bc6ecf2da9dbf902 0\tbpftool/libbpf/ci/managers/test_compile.sh\n100644 acf6ad15e461bfeadaa11b66d87cfbdffc58b660 0\tbpftool/libbpf/ci/managers/travis_wait.bash\n100755 7fe1b3fb8b080db8a7a64660dcb5c8791e43b1ab 0\tbpftool/libbpf/ci/managers/ubuntu.sh\n100644 ee0d3db9ef0f5b33f2de16622135a260dcb07782 0\tbpftool/libbpf/ci/vmtest/configs/ALLOWLIST-4.9.0\n100644 998f0368aa4c9b2e30f3afa3276a259ad0b8c60e 0\tbpftool/libbpf/ci/vmtest/configs/ALLOWLIST-5.5.0\n100644 26887713d2dd6658b661dd885546477b4ebad461 0\tbpftool/libbpf/ci/vmtest/configs/DENYLIST-5.5.0\n100644 1984883d00954e5fcf333cdffb08de69ab344b51 0\tbpftool/libbpf/ci/vmtest/configs/DENYLIST-latest\n100644 e97d7ba44965f9fe7fe5ccf7aea880cfd23c219d 0\tbpftool/libbpf/ci/vmtest/configs/DENYLIST-latest.s390x\n100755 c44d0983156d06848bc4aee8ae4e855dc084d30d 0\tbpftool/libbpf/ci/vmtest/helpers.sh\n100755 0e5ac17f8da35ea8d107c45e4831f8203f2be0f7 0\tbpftool/libbpf/ci/vmtest/run_selftests.sh\n100644 dd08faed1798640f69cd9600700ad745306dc9e1 0\tbpftool/libbpf/docs/.gitignore\n100644 7a8e709b3401ba440ec391b11aa90c566253a587 0\tbpftool/libbpf/docs/api.rst\n100644 1d8714ee02e0ea4d6bf5a889b71e8a5fc151aa34 0\tbpftool/libbpf/docs/conf.py\n100644 7545a20496929a1112143f7b19984e7a3b93738d 0\tbpftool/libbpf/docs/index.rst\n100644 8e8c23e8093d1d53f9149ea7ca2fdbe51a007db2 0\tbpftool/libbpf/docs/libbpf_build.rst\n100644 b5b41b61b3c0c1439ad951eed194ea5032fc69ed 0\tbpftool/libbpf/docs/libbpf_naming_convention.rst\n100644 f36a2d4ffea2b3193b65b76363ec37f9cd616885 0\tbpftool/libbpf/docs/libbpf_overview.rst\n100644 ad4d4d5eecb0f29d442c3745afbf01fe39eb9115 0\tbpftool/libbpf/docs/program_types.rst\n100644 5dc39c587edb85d79448b4a67bae50243b37e444 0\tbpftool/libbpf/docs/sphinx/Makefile\n100644 b04c11543e1509a2866112a8a659dc72fca2c889 0\tbpftool/libbpf/docs/sphinx/doxygen/Doxyfile\n100644 188f51e62deec85b0c9e660685690f6744e50b60 0\tbpftool/libbpf/docs/sphinx/requirements.txt\n100644 89286e2d44eeb048d36c0bf5c78c3a62f2400f0e 0\tbpftool/libbpf/fuzz/bpf-object-fuzzer.c\n100644 602b3812c46ce03b56f89b3f8f94f06954ef0015 0\tbpftool/libbpf/fuzz/bpf-object-fuzzer_seed_corpus.zip\n100644 1fc6aee1f32ba43880327a6b6af5a04c147fb657 0\tbpftool/libbpf/include/asm/barrier.h\n100644 26336dc7027e85962cf85a551e298647cfede9cf 0\tbpftool/libbpf/include/linux/compiler.h\n100644 1b1dafbcba482608b3a5e55d98d4f9ce68da38fa 0\tbpftool/libbpf/include/linux/err.h\n100644 e7e33737332ca2e6cb4a2ffd1c73440b979fdd79 0\tbpftool/libbpf/include/linux/filter.h\n100644 a4a7a9d6f179e9779ff3e8099b2282ff70239c09 0\tbpftool/libbpf/include/linux/kernel.h\n100644 fc91c34e1dee556e79c3af5447525d7345443922 0\tbpftool/libbpf/include/linux/list.h\n100644 53d758036ca4b10639223cf4de998dec2855b923 0\tbpftool/libbpf/include/linux/overflow.h\n100644 fc4677bc0a65a95423c0171d85f0e5c3bffbe944 0\tbpftool/libbpf/include/linux/ring_buffer.h\n100644 b15252a4ede69f4c8c79379e31ed42fc470dba5d 0\tbpftool/libbpf/include/linux/types.h\n100644 60a9d59beeabba9bdbaa94946aa0c28e3f435463 0\tbpftool/libbpf/include/uapi/linux/bpf.h\n100644 ee97668bdadb31585815e271af40667b6dea8b53 0\tbpftool/libbpf/include/uapi/linux/bpf_common.h\n100644 ec1798b6d3ffb4e80ea43e9113b09e1363672df5 0\tbpftool/libbpf/include/uapi/linux/btf.h\n100644 e8c07da58c9f20ed3b7b4aa886f964d335fa41d2 0\tbpftool/libbpf/include/uapi/linux/fcntl.h\n100644 39e659c83cfd21a4c6f7ff5fa5235d01ba20dc19 0\tbpftool/libbpf/include/uapi/linux/if_link.h\n100644 a78a8096f4ce67927eb84841b989e911cdf2816e 0\tbpftool/libbpf/include/uapi/linux/if_xdp.h\n100644 639524b59930bfcabcd0d352048a3fd4aa1da08b 0\tbpftool/libbpf/include/uapi/linux/netdev.h\n100644 0a4d73317759c9ee523d7d5482548b3171c821e6 0\tbpftool/libbpf/include/uapi/linux/netlink.h\n100644 a5feb7604948791c7a34ec0876c24a97eb5a375b 0\tbpftool/libbpf/include/uapi/linux/openat2.h\n100644 37675437b76860ae4c3bef6a35e0eded9c25d55b 0\tbpftool/libbpf/include/uapi/linux/perf_event.h\n100644 3faee0199a9b972c2036882a607cf70cf83c2626 0\tbpftool/libbpf/include/uapi/linux/pkt_cls.h\n100644 5c903abc9fa52a52477547b8ca0ce52dcab88b62 0\tbpftool/libbpf/include/uapi/linux/pkt_sched.h\n100755 5171e950be39280de0a8551e85f4a44d66227b96 0\tbpftool/libbpf/scripts/build-fuzzers.sh\n100755 99e4809be798a5986d78dff37307ceab448cdc6c 0\tbpftool/libbpf/scripts/coverity.sh\n100755 55ffcd157dc0dc76893842c3293db45ac6db4c15 0\tbpftool/libbpf/scripts/sync-kernel.sh\n100644 0473afb6d6c62c353fa949ccc3327a4e84564636 0\tbpftool/libbpf/src/.gitignore\n100644 52188db25ba59a0b8cdfca5fba5db01606c8ceae 0\tbpftool/libbpf/src/Makefile\n100644 3b0da19715e1da466cfc75dc1d91d142809b70cc 0\tbpftool/libbpf/src/bpf.c\n100644 c676295ab9bfe2d41614605b5433e79e9120fbd3 0\tbpftool/libbpf/src/bpf.h\n100644 1ac57bb7ac55f7d6aaec31955b26d7b626d5c39f 0\tbpftool/libbpf/src/bpf_core_read.h\n100644 ec9db4feca9f2f308254732bd411098ad6585556 0\tbpftool/libbpf/src/bpf_endian.h\n100644 fdf44403ff36996bbdf1a1dd2bfceb5cb926cd7a 0\tbpftool/libbpf/src/bpf_gen_internal.h\n100644 e338dbec8533e16f89e2c95f199802f5c927c935 0\tbpftool/libbpf/src/bpf_helper_defs.h\n100644 bbab9ad9dc5a778cfc12d74ddd344e24a17eb65f 0\tbpftool/libbpf/src/bpf_helpers.h\n100644 5c503096ef4349ee5a4e0dbec4c357ff40b0ada6 0\tbpftool/libbpf/src/bpf_prog_linfo.c\n100644 be076a4041ab1c68a595c052b3959d95f6019610 0\tbpftool/libbpf/src/bpf_tracing.h\n100644 8484b563b53d0a70b73ff53faec0dec3db36bb33 0\tbpftool/libbpf/src/btf.c\n100644 8e6880d91c8408261f2fc2071a4376ca279829a1 0\tbpftool/libbpf/src/btf.h\n100644 4d9f30bf7f01438e47fdfa7dc8a94b51acfe80e1 0\tbpftool/libbpf/src/btf_dump.c\n100644 cf3323fd47b88630a375e79c64b46d77270f85a3 0\tbpftool/libbpf/src/gen_loader.c\n100644 140ee40556761011c15a26da79a8e0bd2c4821a4 0\tbpftool/libbpf/src/hashmap.c\n100644 c12f8320e6682d50d0ec6a12e3e4d15802b9972c 0\tbpftool/libbpf/src/hashmap.h\n100644 63311a73c16d40e34c7a97ed5ea12f30e1034a75 0\tbpftool/libbpf/src/libbpf.c\n100644 10642ad69d763228392f8a8261b93cd6a29c8689 0\tbpftool/libbpf/src/libbpf.h\n100644 d9ec4407befa61c6d63590436665996138b06f2f 0\tbpftool/libbpf/src/libbpf.map\n100644 b45ed534bdfb58779eec4c3abfd8c5e188ae87f0 0\tbpftool/libbpf/src/libbpf.pc.template\n100644 9a7937f339dfaaada456fdaec057a8e36cf984e2 0\tbpftool/libbpf/src/libbpf_common.h\n100644 6b180172ec6bb89168cae6e7d9340851026c12a9 0\tbpftool/libbpf/src/libbpf_errno.c\n100644 e4d05662a96ce38ba029f85960ff896046a22976 0\tbpftool/libbpf/src/libbpf_internal.h\n100644 1e1be467bede6db7821e2d41f0cef8eab56b03b8 0\tbpftool/libbpf/src/libbpf_legacy.h\n100644 9c4db90b92b6b55bb143d80c308085003becc20b 0\tbpftool/libbpf/src/libbpf_probes.c\n100644 290411ddb39e97910a4ef2997a2aaa32cee0f1da 0\tbpftool/libbpf/src/libbpf_version.h\n100644 5ced96d99f8c5f787ca528503d2f9b1e9b946bfa 0\tbpftool/libbpf/src/linker.c\n100644 84dd5fa149058d21c196fdb6e011f98779961765 0\tbpftool/libbpf/src/netlink.c\n100644 975e265eab3bfec5378a5c4849813dfb672ce018 0\tbpftool/libbpf/src/nlattr.c\n100644 d92d1c1de700ee6d39f1960b7b0577f76b40ddd6 0\tbpftool/libbpf/src/nlattr.h\n100644 a26b2f5fa0fc9b44bdc41509893cb3db11905260 0\tbpftool/libbpf/src/relo_core.c\n100644 1c0566daf8e8818c257e0e7c3748db6d8425f3e6 0\tbpftool/libbpf/src/relo_core.h\n100644 02199364db136be06c2e8ee14b7a4c737a83a46f 0\tbpftool/libbpf/src/ringbuf.c\n100644 1e82ab06c3ebf4d32eb0e257a1f647ee4c6d0cd3 0\tbpftool/libbpf/src/skel_internal.h\n100644 146da01979c7fc52b3c5dae00909b5d53663d04c 0\tbpftool/libbpf/src/str_error.c\n100644 a139334d57b603db5e2b4475740ecac5bdc4d36f 0\tbpftool/libbpf/src/str_error.h\n100644 2464bcbd04e03786ab71ed4a41645b39a1e0eb0b 0\tbpftool/libbpf/src/strset.c\n100644 b6ddf77a83c2b13d32672b5f3104ed874f446e2a 0\tbpftool/libbpf/src/strset.h\n100644 0bd4c135acc21c2de62378e024e40c15bcb45c8b 0\tbpftool/libbpf/src/usdt.bpf.h\n100644 37455d00b239c1f385d55da7a2434d6b741aebe5 0\tbpftool/libbpf/src/usdt.c\n100644 3f26d629b2b49862812bca4f7ec3da474cf89f3a 0\tbpftool/libbpf/src/zip.c\n100644 1c1bb21fba7646b3e2b89281ee4ccd961de56fc4 0\tbpftool/libbpf/src/zip.h\n100644 a5f765cceb3aa857f5ae102bdb5059ba0b3cea0f 0\tbpftool/scripts/README.md\n100755 4143a1e7d32f5430c39273c4dcd1b0203409df44 0\tbpftool/scripts/gh-label-release-assets.sh\n100644 769801a1629fdb25c016aaf967845e0bb335bf7b 0\tbpftool/scripts/sync-kernel-expected-diff.patch\n100755 086b60b250b1192f4570438e046f4dedac0b2e49 0\tbpftool/scripts/sync-kernel.sh\n100644 712adf5b264793252efdfc27c1e67fc9ea220c87 0\tbpftool/src/.gitignore\n100644 048d2214a3ed4b88d197002bca46beeffa57015c 0\tbpftool/src/Makefile\n100644 d091cdac37c1e8aa92614f7eddc05e0f47ea3214 0\tbpftool/src/Makefile.feature\n100644 d01b7d13c7b72e7ce309132e09ed1569e760df1f 0\tbpftool/src/Makefile.include\n100644 91fcb75babe33a9b15b6ae856a884cf2a68c071f 0\tbpftool/src/btf.c\n100644 294de231db99c491c794ebf3ec93003d4e91af55 0\tbpftool/src/btf_dumper.c\n100644 eec437cca2ea796120958effc2a02a9c8dd4111c 0\tbpftool/src/cfg.c\n100644 b3793f4e17832fd63322ee8d97bce2499714e662 0\tbpftool/src/cfg.h\n100644 ac846b0805b45fdef692ef249e67de987502c7d2 0\tbpftool/src/cgroup.c\n100644 cc6e6aae2447da0d4d901eda105af702e27bc08c 0\tbpftool/src/common.c\n100644 0675d6a4641388d5b0c736e5616c152c1aedb141 0\tbpftool/src/feature.c\n100644 2883660d6b6728ae6827a091fad576b6224b8b5f 0\tbpftool/src/gen.c\n100644 6b0e5202ca7a962d349b07195873506749f03900 0\tbpftool/src/iter.c\n100644 7b8d9ec89ebd3551fb2f8f77acd87371bfc3cdac 0\tbpftool/src/jit_disasm.c\n100644 be379613d11885c32c7b12428c3aeb662a19861b 0\tbpftool/src/json_writer.c\n100644 5aaffd3b837b177401b54b83798f8c473f207510 0\tbpftool/src/json_writer.h\n100644 7b4afb7d96db18306006f51b7805b1150df0789c 0\tbpftool/src/kernel/bpf/disasm.c\n100644 a4b040793f443cc6a4ffa38b12721dd27cd9c690 0\tbpftool/src/kernel/bpf/disasm.h\n100644 2d786072ed0d03efa53b13dd83f594e791a75f11 0\tbpftool/src/link.c\n100644 08d0ac543c6746087a2952a973b612a37f67dd14 0\tbpftool/src/main.c\n100644 b8bb08d10dec93700e96aca2f755564cbc912848 0\tbpftool/src/main.h\n100644 f98f7bbea2b1582304afbf220a29fe804187eec5 0\tbpftool/src/map.c\n100644 21d7d447e1f3b2db3740629efc877f52306cb141 0\tbpftool/src/map_perf_ring.c\n100644 26a49965bf710a22d25993e0db33d167b29acd9b 0\tbpftool/src/net.c\n100644 5f65140b003b2e6a2d8460b64d2cb47700174014 0\tbpftool/src/netlink_dumper.c\n100644 774af6c62ef5ff1c32375ee302eec066d7613872 0\tbpftool/src/netlink_dumper.h\n100644 91743445e4c7cdfebbbc13ad2a7737889a5d6a45 0\tbpftool/src/perf.c\n100644 00c77edb63312be8b783bddc45a5f7b6051d2af3 0\tbpftool/src/pids.c\n100644 8443a149dd17fd9024a623d29c4bfc12c7e14f89 0\tbpftool/src/prog.c\n100644 26004f0c5a6ae15861e59f68dd2a3fee5154d95e 0\tbpftool/src/skeleton/pid_iter.bpf.c\n100644 bbb570d4cca696190dc5aaf06ce814097bd2af69 0\tbpftool/src/skeleton/pid_iter.h\n100644 2f80edc682f115e52b7377170c6ec358aadc5f8a 0\tbpftool/src/skeleton/profiler.bpf.c\n100644 3ebc9fe91e0e1328597cf7e0a200fd528c92b5dc 0\tbpftool/src/struct_ops.c\n100644 bf1f02212797248dbc8b1210cca7463316ad09ca 0\tbpftool/src/tracelog.c\n100644 da608e10c843a4e7d26b06f61f7823d8cd2d0b31 0\tbpftool/src/xlated_dumper.c\n100644 9a946377b0e634107aaa73a2873dbab7ff2bcf69 0\tbpftool/src/xlated_dumper.h\n160000 c3f5b472182cb1e149769e20fa646ecdc49a5ea6 0\tdataset-instance/intrusion/DVMA/brute-force\n100644 c9fbc61eb26b4c9f10f100186a78a5f0984fbfee 0\tdataset-instance/intrusion/DVMA/xss/0511up782LvkTf8DQW30fvo-1..v1577495962.jpg\n100644 76e4b8e4883b2a7d0cdc6ccd9aa59e0841225ea0 0\tdataset-instance/intrusion/DVMA/xss/figure/0.png\n100644 29fee9c91834b0c2569fd2f09171114ded45a085 0\tdataset-instance/intrusion/DVMA/xss/figure/1.png\n100644 7021624d5be61c349c2518d14beecfe2d116abca 0\tdataset-instance/intrusion/DVMA/xss/figure/10.png\n100644 316d69ab77514841dc3285c12849806bc6a9507a 0\tdataset-instance/intrusion/DVMA/xss/figure/11.png\n100644 c37d17626a9c05729604bd5d54325fd6aed1b437 0\tdataset-instance/intrusion/DVMA/xss/figure/12.png\n100644 33c9580ffa2483492e771ba8c2bcc1f0bf3ca6ee 0\tdataset-instance/intrusion/DVMA/xss/figure/13.png\n100644 e85550bbe714c666145738000216d59752768e1c 0\tdataset-instance/intrusion/DVMA/xss/figure/14.png\n100644 8e9b1d123db17db8fe1ccb166290a840c50dc157 0\tdataset-instance/intrusion/DVMA/xss/figure/15.png\n100644 42c28d66bd9e28f0ac6859a4f46ad9b4d321780c 0\tdataset-instance/intrusion/DVMA/xss/figure/16.png\n100644 c75d934cf72ef0b3fe6d740c7f73457bad767e96 0\tdataset-instance/intrusion/DVMA/xss/figure/17.png\n100644 b487dbcfa08c6c7bc4629b77342e2548154e9754 0\tdataset-instance/intrusion/DVMA/xss/figure/18.png\n100644 fe3baca42984abdfd45f4b76172597fab791f983 0\tdataset-instance/intrusion/DVMA/xss/figure/19.png\n100644 cef6d4d73a7e83578f44e8499b84549e35199f2e 0\tdataset-instance/intrusion/DVMA/xss/figure/2.png\n100644 370d6002df9695dc716f3720f3c4ffcb8e1183b7 0\tdataset-instance/intrusion/DVMA/xss/figure/20.png\n100644 95810311bb4f5a6a8083d38b9ba502b05a7754b0 0\tdataset-instance/intrusion/DVMA/xss/figure/21.png\n100644 9b818196d37f16165b67df32ac73ed2a5fae11c0 0\tdataset-instance/intrusion/DVMA/xss/figure/22.png\n100644 f5e4a2017374a1e8d32d033f3f5fd275366c9afc 0\tdataset-instance/intrusion/DVMA/xss/figure/23.png\n100644 9ab48ef02a79531172c4b12bdbd6a5fb7c2c2f4a 0\tdataset-instance/intrusion/DVMA/xss/figure/24.png\n100644 409f69d864c55e1168e7f22482b7b45bbc4c1d79 0\tdataset-instance/intrusion/DVMA/xss/figure/25.png\n100644 67339dacc4afb48a205f67c6afce46c08ffbf744 0\tdataset-instance/intrusion/DVMA/xss/figure/26.png\n100644 0f0f5708fe068bb25e7ecc3ab43acf3aee38008a 0\tdataset-instance/intrusion/DVMA/xss/figure/27.png\n100644 ed8f8886c17d5e09cafb621a1a90b8114a2ea5fc 0\tdataset-instance/intrusion/DVMA/xss/figure/28.png\n100644 7f1b20c33759251db33157cdaa503fb078de51b8 0\tdataset-instance/intrusion/DVMA/xss/figure/29.png\n100644 a333f3779871b39aa56ac476d1f2e7523122f09c 0\tdataset-instance/intrusion/DVMA/xss/figure/3.png\n100644 553998e7c309bd87162df351736a5c854acb274b 0\tdataset-instance/intrusion/DVMA/xss/figure/30.png\n100644 f4bc7213a5350f2f38822e589068143a8353b95e 0\tdataset-instance/intrusion/DVMA/xss/figure/31.png\n100644 29997d653fec75c1934f40cdf992e97f4af7531d 0\tdataset-instance/intrusion/DVMA/xss/figure/32.png\n100644 62a5db2a03936cb4b3159d8c1d5aa39b2dc5e45f 0\tdataset-instance/intrusion/DVMA/xss/figure/33.png\n100644 3052ca1784b1a538458b99b0537bfe957bf4c943 0\tdataset-instance/intrusion/DVMA/xss/figure/34.png\n100644 ca66f0e3773eddb1eaced0bdb58eec2b163e6123 0\tdataset-instance/intrusion/DVMA/xss/figure/35.png\n100644 cb106ba2eb03686d2bff1bcaadbd712759ac338e 0\tdataset-instance/intrusion/DVMA/xss/figure/36.png\n100644 3ef5075992d63e98b96d1abb38840f72688d6e9b 0\tdataset-instance/intrusion/DVMA/xss/figure/37.png\n100644 a1924b823f483536c46fd36bed82e48e1f814fdf 0\tdataset-instance/intrusion/DVMA/xss/figure/38.png\n100644 cabba64c98cf739daa9f782fc6ee3cb0c9ba9629 0\tdataset-instance/intrusion/DVMA/xss/figure/39.png\n100644 66ce614f2b88e20c34b69b3b63c9478a365522a5 0\tdataset-instance/intrusion/DVMA/xss/figure/4.png\n100644 72651018ba739e43001c08a8b699ad2cf4977137 0\tdataset-instance/intrusion/DVMA/xss/figure/40.png\n100644 855690689863e0e5a4574d966cde65fb5883cd86 0\tdataset-instance/intrusion/DVMA/xss/figure/41.png\n100644 75c1a40fc08ace40de37a81edf61f475c58959b4 0\tdataset-instance/intrusion/DVMA/xss/figure/42.png\n100644 e2aa10b302125d97b32ebd764aa7ccf2ed98ce05 0\tdataset-instance/intrusion/DVMA/xss/figure/43.png\n100644 5640eb83f04f7cc8057f06c9fef8a9ec13a7a353 0\tdataset-instance/intrusion/DVMA/xss/figure/44.png\n100644 55145c3a1bdaa7d6b391dbe096f38b68e74feb89 0\tdataset-instance/intrusion/DVMA/xss/figure/45.png\n100644 3091aa66f456209ad51f177ea0b12959a17c1bc4 0\tdataset-instance/intrusion/DVMA/xss/figure/46.png\n100644 0364707dd0c59a451077eec47c8e477e391d1293 0\tdataset-instance/intrusion/DVMA/xss/figure/47.png\n100644 1ebb4d68f87eb3851ebe9a623b8b0b9d73f154da 0\tdataset-instance/intrusion/DVMA/xss/figure/48.png\n100644 07a2e6ef1ac78e1423f3d587f4873d8805162507 0\tdataset-instance/intrusion/DVMA/xss/figure/49.png\n100644 7f5e5a70a9277bd43eb8cbbea5e97c224c172f0d 0\tdataset-instance/intrusion/DVMA/xss/figure/5.png\n100644 01f2a2d410ad559cd1662c113eca0decacfcf44c 0\tdataset-instance/intrusion/DVMA/xss/figure/50.png\n100644 6a6d2c719dfe07ba84b748153b18930d22e1e009 0\tdataset-instance/intrusion/DVMA/xss/figure/51.png\n100644 34e51e4cbef0a84e7686002a29a503baf7ca59b7 0\tdataset-instance/intrusion/DVMA/xss/figure/52.png\n100644 66c6be24b9e9c48a478864381848972f9d25eb7e 0\tdataset-instance/intrusion/DVMA/xss/figure/53.png\n100644 8f5a0ab7ffe76b4b894f1505fd78669df2fc6d2b 0\tdataset-instance/intrusion/DVMA/xss/figure/54.png\n100644 ef180549e6b976a84c7dbbd74f0b4aaf8a8794bd 0\tdataset-instance/intrusion/DVMA/xss/figure/55.png\n100644 e681fab6d10789f42b19152c24a67ca2c099a4b2 0\tdataset-instance/intrusion/DVMA/xss/figure/56.png\n100644 1de8d58e24e74c44e9e29324252c0f923a32e87c 0\tdataset-instance/intrusion/DVMA/xss/figure/57.png\n100644 ddde373b7827699c5821bd80cc7ed3744c538cbd 0\tdataset-instance/intrusion/DVMA/xss/figure/58.png\n100644 3624e40a5f68914ad6e071548d0bbd7f6ef21a37 0\tdataset-instance/intrusion/DVMA/xss/figure/59.png\n100644 023b1a7dd70c010121dc621ad0cf454f538182c0 0\tdataset-instance/intrusion/DVMA/xss/figure/6.png\n100644 392d07a4f16a3d0aeb7457bd6c648cabcd2eb6b4 0\tdataset-instance/intrusion/DVMA/xss/figure/60.png\n100644 8844aaa7d6a48b582f617b7e5ecb9629106e43e0 0\tdataset-instance/intrusion/DVMA/xss/figure/61.png\n100644 3d5575a2c8a56d385f534ef7579e286ca3e17cd7 0\tdataset-instance/intrusion/DVMA/xss/figure/62.png\n100644 29b6343d50844c268c7fb174013c94fafee1c961 0\tdataset-instance/intrusion/DVMA/xss/figure/63.png\n100644 908e284e3540ea8fae46274bc198638c6fbe8e79 0\tdataset-instance/intrusion/DVMA/xss/figure/64.png\n100644 bfc2c2d6c919e07a55bc7d564eb2503d1c8210c6 0\tdataset-instance/intrusion/DVMA/xss/figure/65.png\n100644 480619743276e3ec0053606468ca94d7b33b3547 0\tdataset-instance/intrusion/DVMA/xss/figure/66.png\n100644 791c50e097fffaa03ff65c4ec26fb85572152a4b 0\tdataset-instance/intrusion/DVMA/xss/figure/67.png\n100644 4be866311752bc972440cdee5fd4893d8d7db14a 0\tdataset-instance/intrusion/DVMA/xss/figure/68.png\n100644 8e7d1f826e84f51a728e073d7615cd635e03012b 0\tdataset-instance/intrusion/DVMA/xss/figure/69.png\n100644 3be6b2b8f42dc4dec6a3107556c5eacaa917882b 0\tdataset-instance/intrusion/DVMA/xss/figure/7.png\n100644 a1c74dc9892175370afa5411c73cb1de4a9f01ef 0\tdataset-instance/intrusion/DVMA/xss/figure/70.png\n100644 cf4685a5bc67fb7e6a9fecfb6262bd30685bc016 0\tdataset-instance/intrusion/DVMA/xss/figure/71.png\n100644 94dca4ebac1656655c291e7b5c99b81f035a3b36 0\tdataset-instance/intrusion/DVMA/xss/figure/72.png\n100644 ff5af7336f678973e1424f197294fcdad7927929 0\tdataset-instance/intrusion/DVMA/xss/figure/73.png\n100644 b9e039b9bcf9badd8328dc3b1eace57eb4260ff8 0\tdataset-instance/intrusion/DVMA/xss/figure/74.png\n100644 bde504d54daa5f94061ec11b85b0835a6799574d 0\tdataset-instance/intrusion/DVMA/xss/figure/75.png\n100644 2facf4db4a043d49bc35ea2ffecdf884abdca5d5 0\tdataset-instance/intrusion/DVMA/xss/figure/76.png\n100644 d97424b1334b4f00ace04adb6201a6e2456a8ead 0\tdataset-instance/intrusion/DVMA/xss/figure/77.png\n100644 d8f1bc65d6f0a9eed90e1a3e3a4794409bc91387 0\tdataset-instance/intrusion/DVMA/xss/figure/78.png\n100644 3a300a46539c0ef48e34f0f9383d14a290087cdb 0\tdataset-instance/intrusion/DVMA/xss/figure/79.png\n100644 59d08e1f5bd5c8ffbbd53a7de7d3c93a57ad7e1a 0\tdataset-instance/intrusion/DVMA/xss/figure/8.png\n100644 d8daa55d3262a19164d5201eac94b9d172bb1b5a 0\tdataset-instance/intrusion/DVMA/xss/figure/80.png\n100644 5cfb444108daf6d4a80f72de3e88bd95bffc08ee 0\tdataset-instance/intrusion/DVMA/xss/figure/81.png\n100644 87560b7235003211b6d556a5d8fa3575a0a5e520 0\tdataset-instance/intrusion/DVMA/xss/figure/82.png\n100644 6ae122c85cdb9fdc85d2182ee1f9792e860366d4 0\tdataset-instance/intrusion/DVMA/xss/figure/83.png\n100644 ad83aad54d39056d9cff8685121c3cd0fa675d8b 0\tdataset-instance/intrusion/DVMA/xss/figure/84.png\n100644 ef69d8e96bfa0e642cc06ff363ea3c74a9159715 0\tdataset-instance/intrusion/DVMA/xss/figure/85.png\n100644 ce93042a4a768c8d5af62e6147922bf048720244 0\tdataset-instance/intrusion/DVMA/xss/figure/9.png\n100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0\tdataset-instance/intrusion/DVMA/xss/figure/run`\n100755 8f84330d90e6135e99ad2649e59d2fa45769ab2b 0\tdataset-instance/intrusion/DVMA/xss/geckodriver\n100644 a77d15f88d3d93c6ed7860754368fac054dfdbd0 0\tdataset-instance/intrusion/DVMA/xss/hero-image-dbc0f47f2944ed64a0a7a0e6ce6f2471.png\n100644 d767f5739caf671b439bdab149d1f6d229f63f2f 0\tdataset-instance/intrusion/DVMA/xss/image.txt\n100644 73cec8f2cb926e7b1f8d044c9a07a93f7d12ca85 0\tdataset-instance/intrusion/DVMA/xss/images.txt\n100755 49cd4c536d3912dbc9c063aa4a0d85e5bab6e273 0\tdataset-instance/intrusion/DVMA/xss/run.sh\n100644 bf2f6ddde0be495884e73b44fdd976bac6ff927d 0\tdataset-instance/intrusion/DVMA/xss/test.png\n100644 a04de962788d30143e1ed96941fb02475eee1c8a 0\tdataset-instance/intrusion/DVMA/xss/test.py\n100644 b8493a5dd9fc701446b5d0362c2572c28b202c2b 0\tdataset-instance/intrusion/DVMA/xss/timestamp.txt\n100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0\tdataset-instance/intrusion/DVMA/xss/xss.log\n100644 bbc03deb37a42eebc88aeffb099e6e59fe3d63c4 0\tdataset-instance/intrusion/DVMA/xss/xss.py\n100644 4018a9fa9032a7832e20658c55eab898a752e75d 0\tdataset-instance/intrusion/DVMA/xss/xss_fake_img.png\n100644 0fb2b575eb8daea925afb94e60d93e39cdb43849 0\tdataset-instance/intrusion/DVMA/xss/xss_get_cookie.png\n160000 792862f5c8cb98f9ffcb9fab245e2c663e3a1026 0\tdataset-instance/intrusion/GoldenEye\n100644 d90ff04976bb144499ea341e120606929a1ad8a5 0\tdataset-instance/intrusion/metasploit/archive-key.asc\n100755 7844f81c08417f25d01cdb28265526d031862141 0\tdataset-instance/intrusion/metasploit/myshell\n100644 2d6537ad5e99173eebb5cba7c5cb0bd23396e69a 0\tdataset-instance/intrusion/metasploit/nmap.rc\n100644 34c159b45d2b3a0b13b8dde8278e9bd90af5ba00 0\tdataset-instance/intrusion/metasploit/run.py\n100755 76dfb1d472a0cdf39fee2599a510a7ca93de0b3d 0\tdataset-instance/intrusion/metasploit/run.sh\n100644 30361a7259b645204d89e03d611696582cc6a561 0\tdataset-instance/intrusion/patator/ftp-result.txt\n100755 b145127d8637df2ec0f28c99a4890e2852d5cecb 0\tdataset-instance/intrusion/patator/ftp.sh\n100644 4a3fb5f5d5288f4c280940419d8835d8762c6050 0\tdataset-instance/intrusion/patator/gen.py\n100644 35e90e3cea72ec0b145006c388c94cadaf34a476 0\tdataset-instance/intrusion/patator/password.txt\n100755 00dc940f303508149e11ac6f05f22cc029b9963b 0\tdataset-instance/intrusion/patator/run_ftp.sh\n100755 cf6e91a4a18ee02b6add1bc128ed799d8f12fda3 0\tdataset-instance/intrusion/patator/run_ssh.sh\n100644 e265e5cadebca5a49c2f992e4a1ead5a124f02c3 0\tdataset-instance/intrusion/patator/ssh-result.txt\n100755 a566699418ddc115e329bb22ceb0bdfbd6a04b79 0\tdataset-instance/intrusion/patator/ssh.sh\n100644 88d4ee469dc34e61108185856e207e0d226c0a94 0\tdataset-instance/intrusion/patator/user.txt\n100755 5e4f21fc94cf723d61a36152f5ec8e3828020590 0\tdataset-instance/intrusion/run.sh\n100644 96ed4440ebd82c39296de5e8880be1977fc9a843 0\tdataset-instance/intrusion/slowloris/index.html\n100755 69a32624bb18233f192bbcc56e55d2baf9f54292 0\tdataset-instance/intrusion/slowloris/run.sh\n100644 31e63b429e1e76960368fd912b60b690d91b38b1 0\tdataset-instance/intrusion/timestamp.txt\n100755 17a8f4cf3557721fa16babea4f87a58ea517eb6b 0\tdataset-instance/normal/ftp/download.sh\n100644 87dd6d73d3cce027d3c3f5d9cdc5944391d40d33 0\tdataset-instance/normal/ftp/myftp.py\n100644 014c17e84328f26ba0b0507e5907f33fbfc928ed 0\tdataset-instance/normal/ftp/run_download.py\n100755 0f09f52166bf54cd392025bc66606c53ecc35bb4 0\tdataset-instance/normal/ftp/run_download.sh\n100644 0e9b09836c975efe6ab52c1065a5148a1aae755c 0\tdataset-instance/normal/ftp/run_upload.py\n100755 d3b8ca30ea4002f4a675d8a2ba58f9e7dce378f7 0\tdataset-instance/normal/ftp/run_upload.sh\n100755 29f1f2be99b2d66aeef45cd8a8f0357424302157 0\tdataset-instance/normal/ftp/upload.sh\n100755 ed14662e1d91df46858fba248ab8bce1762ae7a9 0\tdataset-instance/normal/http/run.sh\n100644 7c903d6b8753c8aaebc1aa63d99988c6f3134624 0\tdataset-instance/normal/iperf/gen.py\n100755 4b6b83f7d5a86d27099ee5334b0838215747cfbf 0\tdataset-instance/normal/iperf/iperf.sh\n100644 b5a36c2224889cffb09ccd3bc4c4848ace1eedd7 0\tdataset-instance/normal/iperf/run.py\n100755 ce143fda03f19ee03b68731bd771ca652fbe71cd 0\tdataset-instance/normal/iperf/run.sh\n100644 7c951cc20766505ba00bef99bb36f8dd2d52bf6b 0\tdataset-instance/normal/mysql/run.py\n100644 c5400133170d025059987ae44d196f6d021f890c 0\tdataset-instance/normal/mysql/run.sh\n100755 df8951b89a44c5d13f5a3885304d35063530d06c 0\tdataset-instance/normal/run.sh\n100644 79e8c5736b4dc8364d5d2249b4d07a15a970811d 0\tdataset-instance/normal/ssh_exec/command.txt\n100755 4507518de72cc8f16a4adab38d343ddb48a37a17 0\tdataset-instance/normal/ssh_exec/run_ssh.sh\n100644 bede48807397ac57840f10eb51f48612dd003a8f 0\tdataset-instance/normal/ssh_exec/ssh_exec.py\n100644 b34716e8b65b7f83b97d0a49a70e701148f2d39a 0\tdataset-instance/normal/timestamp.txt\n100644 5c25fd58f3f984764df2539996caf74b340af323 0\tdataset/reproduction-xdp-data.npy\n100644 31676a06731daac6c1ecbcfaf282cbc90819c851 0\tdataset/reproduction-xdp-label.npy\n100644 425f5b13fea05a2536449460375f87320f6a8f2b 0\tevaluation/__init__.py\n100644 1dfd485ec856232eb2d415e988ba8676a4b2604a 0\tevaluation/__main__.py\n100644 ae9ab15a88932a986c52ded64a0bb7137e91749d 0\tevaluation/artifacts.py\n100644 272a51cdb8f29d3332351d9b0dc3cfa5c1904552 0\tevaluation/dataset.py\n100644 49b9adef3cc5020d1de20a2a840b8db50bb45cb6 0\tevaluation/kernel.py\n100644 be87146027564271cb3e562eb0f46bbc6e426867 0\tevaluation/kernel_driver.c\n100644 0bf7171ed287c8f36e2213559fa93171c0ff1ae1 0\tevaluation/metrics.py\n100644 ba54b56f3bb79276ba1318eae566483115321efc 0\tevaluation/model.py\n100644 05b22e30239c070b7e454112252c2275f07ce0aa 0\tevaluation/native_reference.c\n100644 f9fb322fc3a4d9d5eafd09089b7b56f1405b76f9 0\tevaluation/reference.py\n100644 1f1047aa5ad858ee79f7f551ba2944aa74841f22 0\tevaluation/requirements.txt\n100644 e45057d1b39045620cd5f132a8af35f924251a5c 0\tevaluation/split.py\n100644 c372486f9f1363a1ee3c9fa6418779b3599eea89 0\tevaluation/tests/__init__.py\n100644 c4f433dede4668c2ae26dd59b9be85fe88c6a22f 0\tevaluation/tests/test_artifacts.py\n100644 eab67cd51df20b1e045ff36899c787ecc3ff2f47 0\tevaluation/tests/test_dataset.py\n100644 5b7719451db9679543321f19c6aad6a6d4a2b05e 0\tevaluation/tests/test_kernel.py\n100644 4a6012b29d38201b2de58dede871e949ca3c1448 0\tevaluation/tests/test_model.py\n100644 7fdb77c1acfb06127ef8450dc9acfe1e903022a8 0\tevaluation/tests/test_split.py\n100644 3a3dadb4dcd4b4499b61eb896eaba2d3187dfbb8 0\tevaluation/tests/test_training.py\n100644 bd4876d573730e3b9a6b01ea549c628f69344ccd 0\tevaluation/training.py\n100644 c899af4ee617f6335149e50c5af5076c8273e0c4 0\tlibbpf/.gitattributes\n100644 c677fe03ddf3d2e5db0d5e9e982d86252be1dfb8 0\tlibbpf/.github/actions/build-selftests/action.yml\n100755 31094c464d5ab9b7f3f0ae28f2bc972a7ea5cc62 0\tlibbpf/.github/actions/build-selftests/build_selftests.sh\n100644 c44d0983156d06848bc4aee8ae4e855dc084d30d 0\tlibbpf/.github/actions/build-selftests/helpers.sh\n100755 cb5555256a28c3b7f2841ecf7e2aa948ed8c0562 0\tlibbpf/.github/actions/build-selftests/prepare_selftests-4.9.0.sh\n100755 cb5555256a28c3b7f2841ecf7e2aa948ed8c0562 0\tlibbpf/.github/actions/build-selftests/prepare_selftests-5.5.0.sh\n100644 23e735ca8b98acf468bd3dde4c76d6d44160d007 0\tlibbpf/.github/actions/build-selftests/vmlinux.h\n100644 23d48ec01ba0419f661652c41d085f5bbe4925b3 0\tlibbpf/.github/actions/debian/action.yml\n100644 1776b1533c05344997655a75777df05e0906c60f 0\tlibbpf/.github/actions/setup/action.yml\n100644 d86c872eb399ecc9971dab9b6d04ee2bb847531e 0\tlibbpf/.github/actions/vmtest/action.yml\n100644 d9697bad1007ad623b405ef1adef1d00193f5532 0\tlibbpf/.github/workflows/build.yml\n100644 bcada62f60187c575915d2bd82c1ced5da0d533a 0\tlibbpf/.github/workflows/cifuzz.yml\n100644 5d3ecf36afad933da398baea276d2ca4011885ed 0\tlibbpf/.github/workflows/codeql.yml\n100644 8caa8ad9581c76eb6cfadc0b5d67cfa8803483b9 0\tlibbpf/.github/workflows/coverity.yml\n100644 35e709187abfb4a996c05583a1f031077afcb943 0\tlibbpf/.github/workflows/lint.yml\n100644 6cd46e5bb34a56e56827ca3823b6e15a1ac44fca 0\tlibbpf/.github/workflows/ondemand.yml\n100644 37840ff0079bcfdb87d08114a09c069a8a68a65c 0\tlibbpf/.github/workflows/pahole.yml\n100644 1e7224c7ab70b5da31b99fdfc482008de991adf6 0\tlibbpf/.github/workflows/test.yml\n100644 803dfa298a2b31818820d7cd117ba85d5239b479 0\tlibbpf/.readthedocs.yaml\n100644 ec5e4be249bfb69656ed65a19afbcdc58657ff27 0\tlibbpf/BPF-CHECKPOINT-COMMIT\n100644 130cfa6ba8f97a6f30d9d395cb6fb69743d354de 0\tlibbpf/CHECKPOINT-COMMIT\n100644 d38fed3cd0c4d8d07a694c636d5aa336d2a00b83 0\tlibbpf/LICENSE\n100644 bce40aa98c5e77b47803d4676bbe7c1d4250cb6b 0\tlibbpf/LICENSE.BSD-2-Clause\n100644 27bb4342a3e8dedd312a044ec3e59e295ac5e4d2 0\tlibbpf/LICENSE.LGPL-2.1\n100644 46422940d437d7b09a7f6ff5e3ce13ed0b264160 0\tlibbpf/README.md\n100644 14a44a786a01df6d0286ef80cf601e923e8cb36d 0\tlibbpf/SYNC.md\n100644 aaef60ebbd9f4447bf7986833189b1d48d3129c9 0\tlibbpf/assets/libbpf-logo-compact-darkbg.png\n100644 51daed11fdb6df4f2b73c4a4e1aa6804969d8e5d 0\tlibbpf/assets/libbpf-logo-compact-mono.png\n100644 99ae3aba6f4455c08125e7ea8387cdd425e566b2 0\tlibbpf/assets/libbpf-logo-compact.png\n100644 00d6d83622de74d14ce55b916557344dc9355a8b 0\tlibbpf/assets/libbpf-logo-sideways-darkbg.png\n100644 82f1ce555b848724cf289a0cefcdba28fe49e980 0\tlibbpf/assets/libbpf-logo-sideways-mono.png\n100644 48186c317133564a1a2f8503cf13a456c34f91eb 0\tlibbpf/assets/libbpf-logo-sideways.png\n100644 5e5743087ed4d788941829cb48421a385471cd1e 0\tlibbpf/assets/libbpf-logo-sparse-darkbg.png\n100644 b02d432f21ea2ad0d6dcf97d62ae8e7bbb7b920d 0\tlibbpf/assets/libbpf-logo-sparse-mono.png\n100644 a3065883567511906cd32a50735a9c1daf29f496 0\tlibbpf/assets/libbpf-logo-sparse.png\n100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0\tlibbpf/ci/diffs/.keep\n100644 2f8d84f23f420b31859257713a2898f0920e2d36 0\tlibbpf/ci/diffs/0001-s390-define-RUNTIME_DISCARD_EXIT-to-fix-link-error-w.patch\n100644 64bf9ff3057b837e048cb7133a9438d467089592 0\tlibbpf/ci/diffs/0001-selftests-bpf-Check-whether-to-run-selftest.patch\n100644 3ee42c6dae29c1049807581ee975a8212c8adacb 0\tlibbpf/ci/diffs/0001-selftests-bpf-Select-CONFIG_FUNCTION_ERROR_INJECTION.patch\n100644 9547c62c40bf9cc9f44392b24f8f63f45cd998b6 0\tlibbpf/ci/diffs/0001-tracing-fprobe-Initialize-ret-valiable-to-fix-smatch.patch\n100644 b97dba0accaeedc46863a6d672b90c4e564450f1 0\tlibbpf/ci/diffs/0001-veth-take-into-account-peer-device-for-NETDEV_XDP_AC.patch\n100755 3d3f8603e7ff562f1c3791431f2db891b15e0a29 0\tlibbpf/ci/managers/debian.sh\n100755 094ba3e901468331beb538e5bc6ecf2da9dbf902 0\tlibbpf/ci/managers/test_compile.sh\n100644 acf6ad15e461bfeadaa11b66d87cfbdffc58b660 0\tlibbpf/ci/managers/travis_wait.bash\n100755 7fe1b3fb8b080db8a7a64660dcb5c8791e43b1ab 0\tlibbpf/ci/managers/ubuntu.sh\n100644 ee0d3db9ef0f5b33f2de16622135a260dcb07782 0\tlibbpf/ci/vmtest/configs/ALLOWLIST-4.9.0\n100644 998f0368aa4c9b2e30f3afa3276a259ad0b8c60e 0\tlibbpf/ci/vmtest/configs/ALLOWLIST-5.5.0\n100644 26887713d2dd6658b661dd885546477b4ebad461 0\tlibbpf/ci/vmtest/configs/DENYLIST-5.5.0\n100644 1984883d00954e5fcf333cdffb08de69ab344b51 0\tlibbpf/ci/vmtest/configs/DENYLIST-latest\n100644 e97d7ba44965f9fe7fe5ccf7aea880cfd23c219d 0\tlibbpf/ci/vmtest/configs/DENYLIST-latest.s390x\n100755 c44d0983156d06848bc4aee8ae4e855dc084d30d 0\tlibbpf/ci/vmtest/helpers.sh\n100755 0e5ac17f8da35ea8d107c45e4831f8203f2be0f7 0\tlibbpf/ci/vmtest/run_selftests.sh\n100644 dd08faed1798640f69cd9600700ad745306dc9e1 0\tlibbpf/docs/.gitignore\n100644 7a8e709b3401ba440ec391b11aa90c566253a587 0\tlibbpf/docs/api.rst\n100644 1d8714ee02e0ea4d6bf5a889b71e8a5fc151aa34 0\tlibbpf/docs/conf.py\n100644 7545a20496929a1112143f7b19984e7a3b93738d 0\tlibbpf/docs/index.rst\n100644 8e8c23e8093d1d53f9149ea7ca2fdbe51a007db2 0\tlibbpf/docs/libbpf_build.rst\n100644 b5b41b61b3c0c1439ad951eed194ea5032fc69ed 0\tlibbpf/docs/libbpf_naming_convention.rst\n100644 f36a2d4ffea2b3193b65b76363ec37f9cd616885 0\tlibbpf/docs/libbpf_overview.rst\n100644 ad4d4d5eecb0f29d442c3745afbf01fe39eb9115 0\tlibbpf/docs/program_types.rst\n100644 5dc39c587edb85d79448b4a67bae50243b37e444 0\tlibbpf/docs/sphinx/Makefile\n100644 b04c11543e1509a2866112a8a659dc72fca2c889 0\tlibbpf/docs/sphinx/doxygen/Doxyfile\n100644 188f51e62deec85b0c9e660685690f6744e50b60 0\tlibbpf/docs/sphinx/requirements.txt\n100644 89286e2d44eeb048d36c0bf5c78c3a62f2400f0e 0\tlibbpf/fuzz/bpf-object-fuzzer.c\n100644 602b3812c46ce03b56f89b3f8f94f06954ef0015 0\tlibbpf/fuzz/bpf-object-fuzzer_seed_corpus.zip\n100644 1fc6aee1f32ba43880327a6b6af5a04c147fb657 0\tlibbpf/include/asm/barrier.h\n100644 26336dc7027e85962cf85a551e298647cfede9cf 0\tlibbpf/include/linux/compiler.h\n100644 1b1dafbcba482608b3a5e55d98d4f9ce68da38fa 0\tlibbpf/include/linux/err.h\n100644 e7e33737332ca2e6cb4a2ffd1c73440b979fdd79 0\tlibbpf/include/linux/filter.h\n100644 a4a7a9d6f179e9779ff3e8099b2282ff70239c09 0\tlibbpf/include/linux/kernel.h\n100644 fc91c34e1dee556e79c3af5447525d7345443922 0\tlibbpf/include/linux/list.h\n100644 53d758036ca4b10639223cf4de998dec2855b923 0\tlibbpf/include/linux/overflow.h\n100644 fc4677bc0a65a95423c0171d85f0e5c3bffbe944 0\tlibbpf/include/linux/ring_buffer.h\n100644 b15252a4ede69f4c8c79379e31ed42fc470dba5d 0\tlibbpf/include/linux/types.h\n100644 60a9d59beeabba9bdbaa94946aa0c28e3f435463 0\tlibbpf/include/uapi/linux/bpf.h\n100644 ee97668bdadb31585815e271af40667b6dea8b53 0\tlibbpf/include/uapi/linux/bpf_common.h\n100644 ec1798b6d3ffb4e80ea43e9113b09e1363672df5 0\tlibbpf/include/uapi/linux/btf.h\n100644 e8c07da58c9f20ed3b7b4aa886f964d335fa41d2 0\tlibbpf/include/uapi/linux/fcntl.h\n100644 39e659c83cfd21a4c6f7ff5fa5235d01ba20dc19 0\tlibbpf/include/uapi/linux/if_link.h\n100644 a78a8096f4ce67927eb84841b989e911cdf2816e 0\tlibbpf/include/uapi/linux/if_xdp.h\n100644 639524b59930bfcabcd0d352048a3fd4aa1da08b 0\tlibbpf/include/uapi/linux/netdev.h\n100644 0a4d73317759c9ee523d7d5482548b3171c821e6 0\tlibbpf/include/uapi/linux/netlink.h\n100644 a5feb7604948791c7a34ec0876c24a97eb5a375b 0\tlibbpf/include/uapi/linux/openat2.h\n100644 37675437b76860ae4c3bef6a35e0eded9c25d55b 0\tlibbpf/include/uapi/linux/perf_event.h\n100644 3faee0199a9b972c2036882a607cf70cf83c2626 0\tlibbpf/include/uapi/linux/pkt_cls.h\n100644 5c903abc9fa52a52477547b8ca0ce52dcab88b62 0\tlibbpf/include/uapi/linux/pkt_sched.h\n100755 5171e950be39280de0a8551e85f4a44d66227b96 0\tlibbpf/scripts/build-fuzzers.sh\n100755 99e4809be798a5986d78dff37307ceab448cdc6c 0\tlibbpf/scripts/coverity.sh\n100755 55ffcd157dc0dc76893842c3293db45ac6db4c15 0\tlibbpf/scripts/sync-kernel.sh\n100644 0473afb6d6c62c353fa949ccc3327a4e84564636 0\tlibbpf/src/.gitignore\n100644 52188db25ba59a0b8cdfca5fba5db01606c8ceae 0\tlibbpf/src/Makefile\n100644 3b0da19715e1da466cfc75dc1d91d142809b70cc 0\tlibbpf/src/bpf.c\n100644 c676295ab9bfe2d41614605b5433e79e9120fbd3 0\tlibbpf/src/bpf.h\n100644 1ac57bb7ac55f7d6aaec31955b26d7b626d5c39f 0\tlibbpf/src/bpf_core_read.h\n100644 ec9db4feca9f2f308254732bd411098ad6585556 0\tlibbpf/src/bpf_endian.h\n100644 fdf44403ff36996bbdf1a1dd2bfceb5cb926cd7a 0\tlibbpf/src/bpf_gen_internal.h\n100644 e338dbec8533e16f89e2c95f199802f5c927c935 0\tlibbpf/src/bpf_helper_defs.h\n100644 bbab9ad9dc5a778cfc12d74ddd344e24a17eb65f 0\tlibbpf/src/bpf_helpers.h\n100644 5c503096ef4349ee5a4e0dbec4c357ff40b0ada6 0\tlibbpf/src/bpf_prog_linfo.c\n100644 be076a4041ab1c68a595c052b3959d95f6019610 0\tlibbpf/src/bpf_tracing.h\n100644 8484b563b53d0a70b73ff53faec0dec3db36bb33 0\tlibbpf/src/btf.c\n100644 8e6880d91c8408261f2fc2071a4376ca279829a1 0\tlibbpf/src/btf.h\n100644 4d9f30bf7f01438e47fdfa7dc8a94b51acfe80e1 0\tlibbpf/src/btf_dump.c\n100644 cf3323fd47b88630a375e79c64b46d77270f85a3 0\tlibbpf/src/gen_loader.c\n100644 140ee40556761011c15a26da79a8e0bd2c4821a4 0\tlibbpf/src/hashmap.c\n100644 c12f8320e6682d50d0ec6a12e3e4d15802b9972c 0\tlibbpf/src/hashmap.h\n100644 63311a73c16d40e34c7a97ed5ea12f30e1034a75 0\tlibbpf/src/libbpf.c\n100644 10642ad69d763228392f8a8261b93cd6a29c8689 0\tlibbpf/src/libbpf.h\n100644 d9ec4407befa61c6d63590436665996138b06f2f 0\tlibbpf/src/libbpf.map\n100644 b45ed534bdfb58779eec4c3abfd8c5e188ae87f0 0\tlibbpf/src/libbpf.pc.template\n100644 9a7937f339dfaaada456fdaec057a8e36cf984e2 0\tlibbpf/src/libbpf_common.h\n100644 6b180172ec6bb89168cae6e7d9340851026c12a9 0\tlibbpf/src/libbpf_errno.c\n100644 e4d05662a96ce38ba029f85960ff896046a22976 0\tlibbpf/src/libbpf_internal.h\n100644 1e1be467bede6db7821e2d41f0cef8eab56b03b8 0\tlibbpf/src/libbpf_legacy.h\n100644 9c4db90b92b6b55bb143d80c308085003becc20b 0\tlibbpf/src/libbpf_probes.c\n100644 290411ddb39e97910a4ef2997a2aaa32cee0f1da 0\tlibbpf/src/libbpf_version.h\n100644 5ced96d99f8c5f787ca528503d2f9b1e9b946bfa 0\tlibbpf/src/linker.c\n100644 84dd5fa149058d21c196fdb6e011f98779961765 0\tlibbpf/src/netlink.c\n100644 975e265eab3bfec5378a5c4849813dfb672ce018 0\tlibbpf/src/nlattr.c\n100644 d92d1c1de700ee6d39f1960b7b0577f76b40ddd6 0\tlibbpf/src/nlattr.h\n100644 a26b2f5fa0fc9b44bdc41509893cb3db11905260 0\tlibbpf/src/relo_core.c\n100644 1c0566daf8e8818c257e0e7c3748db6d8425f3e6 0\tlibbpf/src/relo_core.h\n100644 02199364db136be06c2e8ee14b7a4c737a83a46f 0\tlibbpf/src/ringbuf.c\n100644 1e82ab06c3ebf4d32eb0e257a1f647ee4c6d0cd3 0\tlibbpf/src/skel_internal.h\n100644 146da01979c7fc52b3c5dae00909b5d53663d04c 0\tlibbpf/src/str_error.c\n100644 a139334d57b603db5e2b4475740ecac5bdc4d36f 0\tlibbpf/src/str_error.h\n100644 2464bcbd04e03786ab71ed4a41645b39a1e0eb0b 0\tlibbpf/src/strset.c\n100644 b6ddf77a83c2b13d32672b5f3104ed874f446e2a 0\tlibbpf/src/strset.h\n100644 0bd4c135acc21c2de62378e024e40c15bcb45c8b 0\tlibbpf/src/usdt.bpf.h\n100644 37455d00b239c1f385d55da7a2434d6b741aebe5 0\tlibbpf/src/usdt.c\n100644 3f26d629b2b49862812bca4f7ec3da474cf89f3a 0\tlibbpf/src/zip.c\n100644 1c1bb21fba7646b3e2b89281ee4ccd961de56fc4 0\tlibbpf/src/zip.h\n100755 c2ae2d8a98b082e7cf3441606c2bbb6c6d2c29a5 0\trun-baseline.sh\n100644 822684f82e4584b4773a964ccd58fb6ad8d6b330 0\tsrc/Makefile\n100644 147b7e00389e8ed81f93417298f602f5c1ef0f6d 0\tsrc/common.h\n100644 b417f4e20d79857c4b00923953908e03c78e21f8 0\tsrc/handler.bpf.h\n100644 0c702427da7179b599b754891edd98de6146176d 0\tsrc/hot_updating.c\n100644 0729a3a254a88475ddb3ff9f6422b347c9032be7 0\tsrc/mlp.bpf.h\n100644 460b790ae5c5d35e756030d86355a28109b52f69 0\tsrc/mlp.py\n100644 b18a24edb501a2a2a446e685d9922f0c8717e096 0\tsrc/mlp_params.bpf.h\n100644 70a1407ae30b5f6053d77d35761c55de007b853c 0\tsrc/mlp_quant.py\n100644 8c2d82e15add8c9555de9e53c3a215f341497e93 0\tsrc/mlp_train.py\n100644 bdfa6c4de5a28823930adeb79aceef62a9146d6b 0\tsrc/params.bpf.h\n100644 b68837116f21d218145cd7eb1ac7e4974f2c9e0d 0\tsrc/xdp.bpf.c\n100644 cd56974f270bbff2866eb0d6d4438806d021065b 0\tsrc/xdp.c\n",
+      "stderr": "",
+      "duration_seconds": 0.002314
+    },
+    {
+      "argv": [
+        "ip",
+        "-br",
+        "address"
+      ],
+      "started_utc": "2026-11-06T18:21:28.945936+00:00",
+      "exit_code": 0,
+      "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nenp1s0           UP             192.168.122.20/24 fe80::471c:d5f6:2d72:7fc/64 \n",
+      "stderr": "",
+      "duration_seconds": 0.000981
+    },
+    {
+      "argv": [
+        "ip",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:21:28.946973+00:00",
+      "exit_code": 0,
+      "stdout": "default via 192.168.122.1 dev enp1s0 proto dhcp metric 100 \n169.254.0.0/16 dev enp1s0 scope link metric 1000 \n192.168.122.0/24 dev enp1s0 proto kernel scope link src 192.168.122.20 metric 100 \n",
+      "stderr": "",
+      "duration_seconds": 0.000744
+    },
+    {
+      "argv": [
+        "ip",
+        "-6",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:21:28.947768+00:00",
+      "exit_code": 0,
+      "stdout": "::1 dev lo proto kernel metric 256 pref medium\nfe80::/64 dev enp1s0 proto kernel metric 1024 pref medium\n",
+      "stderr": "",
+      "duration_seconds": 0.00067
+    },
+    {
+      "argv": [
+        "ip",
+        "-d",
+        "-j",
+        "link",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:21:28.948479+00:00",
+      "exit_code": 0,
+      "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"promiscuity\":0,\"min_mtu\":0,\"max_mtu\":0,\"inet6_addr_gen_mode\":\"eui64\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535},{\"ifindex\":2,\"ifname\":\"enp1s0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"52:54:00:73:34:a0\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"promiscuity\":0,\"min_mtu\":68,\"max_mtu\":65535,\"inet6_addr_gen_mode\":\"none\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535,\"parentbus\":\"virtio\",\"parentdev\":\"virtio0\"}]\n",
+      "stderr": "",
+      "duration_seconds": 0.000645
+    },
+    {
+      "argv": [
+        "ip",
+        "netns",
+        "list"
+      ],
+      "started_utc": "2026-11-06T18:21:28.949165+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.000642
+    },
+    {
+      "argv": [
+        "tc",
+        "qdisc",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:21:28.949853+00:00",
+      "exit_code": 0,
+      "stdout": "qdisc noqueue 0: dev lo root refcnt 2 \nqdisc fq_codel 0: dev enp1s0 root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64 \n",
+      "stderr": "",
+      "duration_seconds": 0.000854
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code"
+      ],
+      "started_utc": "2026-11-06T18:21:28.950754+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.001332
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--exit-code"
+      ],
+      "started_utc": "2026-11-06T18:21:28.952123+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.001046
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "baseline-reproduction"
+      ],
+      "started_utc": "2026-11-06T18:21:28.953217+00:00",
+      "exit_code": 0,
+      "stdout": "65c49c737b6791801cc98d9839b930b77ff42435\n65c49c737b6791801cc98d9839b930b77ff42435\n",
+      "stderr": "",
+      "duration_seconds": 0.000832
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "started_utc": "2026-11-06T18:27:14.446032+00:00",
+      "exit_code": 0,
+      "stdout": "## test-env\n?? UBUNTU_VM_IDS_AGENT_PLAN.md\n?? evidence/\n",
+      "stderr": "",
+      "duration_seconds": 0.003342
+    },
+    {
+      "argv": [
+        "/usr/bin/sudo",
+        "-S",
+        "-p",
+        "",
+        "/home/poggers/NN-eBPF/.output/bpftool/bpftool",
+        "feature",
+        "probe",
+        "kernel"
+      ],
+      "started_utc": "2026-11-06T18:39:19.843090+00:00",
+      "exit_code": 0,
+      "stdout": "Scanning system configuration...\nbpf() syscall restricted to privileged users (admin can change)\nJIT compiler is enabled\nJIT compiler hardening is disabled\nJIT compiler kallsyms exports are enabled for root\nGlobal memory limit for JIT compiler for unprivileged users is 528482304 bytes\nCONFIG_BPF is set to y\nCONFIG_BPF_SYSCALL is set to y\nCONFIG_HAVE_EBPF_JIT is set to y\nCONFIG_BPF_JIT is set to y\nCONFIG_BPF_JIT_ALWAYS_ON is set to y\nCONFIG_DEBUG_INFO_BTF is set to y\nCONFIG_DEBUG_INFO_BTF_MODULES is set to y\nCONFIG_CGROUPS is set to y\nCONFIG_CGROUP_BPF is set to y\nCONFIG_CGROUP_NET_CLASSID is set to y\nCONFIG_SOCK_CGROUP_DATA is set to y\nCONFIG_BPF_EVENTS is set to y\nCONFIG_KPROBE_EVENTS is set to y\nCONFIG_UPROBE_EVENTS is set to y\nCONFIG_TRACING is set to y\nCONFIG_FTRACE_SYSCALLS is set to y\nCONFIG_FUNCTION_ERROR_INJECTION is set to y\nCONFIG_BPF_KPROBE_OVERRIDE is set to y\nCONFIG_NET is set to y\nCONFIG_XDP_SOCKETS is set to y\nCONFIG_LWTUNNEL_BPF is set to y\nCONFIG_NET_ACT_BPF is set to m\nCONFIG_NET_CLS_BPF is set to m\nCONFIG_NET_CLS_ACT is set to y\nCONFIG_NET_SCH_INGRESS is set to m\nCONFIG_XFRM is set to y\nCONFIG_IP_ROUTE_CLASSID is set to y\nCONFIG_IPV6_SEG6_BPF is set to y\nCONFIG_BPF_LIRC_MODE2 is not set\nCONFIG_BPF_STREAM_PARSER is set to y\nCONFIG_NETFILTER_XT_MATCH_BPF is set to m\nCONFIG_BPFILTER is not set\nCONFIG_BPFILTER_UMH is not set\nCONFIG_TEST_BPF is set to m\nCONFIG_HZ is set to 1000\n\nScanning system call availability...\nbpf() syscall is available\n\nScanning eBPF program types...\neBPF program_type socket_filter is available\neBPF program_type kprobe is available\neBPF program_type sched_cls is available\neBPF program_type sched_act is available\neBPF program_type tracepoint is available\neBPF program_type xdp is available\neBPF program_type perf_event is available\neBPF program_type cgroup_skb is available\neBPF program_type cgroup_sock is available\neBPF program_type lwt_in is available\neBPF program_type lwt_out is available\neBPF program_type lwt_xmit is available\neBPF program_type sock_ops is available\neBPF program_type sk_skb is available\neBPF program_type cgroup_device is available\neBPF program_type sk_msg is available\neBPF program_type raw_tracepoint is available\neBPF program_type cgroup_sock_addr is available\neBPF program_type lwt_seg6local is available\neBPF program_type lirc_mode2 is NOT available\neBPF program_type sk_reuseport is available\neBPF program_type flow_dissector is available\neBPF program_type cgroup_sysctl is available\neBPF program_type raw_tracepoint_writable is available\neBPF program_type cgroup_sockopt is available\neBPF program_type tracing is available\neBPF program_type struct_ops is available\neBPF program_type ext is available\neBPF program_type lsm is available\neBPF program_type sk_lookup is available\neBPF program_type syscall is available\neBPF program_type netfilter is available\n\nScanning eBPF map types...\neBPF map_type hash is available\neBPF map_type array is available\neBPF map_type prog_array is available\neBPF map_type perf_event_array is available\neBPF map_type percpu_hash is available\neBPF map_type percpu_array is available\neBPF map_type stack_trace is available\neBPF map_type cgroup_array is available\neBPF map_type lru_hash is available\neBPF map_type lru_percpu_hash is available\neBPF map_type lpm_trie is available\neBPF map_type array_of_maps is available\neBPF map_type hash_of_maps is available\neBPF map_type devmap is available\neBPF map_type sockmap is available\neBPF map_type cpumap is available\neBPF map_type xskmap is available\neBPF map_type sockhash is available\neBPF map_type cgroup_storage is available\neBPF map_type reuseport_sockarray is available\neBPF map_type percpu_cgroup_storage is available\neBPF map_type queue is available\neBPF map_type stack is available\neBPF map_type sk_storage is available\neBPF map_type devmap_hash is available\neBPF map_type struct_ops is available\neBPF map_type ringbuf is available\neBPF map_type inode_storage is available\neBPF map_type task_storage is available\neBPF map_type bloom_filter is available\neBPF map_type user_ringbuf is available\neBPF map_type cgrp_storage is available\n\nScanning eBPF helper functions...\neBPF helpers supported for program type socket_filter:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_get_socket_uid\n\t- bpf_skb_load_bytes_relative\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type kprobe:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_perf_event_read_value\n\t- bpf_override_return\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_send_signal\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_get_task_stack\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_get_attach_cookie\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type sched_cls:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_skb_store_bytes\n\t- bpf_l3_csum_replace\n\t- bpf_l4_csum_replace\n\t- bpf_tail_call\n\t- bpf_clone_redirect\n\t- bpf_get_cgroup_classid\n\t- bpf_skb_vlan_push\n\t- bpf_skb_vlan_pop\n\t- bpf_skb_get_tunnel_key\n\t- bpf_skb_set_tunnel_key\n\t- bpf_redirect\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_get_tunnel_opt\n\t- bpf_skb_set_tunnel_opt\n\t- bpf_skb_change_proto\n\t- bpf_skb_change_type\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_change_tail\n\t- bpf_skb_pull_data\n\t- bpf_csum_update\n\t- bpf_set_hash_invalid\n\t- bpf_get_numa_node_id\n\t- bpf_skb_change_head\n\t- bpf_get_socket_cookie\n\t- bpf_get_socket_uid\n\t- bpf_set_hash\n\t- bpf_skb_adjust_room\n\t- bpf_skb_get_xfrm_state\n\t- bpf_skb_load_bytes_relative\n\t- bpf_fib_lookup\n\t- bpf_skb_cgroup_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_skb_ancestor_cgroup_id\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_sk_fullsock\n\t- bpf_tcp_sock\n\t- bpf_skb_ecn_set_ce\n\t- bpf_get_listener_sock\n\t- bpf_skc_lookup_tcp\n\t- bpf_tcp_check_syncookie\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_tcp_gen_syncookie\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_sk_assign\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_csum_level\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_skb_cgroup_classid\n\t- bpf_redirect_neigh\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_redirect_peer\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_check_mtu\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_skb_set_tstamp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_tcp_raw_gen_syncookie_ipv4\n\t- bpf_tcp_raw_gen_syncookie_ipv6\n\t- bpf_tcp_raw_check_syncookie_ipv4\n\t- bpf_tcp_raw_check_syncookie_ipv6\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type sched_act:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_skb_store_bytes\n\t- bpf_l3_csum_replace\n\t- bpf_l4_csum_replace\n\t- bpf_tail_call\n\t- bpf_clone_redirect\n\t- bpf_get_cgroup_classid\n\t- bpf_skb_vlan_push\n\t- bpf_skb_vlan_pop\n\t- bpf_skb_get_tunnel_key\n\t- bpf_skb_set_tunnel_key\n\t- bpf_redirect\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_get_tunnel_opt\n\t- bpf_skb_set_tunnel_opt\n\t- bpf_skb_change_proto\n\t- bpf_skb_change_type\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_change_tail\n\t- bpf_skb_pull_data\n\t- bpf_csum_update\n\t- bpf_set_hash_invalid\n\t- bpf_get_numa_node_id\n\t- bpf_skb_change_head\n\t- bpf_get_socket_cookie\n\t- bpf_get_socket_uid\n\t- bpf_set_hash\n\t- bpf_skb_adjust_room\n\t- bpf_skb_get_xfrm_state\n\t- bpf_skb_load_bytes_relative\n\t- bpf_fib_lookup\n\t- bpf_skb_cgroup_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_skb_ancestor_cgroup_id\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_sk_fullsock\n\t- bpf_tcp_sock\n\t- bpf_skb_ecn_set_ce\n\t- bpf_get_listener_sock\n\t- bpf_skc_lookup_tcp\n\t- bpf_tcp_check_syncookie\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_tcp_gen_syncookie\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_sk_assign\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_csum_level\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_skb_cgroup_classid\n\t- bpf_redirect_neigh\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_redirect_peer\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_check_mtu\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_skb_set_tstamp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_tcp_raw_gen_syncookie_ipv4\n\t- bpf_tcp_raw_gen_syncookie_ipv6\n\t- bpf_tcp_raw_check_syncookie_ipv4\n\t- bpf_tcp_raw_check_syncookie_ipv6\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type tracepoint:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_perf_event_read_value\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_send_signal\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_get_task_stack\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_get_attach_cookie\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type xdp:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_redirect\n\t- bpf_perf_event_output\n\t- bpf_csum_diff\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_xdp_adjust_head\n\t- bpf_redirect_map\n\t- bpf_xdp_adjust_meta\n\t- bpf_xdp_adjust_tail\n\t- bpf_fib_lookup\n\t- bpf_get_current_cgroup_id\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_skc_lookup_tcp\n\t- bpf_tcp_check_syncookie\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_tcp_gen_syncookie\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_check_mtu\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_xdp_get_buff_len\n\t- bpf_xdp_load_bytes\n\t- bpf_xdp_store_bytes\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_tcp_raw_gen_syncookie_ipv4\n\t- bpf_tcp_raw_gen_syncookie_ipv6\n\t- bpf_tcp_raw_check_syncookie_ipv4\n\t- bpf_tcp_raw_check_syncookie_ipv6\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type perf_event:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_perf_event_read_value\n\t- bpf_perf_prog_read_value\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_send_signal\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_read_branch_records\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_get_task_stack\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_get_attach_cookie\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_skb:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_get_socket_uid\n\t- bpf_skb_load_bytes_relative\n\t- bpf_skb_cgroup_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_skb_ancestor_cgroup_id\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_sk_fullsock\n\t- bpf_tcp_sock\n\t- bpf_skb_ecn_set_ce\n\t- bpf_get_listener_sock\n\t- bpf_skc_lookup_tcp\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_sk_cgroup_id\n\t- bpf_sk_ancestor_cgroup_id\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_sock:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_netns_cookie\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_get_retval\n\t- bpf_set_retval\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type lwt_in:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_cgroup_classid\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_pull_data\n\t- bpf_get_numa_node_id\n\t- bpf_lwt_push_encap\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type lwt_out:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_cgroup_classid\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_pull_data\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type lwt_xmit:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_skb_store_bytes\n\t- bpf_l3_csum_replace\n\t- bpf_l4_csum_replace\n\t- bpf_tail_call\n\t- bpf_clone_redirect\n\t- bpf_get_cgroup_classid\n\t- bpf_skb_get_tunnel_key\n\t- bpf_skb_set_tunnel_key\n\t- bpf_redirect\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_get_tunnel_opt\n\t- bpf_skb_set_tunnel_opt\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_change_tail\n\t- bpf_skb_pull_data\n\t- bpf_csum_update\n\t- bpf_set_hash_invalid\n\t- bpf_get_numa_node_id\n\t- bpf_skb_change_head\n\t- bpf_lwt_push_encap\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_csum_level\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type sock_ops:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_setsockopt\n\t- bpf_sock_map_update\n\t- bpf_getsockopt\n\t- bpf_sock_ops_cb_flags_set\n\t- bpf_sock_hash_update\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_tcp_sock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_netns_cookie\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_load_hdr_opt\n\t- bpf_store_hdr_opt\n\t- bpf_reserve_hdr_opt\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type sk_skb:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_skb_store_bytes\n\t- bpf_tail_call\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_get_current_task\n\t- bpf_skb_change_tail\n\t- bpf_skb_pull_data\n\t- bpf_get_numa_node_id\n\t- bpf_skb_change_head\n\t- bpf_get_socket_cookie\n\t- bpf_get_socket_uid\n\t- bpf_skb_adjust_room\n\t- bpf_sk_redirect_map\n\t- bpf_sk_redirect_hash\n\t- bpf_get_current_cgroup_id\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_skc_lookup_tcp\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_device:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type sk_msg:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_msg_redirect_map\n\t- bpf_msg_apply_bytes\n\t- bpf_msg_cork_bytes\n\t- bpf_msg_pull_data\n\t- bpf_msg_redirect_hash\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_msg_push_data\n\t- bpf_msg_pop_data\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_netns_cookie\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type raw_tracepoint:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_perf_event_read_value\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_send_signal\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_get_task_stack\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_sock_addr:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_setsockopt\n\t- bpf_getsockopt\n\t- bpf_bind\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_sk_lookup_tcp\n\t- bpf_sk_lookup_udp\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_skc_lookup_tcp\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_netns_cookie\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_get_retval\n\t- bpf_set_retval\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type lwt_seg6local:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_cgroup_classid\n\t- bpf_get_route_realm\n\t- bpf_perf_event_output\n\t- bpf_skb_load_bytes\n\t- bpf_csum_diff\n\t- bpf_skb_under_cgroup\n\t- bpf_get_hash_recalc\n\t- bpf_get_current_task\n\t- bpf_skb_pull_data\n\t- bpf_get_numa_node_id\n\t- bpf_lwt_seg6_store_bytes\n\t- bpf_lwt_seg6_adjust_srh\n\t- bpf_lwt_seg6_action\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type lirc_mode2:\n\tProgram type not supported\neBPF helpers supported for program type sk_reuseport:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_skb_load_bytes\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_socket_cookie\n\t- bpf_skb_load_bytes_relative\n\t- bpf_get_current_cgroup_id\n\t- bpf_sk_select_reuseport\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type flow_dissector:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_skb_load_bytes\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_sysctl:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_sysctl_get_name\n\t- bpf_sysctl_get_current_value\n\t- bpf_sysctl_get_new_value\n\t- bpf_sysctl_set_new_value\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type raw_tracepoint_writable:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_perf_event_read_value\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_send_signal\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_get_task_stack\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type cgroup_sockopt:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_get_cgroup_classid\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_get_local_storage\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_tcp_sock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_netns_cookie\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_get_retval\n\t- bpf_set_retval\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type tracing:\n\tCould not determine which helpers are available\neBPF helpers supported for program type struct_ops:\n\tCould not determine which helpers are available\neBPF helpers supported for program type ext:\n\tCould not determine which helpers are available\neBPF helpers supported for program type lsm:\n\tCould not determine which helpers are available\neBPF helpers supported for program type sk_lookup:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_perf_event_output\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_sk_release\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_sk_assign\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_ktime_get_coarse_ns\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_skc_to_unix_sock\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type syscall:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_probe_read\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_pid_tgid\n\t- bpf_get_current_uid_gid\n\t- bpf_get_current_comm\n\t- bpf_perf_event_read\n\t- bpf_perf_event_output\n\t- bpf_get_stackid\n\t- bpf_get_current_task\n\t- bpf_current_task_under_cgroup\n\t- bpf_get_numa_node_id\n\t- bpf_probe_read_str\n\t- bpf_get_socket_cookie\n\t- bpf_perf_event_read_value\n\t- bpf_get_stack\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_sk_storage_get\n\t- bpf_sk_storage_delete\n\t- bpf_send_signal\n\t- bpf_skb_output\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_send_signal_thread\n\t- bpf_jiffies64\n\t- bpf_get_ns_current_pid_tgid\n\t- bpf_xdp_output\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_skc_to_tcp6_sock\n\t- bpf_skc_to_tcp_sock\n\t- bpf_skc_to_tcp_timewait_sock\n\t- bpf_skc_to_tcp_request_sock\n\t- bpf_skc_to_udp6_sock\n\t- bpf_get_task_stack\n\t- bpf_d_path\n\t- bpf_copy_from_user\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_task_storage_get\n\t- bpf_task_storage_delete\n\t- bpf_get_current_task_btf\n\t- bpf_sock_from_file\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_sys_bpf\n\t- bpf_btf_find_by_name_kind\n\t- bpf_sys_close\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_get_func_ip\n\t- bpf_task_pt_regs\n\t- bpf_get_branch_snapshot\n\t- bpf_skc_to_unix_sock\n\t- bpf_kallsyms_lookup_name\n\t- bpf_find_vma\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_xdp_get_buff_len\n\t- bpf_copy_from_user_task\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_skc_to_mptcp_sock\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\neBPF helpers supported for program type netfilter:\n\t- bpf_map_lookup_elem\n\t- bpf_map_update_elem\n\t- bpf_map_delete_elem\n\t- bpf_ktime_get_ns\n\t- bpf_get_prandom_u32\n\t- bpf_get_smp_processor_id\n\t- bpf_tail_call\n\t- bpf_get_current_task\n\t- bpf_get_numa_node_id\n\t- bpf_get_current_cgroup_id\n\t- bpf_map_push_elem\n\t- bpf_map_pop_elem\n\t- bpf_map_peek_elem\n\t- bpf_spin_lock\n\t- bpf_spin_unlock\n\t- bpf_strtol\n\t- bpf_strtoul\n\t- bpf_probe_read_user\n\t- bpf_probe_read_kernel\n\t- bpf_probe_read_user_str\n\t- bpf_probe_read_kernel_str\n\t- bpf_jiffies64\n\t- bpf_get_current_ancestor_cgroup_id\n\t- bpf_ktime_get_boot_ns\n\t- bpf_ringbuf_output\n\t- bpf_ringbuf_reserve\n\t- bpf_ringbuf_submit\n\t- bpf_ringbuf_discard\n\t- bpf_ringbuf_query\n\t- bpf_snprintf_btf\n\t- bpf_per_cpu_ptr\n\t- bpf_this_cpu_ptr\n\t- bpf_get_current_task_btf\n\t- bpf_for_each_map_elem\n\t- bpf_snprintf\n\t- bpf_timer_init\n\t- bpf_timer_set_callback\n\t- bpf_timer_start\n\t- bpf_timer_cancel\n\t- bpf_task_pt_regs\n\t- bpf_loop\n\t- bpf_strncmp\n\t- bpf_kptr_xchg\n\t- bpf_map_lookup_percpu_elem\n\t- bpf_dynptr_from_mem\n\t- bpf_ringbuf_reserve_dynptr\n\t- bpf_ringbuf_submit_dynptr\n\t- bpf_ringbuf_discard_dynptr\n\t- bpf_dynptr_read\n\t- bpf_dynptr_write\n\t- bpf_dynptr_data\n\t- bpf_ktime_get_tai_ns\n\t- bpf_user_ringbuf_drain\n\t- bpf_cgrp_storage_get\n\t- bpf_cgrp_storage_delete\n\nScanning miscellaneous eBPF features...\nLarge program size limit is available\nBounded loop support is available\nISA extension v2 is available\nISA extension v3 is available\n\n",
+      "stderr": "",
+      "authentication": "Provided through standard input only; input intentionally excluded from evidence"
+    },
+    {
+      "argv": [
+        "ip",
+        "-br",
+        "address"
+      ],
+      "started_utc": "2026-11-06T18:44:48.874191+00:00",
+      "exit_code": 0,
+      "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nenp1s0           UP             192.168.122.20/24 fe80::471c:d5f6:2d72:7fc/64 \n",
+      "stderr": "",
+      "duration_seconds": 0.000933
+    },
+    {
+      "argv": [
+        "ip",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:44:48.875178+00:00",
+      "exit_code": 0,
+      "stdout": "default via 192.168.122.1 dev enp1s0 proto dhcp metric 100 \n169.254.0.0/16 dev enp1s0 scope link metric 1000 \n192.168.122.0/24 dev enp1s0 proto kernel scope link src 192.168.122.20 metric 100 \n",
+      "stderr": "",
+      "duration_seconds": 0.00067
+    },
+    {
+      "argv": [
+        "ip",
+        "-6",
+        "route"
+      ],
+      "started_utc": "2026-11-06T18:44:48.875882+00:00",
+      "exit_code": 0,
+      "stdout": "::1 dev lo proto kernel metric 256 pref medium\nfe80::/64 dev enp1s0 proto kernel metric 1024 pref medium\n",
+      "stderr": "",
+      "duration_seconds": 0.000661
+    },
+    {
+      "argv": [
+        "ip",
+        "-d",
+        "-j",
+        "link",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:44:48.876577+00:00",
+      "exit_code": 0,
+      "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"promiscuity\":0,\"min_mtu\":0,\"max_mtu\":0,\"inet6_addr_gen_mode\":\"eui64\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535},{\"ifindex\":2,\"ifname\":\"enp1s0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"52:54:00:73:34:a0\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"promiscuity\":0,\"min_mtu\":68,\"max_mtu\":65535,\"inet6_addr_gen_mode\":\"none\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535,\"parentbus\":\"virtio\",\"parentdev\":\"virtio0\"}]\n",
+      "stderr": "",
+      "duration_seconds": 0.00069
+    },
+    {
+      "argv": [
+        "ip",
+        "netns",
+        "list"
+      ],
+      "started_utc": "2026-11-06T18:44:48.877316+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.001869
+    },
+    {
+      "argv": [
+        "tc",
+        "qdisc",
+        "show"
+      ],
+      "started_utc": "2026-11-06T18:44:48.879235+00:00",
+      "exit_code": 0,
+      "stdout": "qdisc noqueue 0: dev lo root refcnt 2 \nqdisc fq_codel 0: dev enp1s0 root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64 \n",
+      "stderr": "",
+      "duration_seconds": 0.001016
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code"
+      ],
+      "started_utc": "2026-11-06T18:44:48.880311+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.003399
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--exit-code"
+      ],
+      "started_utc": "2026-11-06T18:44:48.883788+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.001357
+    }
+  ],
+  "evidence_validation": {
+    "json_records_parsed": 6,
+    "new_document_links_resolve": 27,
+    "bash_blocks_syntax_checked_only": 2,
+    "branch_and_untracked_files_match_expected": true,
+    "artifact_checks_pass": true,
+    "preservation_checks_pass": true,
+    "stage_00_gate": "PASS with explicitly approved legacy-metadata exception",
+    "stage_01_started": false,
+    "privileged_feature_probe_pass": true,
+    "post_probe_preservation_pass": true,
+    "remaining_gate_blocker": null,
+    "legacy_metadata_exception": "legacy-metadata-exception.json"
+  }
+}

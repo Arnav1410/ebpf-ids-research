@@ -1,0 +1,8 @@
+# Keep compact gate records under version control; retain raw runtime output locally.
+*
+!.gitignore
+!INDEX.md
+!stage-*/
+stage-*/*
+!stage-*/*.md
+!stage-*/*.json

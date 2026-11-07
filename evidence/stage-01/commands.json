@@ -1,0 +1,266 @@
+{
+  "stage": "01",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "commands": [
+    {
+      "label": "dependencies-build",
+      "argv": [
+        "make",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps"
+      ],
+      "started_utc": "2026-11-06T19:09:30.397080+00:00",
+      "exit_code": 0,
+      "stdout": "dependencies-build.stdout.log",
+      "stderr": "dependencies-build.stderr.log"
+    },
+    {
+      "label": "baseline-build-first",
+      "argv": [
+        "make",
+        "-C",
+        "src",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-01/build",
+        "BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+        "LIBBPF_INCLUDE=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/usr/include",
+        "LIBBPF_OBJ=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/libbpf.a"
+      ],
+      "started_utc": "2026-11-06T19:09:42.628059+00:00",
+      "exit_code": 2,
+      "stdout": "baseline-build-first.stdout.log",
+      "stderr": "baseline-build-first.stderr.log"
+    },
+    {
+      "label": "dependencies-build-corrected",
+      "argv": [
+        "make",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps",
+        "MAKEOVERRIDES="
+      ],
+      "started_utc": "2026-11-06T19:10:45.206930+00:00",
+      "exit_code": 0,
+      "stdout": "dependencies-build-corrected.stdout.log",
+      "stderr": "dependencies-build-corrected.stderr.log"
+    },
+    {
+      "label": "baseline-build-corrected",
+      "argv": [
+        "make",
+        "-C",
+        "src",
+        "-B",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-01/build",
+        "BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+        "LIBBPF_INCLUDE=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/usr/include",
+        "LIBBPF_OBJ=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/libbpf.a"
+      ],
+      "started_utc": "2026-11-06T19:10:51.631367+00:00",
+      "exit_code": 0,
+      "stdout": "baseline-build-corrected.stdout.log",
+      "stderr": "baseline-build-corrected.stderr.log"
+    },
+    {
+      "label": "baseline-build-repeat",
+      "argv": [
+        "make",
+        "-C",
+        "src",
+        "-B",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-01/build",
+        "BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+        "LIBBPF_INCLUDE=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/usr/include",
+        "LIBBPF_OBJ=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/libbpf.a"
+      ],
+      "started_utc": "2026-11-06T19:10:52.218312+00:00",
+      "exit_code": 0,
+      "stdout": "baseline-build-repeat.stdout.log",
+      "stderr": "baseline-build-repeat.stderr.log"
+    },
+    {
+      "label": "behavior-regressions",
+      "argv": [
+        "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evaluation/tests",
+        "-v"
+      ],
+      "started_utc": "2026-11-06T19:10:52.666923+00:00",
+      "exit_code": 0,
+      "stdout": "behavior-regressions.stdout.log",
+      "stderr": "behavior-regressions.stderr.log"
+    },
+    {
+      "label": "native-original",
+      "argv": [
+        "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+        "-B",
+        "-m",
+        "evaluation",
+        "native",
+        "--limit",
+        "18840",
+        "--out",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/native-original"
+      ],
+      "started_utc": "2026-11-06T19:10:55.254370+00:00",
+      "exit_code": 0,
+      "stdout": "native-original.stdout.log",
+      "stderr": "native-original.stderr.log"
+    },
+    {
+      "label": "paired-reevaluation",
+      "argv": [
+        "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+        "-B",
+        "-m",
+        "evaluation",
+        "evaluate",
+        "--experiment",
+        "/home/poggers/NN-eBPF/.output/evaluation/m3-train",
+        "--out",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/paired-reevaluation"
+      ],
+      "started_utc": "2026-11-06T19:10:57.533298+00:00",
+      "exit_code": 0,
+      "stdout": "paired-reevaluation.stdout.log",
+      "stderr": "paired-reevaluation.stderr.log"
+    },
+    {
+      "label": "kernel-driver-build",
+      "argv": [
+        "cc",
+        "-O2",
+        "-std=gnu11",
+        "-fwrapv",
+        "-fdata-sections",
+        "-ffunction-sections",
+        "-I/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/usr/include",
+        "-I/home/poggers/NN-eBPF/src",
+        "/home/poggers/NN-eBPF/evaluation/kernel_driver.c",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/libbpf.a",
+        "-Wl,--gc-sections",
+        "-lelf",
+        "-lz",
+        "-o",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/kernel-driver"
+      ],
+      "started_utc": "2026-11-06T19:11:54.566060+00:00",
+      "exit_code": 0,
+      "stdout": "kernel-driver-build.stdout.log",
+      "stderr": "kernel-driver-build.stderr.log"
+    },
+    {
+      "label": "kernel-original",
+      "argv": [
+        "/usr/bin/sudo",
+        "-S",
+        "-p",
+        "",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/kernel-driver",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp.bpf.o",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/native-original/model.bin",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/vectors.bin"
+      ],
+      "started_utc": "2026-11-06T19:11:54.719129+00:00",
+      "exit_code": 0,
+      "stdout": "kernel-original.stdout.log",
+      "stderr": "kernel-original.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "kernel-paired",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/kernel-driver",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp.bpf.o",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/model-trained.bin",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/vectors.bin"
+      ],
+      "started_utc": "2026-11-06T19:11:56.119632+00:00",
+      "exit_code": 0,
+      "stdout": "kernel-paired.stdout.log",
+      "stderr": "kernel-paired.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "kernel-small-original",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/kernel-driver",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp.bpf.o",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/native-original/model.bin",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/small-vector.bin"
+      ],
+      "started_utc": "2026-11-06T19:13:18.435847+00:00",
+      "exit_code": 0,
+      "stdout": "kernel-small-original.stdout.log",
+      "stderr": "kernel-small-original.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "cleanup-small-original",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "/usr/bin/test",
+        "!",
+        "-e",
+        "/sys/fs/bpf/nn_ebpf_eval_0EBbPH"
+      ],
+      "started_utc": "2026-11-06T19:13:18.496898+00:00",
+      "exit_code": 0,
+      "stdout": "cleanup-small-original.stdout.log",
+      "stderr": "cleanup-small-original.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "kernel-small-paired",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/kernel-driver",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp.bpf.o",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/model-trained.bin",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/small-vector.bin"
+      ],
+      "started_utc": "2026-11-06T19:13:18.502570+00:00",
+      "exit_code": 0,
+      "stdout": "kernel-small-paired.stdout.log",
+      "stderr": "kernel-small-paired.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "cleanup-small-paired",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "/usr/bin/test",
+        "!",
+        "-e",
+        "/sys/fs/bpf/nn_ebpf_eval_vroJqn"
+      ],
+      "started_utc": "2026-11-06T19:13:18.570809+00:00",
+      "exit_code": 0,
+      "stdout": "cleanup-small-paired.stdout.log",
+      "stderr": "cleanup-small-paired.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "tracked-source-preservation",
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code"
+      ],
+      "started_utc": "2026-11-06T19:13:18.576039+00:00",
+      "exit_code": 0,
+      "stdout": "tracked-source-preservation.stdout.log",
+      "stderr": "tracked-source-preservation.stderr.log"
+    }
+  ]
+}

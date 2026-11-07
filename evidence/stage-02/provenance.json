@@ -1,0 +1,121 @@
+{
+  "recorded_utc": "2026-11-06T19:55:46.831378+00:00",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "branch": "test-env",
+  "gate": "BLOCKED",
+  "authoritative_run": "live-private/report.json",
+  "source_hashes_at_report": {
+    "test_env/__init__.py": "7f9e72269f674bd87fed23980d15fbb4474559d7c5af1fbe9ae9fa6129b7d56e",
+    "test_env/__main__.py": "823a3cd9cbd59fc6465692d834eba7b402560bbad5eafcbe40e8eea94f8bf309",
+    "test_env/commands.py": "ff915dc56f61468aa0b9606e7203e35d999e102564bf36b64be18c3215f84e32",
+    "test_env/lab.py": "d370601422cd911489b6f57fa7e30ca148d29d3818d0ac736bd4256a84c89caf",
+    "test_env/traffic.py": "0d325a6fc7c8ecd5e50dfee281cdacbaf49038c6adc716ab097b884148172223",
+    "test_env/baseline.py": "9cdbe368f55efc2c4c82da6701d32a550d1a672e4e0a2af1fdce4429ad977387",
+    "test_env/tests/__init__.py": "c0ce518edca0d70c874d7972b01920d4f7a4dcf09f0fd667981d07b2e25496e3",
+    "test_env/tests/test_lab.py": "6aedfe97a3e4c1a7b3bc597b95eb5e3b19cddb6e62d174395d91f8b2226fdf3b"
+  },
+  "baseline_build_hashes": {
+    "xdp": "d55e91484d334103be2b5c3994289b623bbfaa14e7c5eea3d17d4aa9f97c1386",
+    "hot_updating": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+    "xdp.o": "0097410f4e6123b590f50d858d16d666a89e9d087fd8170b7c8543f1e1d56c04",
+    "xdp.bpf.o": "59f54b6f4867df0acb54991428d27b0a202d0f93f1f0bdf649f71361028ae05f",
+    "xdp.skel.h": "285c27ce0949817f524a28275c4185b8bb3f292d5e8292647ef0988613252566",
+    "vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "original_model_identity": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756",
+  "baseline_source_diff": {
+    "argv": [
+      "git",
+      "diff",
+      "--exit-code",
+      "--",
+      "src",
+      "evaluation",
+      "Makefile",
+      "run-baseline.sh",
+      ".gitignore",
+      ".gitmodules"
+    ],
+    "exit_code": 0
+  },
+  "original_snapshot_preservation": {
+    "Makefile": true,
+    "src/Makefile": true,
+    ".gitmodules": true,
+    ".gitignore": true,
+    "run-baseline.sh": true,
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": true,
+    "src/mlp_params.bpf.h": true,
+    "src/.output/xdp": true,
+    "src/.output/hot_updating": true,
+    "src/.output/xdp.o": true,
+    "src/.output/xdp.bpf.o": true,
+    "src/.output/xdp.skel.h": true,
+    "src/.output/vmlinux.h": true,
+    ".output/bpftool/bpftool": true,
+    ".output/libbpf/libbpf.a": true,
+    "libbpf/CHECKPOINT-COMMIT": true,
+    "bpftool/CHECKPOINT-COMMIT": true,
+    "evaluation/requirements.txt": true,
+    "/boot/config-6.8.0-138-generic": true,
+    "/sys/kernel/btf/vmlinux": true
+  },
+  "cli_help_checks": {
+    "cli": {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "test_env",
+        "--help"
+      ],
+      "exit_code": 0
+    },
+    "capture": {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "test_env.baseline",
+        "--help"
+      ],
+      "exit_code": 0
+    }
+  },
+  "safety_tests": {
+    "count": 3,
+    "exit_code": 0,
+    "record": "safety-tests.json"
+  },
+  "final_resources": "final-resource-state.json",
+  "retained_owned_map": [
+    {
+      "id": 76,
+      "type": "prog_array",
+      "name": "progs",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 4,
+      "max_entries": 1024,
+      "bytes_memlock": 8576,
+      "owner_prog_type": "xdp",
+      "owner_jited": true,
+      "frozen": 0,
+      "btf_id": 133
+    }
+  ],
+  "new_document_links_resolve": 40,
+  "bash_document_blocks_syntax_checked": 2,
+  "runtime_source_note": "Invocation failures and fixes are retained chronologically. Current adapter additionally disables capture-helper bytecode writes; no further detector run followed the cleanup failure.",
+  "stages_not_started": [
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10"
+  ],
+  "commit_created": false
+}

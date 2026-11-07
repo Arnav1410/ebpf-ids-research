@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "Makefile": true,
+    "src/Makefile": true,
+    ".gitmodules": true,
+    ".gitignore": true,
+    "run-baseline.sh": true,
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": true,
+    "src/mlp_params.bpf.h": true,
+    "src/.output/xdp": true,
+    "src/.output/hot_updating": true,
+    "src/.output/xdp.o": true,
+    "src/.output/xdp.bpf.o": true,
+    "src/.output/xdp.skel.h": true,
+    "src/.output/vmlinux.h": true,
+    ".output/bpftool/bpftool": true,
+    ".output/libbpf/libbpf.a": true,
+    "libbpf/CHECKPOINT-COMMIT": true,
+    "bpftool/CHECKPOINT-COMMIT": true,
+    "evaluation/requirements.txt": true,
+    "/boot/config-6.8.0-138-generic": true,
+    "/sys/kernel/btf/vmlinux": true
+  },
+  "all_original_artifacts_preserved": true,
+  "root_test_run_cleanup": "Both small-case private pin roots checked absent with privileged test"
+}

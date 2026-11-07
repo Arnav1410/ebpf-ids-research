@@ -1,0 +1,98 @@
+{
+  "stage": "03",
+  "commands": [
+    {
+      "label": "probe-build",
+      "argv": [
+        "make",
+        "-C",
+        "test_env",
+        "OUTPUT=/home/poggers/NN-eBPF/.output/test-env-stage-03/build",
+        "BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+        "LIBBPF_INCLUDE=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/usr/include",
+        "LIBBPF_OBJ=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/libbpf/libbpf.a"
+      ],
+      "exit_code": 0,
+      "stdout": "probe-build.stdout.log",
+      "stderr": "probe-build.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "probe-live",
+      "argv": [
+        "/usr/bin/sudo",
+        "-S",
+        "-p",
+        "",
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "test_env",
+        "probe",
+        "--out",
+        "/home/poggers/NN-eBPF/evidence/stage-03/live",
+        "--loader",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe-loader",
+        "--object",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe.bpf.o",
+        "--bpftool",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+      ],
+      "exit_code": 1,
+      "stdout": "probe-live.stdout.log",
+      "stderr": "probe-live.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "probe-live-corrected",
+      "argv": [
+        "/usr/bin/sudo",
+        "-S",
+        "-p",
+        "",
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "test_env",
+        "probe",
+        "--out",
+        "/home/poggers/NN-eBPF/evidence/stage-03/live-corrected",
+        "--loader",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe-loader",
+        "--object",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe.bpf.o",
+        "--bpftool",
+        "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+      ],
+      "exit_code": 0,
+      "stdout": "probe-live-corrected.stdout.log",
+      "stderr": "probe-live-corrected.stderr.log",
+      "authentication_input_recorded": false
+    },
+    {
+      "label": "namespace-tc-safety",
+      "argv": [
+        "/usr/bin/sudo",
+        "-n",
+        "env",
+        "NN_EBPF_RUN_LAB_TESTS=1",
+        "NN_EBPF_LAB_EVIDENCE_ROOT=/home/poggers/NN-eBPF/evidence/stage-03/safety",
+        "NN_EBPF_TC_LOADER=/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe-loader",
+        "NN_EBPF_TC_OBJECT=/home/poggers/NN-eBPF/.output/test-env-stage-03/build/probe.bpf.o",
+        "NN_EBPF_BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test_env/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "namespace-tc-safety.stdout.log",
+      "stderr": "namespace-tc-safety.stderr.log",
+      "authentication_input_recorded": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "vectors": 36,
+  "packet_cases": 9,
+  "model_identity": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756",
+  "mismatches": [],
+  "cleanup": {
+    "private_pin_root": "/sys/fs/bpf/nn_ebpf_eval_fUT8xI",
+    "complete": true
+  }
+}

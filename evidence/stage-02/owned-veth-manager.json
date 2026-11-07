@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "journalctl",
+    "--no-pager",
+    "-u",
+    "NetworkManager",
+    "--since",
+    "-15min",
+    "--grep",
+    "veth-idsc|veth-idss",
+    "-o",
+    "short-iso"
+  ],
+  "exit_code": 0,
+  "stdout": "owned-veth-manager.stdout.log",
+  "stderr": "owned-veth-manager.stderr.log"
+}

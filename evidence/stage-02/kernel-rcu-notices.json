@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "journalctl",
+    "--no-pager",
+    "-k",
+    "--since",
+    "-15min",
+    "--grep",
+    "rcu.*stall|bpf.*warn|BPF.*WARN",
+    "-o",
+    "short-iso"
+  ],
+  "exit_code": 1,
+  "stdout": "-- No entries --\n",
+  "stderr": ""
+}

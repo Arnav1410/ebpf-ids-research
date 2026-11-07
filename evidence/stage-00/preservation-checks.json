@@ -1,0 +1,156 @@
+{
+  "stage": "00",
+  "network_checks": [
+    {
+      "argv": [
+        "ip",
+        "-br",
+        "address"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    },
+    {
+      "argv": [
+        "ip",
+        "route"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    },
+    {
+      "argv": [
+        "ip",
+        "-6",
+        "route"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    },
+    {
+      "argv": [
+        "ip",
+        "-d",
+        "-j",
+        "link",
+        "show"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    },
+    {
+      "argv": [
+        "ip",
+        "netns",
+        "list"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    },
+    {
+      "argv": [
+        "tc",
+        "qdisc",
+        "show"
+      ],
+      "before_exit_code": 0,
+      "after_exit_code": 0,
+      "stdout_unchanged": true,
+      "passed": true
+    }
+  ],
+  "tracked_worktree_unchanged": true,
+  "index_unchanged": true,
+  "head_and_baseline_reference_match": true,
+  "snapshot_file_checks": {
+    "Makefile": true,
+    "src/Makefile": true,
+    ".gitmodules": true,
+    ".gitignore": true,
+    "run-baseline.sh": true,
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": true,
+    "src/mlp_params.bpf.h": true,
+    "src/.output/xdp": true,
+    "src/.output/hot_updating": true,
+    "src/.output/xdp.o": true,
+    "src/.output/xdp.bpf.o": true,
+    "src/.output/xdp.skel.h": true,
+    "src/.output/vmlinux.h": true,
+    ".output/bpftool/bpftool": true,
+    ".output/libbpf/libbpf.a": true,
+    "libbpf/CHECKPOINT-COMMIT": true,
+    "bpftool/CHECKPOINT-COMMIT": true,
+    "evaluation/requirements.txt": true,
+    "/boot/config-6.8.0-138-generic": true,
+    "/sys/kernel/btf/vmlinux": true
+  },
+  "user_plan_matches_initial": true,
+  "resources_created": "Evidence files and test-env branch only; no test interfaces, namespace, attachment, qdisc, map or model replacement",
+  "all_preservation_checks_pass": true,
+  "post_privileged_probe": {
+    "network": [
+      {
+        "argv": [
+          "ip",
+          "-br",
+          "address"
+        ],
+        "passed": true
+      },
+      {
+        "argv": [
+          "ip",
+          "route"
+        ],
+        "passed": true
+      },
+      {
+        "argv": [
+          "ip",
+          "-6",
+          "route"
+        ],
+        "passed": true
+      },
+      {
+        "argv": [
+          "ip",
+          "-d",
+          "-j",
+          "link",
+          "show"
+        ],
+        "passed": true
+      },
+      {
+        "argv": [
+          "ip",
+          "netns",
+          "list"
+        ],
+        "passed": true
+      },
+      {
+        "argv": [
+          "tc",
+          "qdisc",
+          "show"
+        ],
+        "passed": true
+      }
+    ],
+    "tracked_worktree_unchanged": true,
+    "index_unchanged": true,
+    "all_pass": true
+  }
+}

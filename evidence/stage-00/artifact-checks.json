@@ -1,0 +1,197 @@
+{
+  "stage": "00",
+  "method": "Fresh SHA-256 and model packing/identity inspection only; no inference, training, build, load or packet execution",
+  "checks": [
+    {
+      "path": ".output/libbpf/libbpf.a",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "observed_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "matches": true
+    },
+    {
+      "path": ".output/libbpf/usr/include/bpf/bpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "0071fc8f1e9d8770bc3a01b4b3e2fd66b70dca3f4ed1afd8b2386ceaed36a88e",
+      "observed_sha256": "0071fc8f1e9d8770bc3a01b4b3e2fd66b70dca3f4ed1afd8b2386ceaed36a88e",
+      "matches": true
+    },
+    {
+      "path": ".output/libbpf/usr/include/bpf/libbpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "578cb5da86d3c9ea6f5ae403fa95486e2f7869f6545b1677ca1f9f0aa5e0ad8d",
+      "observed_sha256": "578cb5da86d3c9ea6f5ae403fa95486e2f7869f6545b1677ca1f9f0aa5e0ad8d",
+      "matches": true
+    },
+    {
+      "path": "evaluation/kernel_driver.c",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "d20e701ddcdebb84851511afa9e3b5245afcd7b360e63aa0987ba2335c99ad33",
+      "observed_sha256": "d20e701ddcdebb84851511afa9e3b5245afcd7b360e63aa0987ba2335c99ad33",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.bpf.o",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "observed_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "matches": true
+    },
+    {
+      "path": "src/common.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "9348693840e3122f39b5342efc239452f6e2a58da9d022d8b15298cdd57e5bef",
+      "observed_sha256": "9348693840e3122f39b5342efc239452f6e2a58da9d022d8b15298cdd57e5bef",
+      "matches": true
+    },
+    {
+      "path": "src/handler.bpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "770af1fc84194a225618e289e6cee8fd7a1b26c710fa0d454fcb10706b6c575e",
+      "observed_sha256": "770af1fc84194a225618e289e6cee8fd7a1b26c710fa0d454fcb10706b6c575e",
+      "matches": true
+    },
+    {
+      "path": "src/hot_updating.c",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "9abb2a777e1b353ada9e59e54a2718a9675a17c819d9bebe0dd2c44071edd598",
+      "observed_sha256": "9abb2a777e1b353ada9e59e54a2718a9675a17c819d9bebe0dd2c44071edd598",
+      "matches": true
+    },
+    {
+      "path": "src/mlp.bpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "observed_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "matches": true
+    },
+    {
+      "path": "src/mlp_params.bpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "observed_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "matches": true
+    },
+    {
+      "path": "src/params.bpf.h",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "385d745f00e7e3c015781b59b6bb3b0e462c31b3af6f24c288921d13f73df46a",
+      "observed_sha256": "385d745f00e7e3c015781b59b6bb3b0e462c31b3af6f24c288921d13f73df46a",
+      "matches": true
+    },
+    {
+      "path": "src/xdp.bpf.c",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "b8736d4f88b1818fa3cfe2e37473d12b00c034a5b22b4e1ab1ccad5c9f65c10a",
+      "observed_sha256": "b8736d4f88b1818fa3cfe2e37473d12b00c034a5b22b4e1ab1ccad5c9f65c10a",
+      "matches": true
+    },
+    {
+      "path": "src/xdp.c",
+      "basis": "Historical M4 report source/dependency/object hashes",
+      "expected_sha256": "4ffd4aee38c2902a95ec3508fb277eb6063a7c15c95a2e1b9987d4c0d9186ffa",
+      "observed_sha256": "4ffd4aee38c2902a95ec3508fb277eb6063a7c15c95a2e1b9987d4c0d9186ffa",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m4-root-context/kernel-driver",
+      "basis": "Historical M4 packed input/executable hash",
+      "expected_sha256": "54b3ba284dfa8d0226541c873624fad119289ab2eb32f7b9b752d56015df4c41",
+      "observed_sha256": "54b3ba284dfa8d0226541c873624fad119289ab2eb32f7b9b752d56015df4c41",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m4-root-context/model.bin",
+      "basis": "Historical M4 packed input/executable hash",
+      "expected_sha256": "ef4da8d5ee4772abde75f6ad4b64b81d0a3078b085e84af70d82fba2daf8fcfb",
+      "observed_sha256": "ef4da8d5ee4772abde75f6ad4b64b81d0a3078b085e84af70d82fba2daf8fcfb",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m4-root-context/vectors.bin",
+      "basis": "Historical M4 packed input/executable hash",
+      "expected_sha256": "5a0052f5a3aa4ca8c81a6e6bec0439a060fa9658ad34676502b8e14b474595ee",
+      "observed_sha256": "5a0052f5a3aa4ca8c81a6e6bec0439a060fa9658ad34676502b8e14b474595ee",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m3-train/float-model.json",
+      "basis": "Historical M3 training artifact manifest",
+      "expected_sha256": "cdee0603866596058999659b3467e8c8b7630a46acd4303d76788269e8c2c894",
+      "observed_sha256": "cdee0603866596058999659b3467e8c8b7630a46acd4303d76788269e8c2c894",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m3-train/mlp_params.bpf.h",
+      "basis": "Historical M3 training artifact manifest",
+      "expected_sha256": "8c7dd0f8af77eecff2c97a7f02c1fdb007cfc27ae90f2809076eca5fa4d9b535",
+      "observed_sha256": "8c7dd0f8af77eecff2c97a7f02c1fdb007cfc27ae90f2809076eca5fa4d9b535",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m3-train/quantized-model.json",
+      "basis": "Historical M3 training artifact manifest",
+      "expected_sha256": "75e64d7dabcc2ba45edf7a48668cf5b522f9cc1700214eb588557e5ccfdbfe54",
+      "observed_sha256": "75e64d7dabcc2ba45edf7a48668cf5b522f9cc1700214eb588557e5ccfdbfe54",
+      "matches": true
+    },
+    {
+      "path": ".output/evaluation/m3-train/split.json",
+      "basis": "Historical M3 training artifact manifest",
+      "expected_sha256": "b0e036cd1fbd2a642854b4484a3da8933e80ac62857044aede973eaa75d9a9ba",
+      "observed_sha256": "b0e036cd1fbd2a642854b4484a3da8933e80ac62857044aede973eaa75d9a9ba",
+      "matches": true
+    },
+    {
+      "path": "dataset/reproduction-xdp-data.npy",
+      "basis": "Historical M4 dataset identity",
+      "expected_sha256": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+      "observed_sha256": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+      "matches": true
+    },
+    {
+      "path": "dataset/reproduction-xdp-label.npy",
+      "basis": "Historical M4 dataset identity",
+      "expected_sha256": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924",
+      "observed_sha256": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924",
+      "matches": true
+    },
+    {
+      "path": "src/mlp.bpf.h",
+      "basis": "m5-native-all actual arithmetic header identity",
+      "expected_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "observed_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "matches": true
+    },
+    {
+      "path": "evaluation/native_reference.c",
+      "basis": "m5-native-all host driver source identity",
+      "expected_sha256": "1ebcac5566a0ee8ca093494e8f9819574af1981a4f9db64dd769b23328e1dfd6",
+      "observed_sha256": "1ebcac5566a0ee8ca093494e8f9819574af1981a4f9db64dd769b23328e1dfd6",
+      "matches": true
+    },
+    {
+      "path": "src/mlp.bpf.h",
+      "basis": "m5-native-trained actual arithmetic header identity",
+      "expected_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "observed_sha256": "124ef5e2fcb8bcbfa9c9c202c53be8525552c662ea12b676c41e4a364aaa1c7f",
+      "matches": true
+    },
+    {
+      "path": "evaluation/native_reference.c",
+      "basis": "m5-native-trained host driver source identity",
+      "expected_sha256": "1ebcac5566a0ee8ca093494e8f9819574af1981a4f9db64dd769b23328e1dfd6",
+      "observed_sha256": "1ebcac5566a0ee8ca093494e8f9819574af1981a4f9db64dd769b23328e1dfd6",
+      "matches": true
+    }
+  ],
+  "model_checks": {
+    "semantic_identity_matches_m4": true,
+    "semantic_identity_matches_m3": true,
+    "packed_parameters_match_m4": true
+  },
+  "historical_kernel_report_sha256": "7b94493b98f00440389f187c30f0131dd395ea25a3be3d8d4d993448b8053899",
+  "historical_kernel_output_sha256": "e1a47aa8fbe3058d89919e1459c8575cba67c1749e5bfe7056b0851422609f24",
+  "current_plan_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+  "all_recorded_checks_match": true
+}

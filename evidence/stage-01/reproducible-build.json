@@ -1,0 +1,22 @@
+{
+  "first_sha256": {
+    "xdp": "d55e91484d334103be2b5c3994289b623bbfaa14e7c5eea3d17d4aa9f97c1386",
+    "hot_updating": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+    "xdp.o": "0097410f4e6123b590f50d858d16d666a89e9d087fd8170b7c8543f1e1d56c04",
+    "xdp.bpf.o": "59f54b6f4867df0acb54991428d27b0a202d0f93f1f0bdf649f71361028ae05f",
+    "xdp.skel.h": "285c27ce0949817f524a28275c4185b8bb3f292d5e8292647ef0988613252566",
+    "vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "repeat_sha256": {
+    "xdp": "d55e91484d334103be2b5c3994289b623bbfaa14e7c5eea3d17d4aa9f97c1386",
+    "hot_updating": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+    "xdp.o": "0097410f4e6123b590f50d858d16d666a89e9d087fd8170b7c8543f1e1d56c04",
+    "xdp.bpf.o": "59f54b6f4867df0acb54991428d27b0a202d0f93f1f0bdf649f71361028ae05f",
+    "xdp.skel.h": "285c27ce0949817f524a28275c4185b8bb3f292d5e8292647ef0988613252566",
+    "vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "all_identical": true,
+  "output": ".output/test-env-stage-01/build",
+  "original_outputs_preserved": "src/.output and root .output/{bpftool,libbpf} were not replaced",
+  "invocation_correction": "MAKEOVERRIDES= prevents root OUTPUT override leaking into recursive Make; failed attempt retained in command logs"
+}

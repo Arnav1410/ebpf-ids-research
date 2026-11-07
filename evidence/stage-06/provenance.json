@@ -1,0 +1,162 @@
+{
+  "stage": "stage06",
+  "status": "pass",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "recorded_utc": "2026-11-07T05:32:43.936989+00:00",
+  "authoritative_current_source_run": "safety/test_live_event_parity_overflows_restart_and_owned_release/events.json",
+  "root_regressions": {
+    "passed": 48,
+    "skipped": 0,
+    "duration_seconds": 65.916,
+    "log": "root-full.stderr.log"
+  },
+  "source_sha256": {
+    "test_env/Makefile": "4c4029bdb55c76f9ad4c7d9526d5bddea056977788a6a210106ee8974a983d9c",
+    "test_env/__main__.py": "e8a948e7a758c155ac5b06a266b2be3a322f34e6e2bd825866456c1202735851",
+    "test_env/nn.h": "b43f88ae7cf4fa211f6a638a5fc696df5a4f84c2ed451cdc3f6f0f5f1b804558",
+    "test_env/nn_bpf.h": "bdf8473212875c3c7d48ad70b6eb50dcb7eb5ccf2893caaa8885f523cd1aece0",
+    "test_env/nn_collect.c": "5b8e12cb395684c03e60c29b4f2c3af26707ed4b577b8f5c46c27c162a5fa689",
+    "test_env/nn_json.c": "113e7ba84a291261fca0cd6c58eef90c803057b507ed546ad556ede6b3f37c4f",
+    "test_env/nn_json.h": "3d3fb3b4bbe976f0075906f3015202d62b7b46b20ec0879dc01ff92cc10c6f8d",
+    "test_env/nn_controller.c": "1bb9a49240de3e2ca5c6bad9a65b21ebf1407e826b73e25b08c849d1bd6bf463",
+    "test_env/nn_controller.h": "cc2891806b94fad8d3360e489228bbfbc2ff431067367af0d1915e676d7cdf8b",
+    "test_env/flow_controller.c": "a8a35facd19e697fdc07b9cff4ea864b92184d616942d2c5c91c4b085b7378e9",
+    "test_env/flow_controller.h": "b86c966ad76d6853fafb250ad3c261acd06567a6bdd46bf4d21272030ac7c497",
+    "test_env/private_scope.c": "9d2cd645eb1962c24cd74c4b08a0043ba6bf177672af4c33aa0e2b54d54b2365",
+    "test_env/private_scope.h": "cfafd94de884cd2349e4dcc390bc6b997f68ddeca664215a548d6c4f1ed0397a",
+    "test_env/probe_loader.c": "9387cf654fa92258c6415e42120e5edc55c0cee7428dde9facabaafb2637c52b",
+    "test_env/inference.py": "aa2c179ca5a0c3d1a515f24e34d8a576ef9212d03d96bc782dd3bec28a3461bd",
+    "test_env/inference_reference.py": "19eecfafc91637981cbcdf39c01baeea5ae9c885000103af2d3ea45482c2b1cb",
+    "test_env/collector.py": "a60c8cce0d1f10ac6e8f162fd4124b85b3f29c71820aa1ea402a4cb9d3acf92e",
+    "test_env/event_schema.py": "7cb2701d54811239db930b27a34c03373382cf7a50b969d5cc92df51854ae561",
+    "test_env/event_validation.py": "af16c1ae9f94a009dd748e6588fbfd1d51aeee745f9fc165e3f477774dc59761",
+    "test_env/tests/test_events.py": "63132a25ec2b66a2cd946ad2046b6c6cb4179813d4a7b25380076c2de51a6fe4",
+    "test_env/tests/test_inference.py": "2ee0cfb7fd50f745f04864cba63f9e725e75671f645cb6eeb2c569e393f6dcf8"
+  },
+  "artifact_sha256": {
+    ".output/test-env-stage-06/build/nn-loader": "ba450cca8cadff4596719517ddc0261018d943f777d7f14f26956649419a5614",
+    ".output/test-env-stage-06/build/nn.bpf.o": "5b7c5790561e0cc1c734a89aa6e59a8027b461ed7e0e050b4b80a1c9b41dcf73",
+    ".output/test-env-stage-06/build/nn-collect": "e6108132f9b2f039fb98513033e1808da5495daf719430c9995451ff25005ac9",
+    ".output/test-env-stage-06/build/probe-loader": "36f35b5b3c7055b3cfb9b61b4619004bbc8c9a992bd74d58222c5cedcd191201",
+    ".output/test-env-stage-06/build/flow-loader": "6fcc9c5a3c81fa34cb740f13da2fa279e52cc600b87f75025ae726fc09ecd556",
+    ".output/test-env-stage-06/build/flow-inspect": "e3ca59e6f5def52389f9c29bf86f7b8a869a5e1c9083157b58b3e56370cd5e98"
+  },
+  "preserved_original_fingerprints": {
+    "Makefile": {
+      "expected_sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "actual_sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "unchanged": true
+    },
+    "src/Makefile": {
+      "expected_sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "actual_sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "unchanged": true
+    },
+    ".gitmodules": {
+      "expected_sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "actual_sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "unchanged": true
+    },
+    ".gitignore": {
+      "expected_sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "actual_sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "unchanged": true
+    },
+    "run-baseline.sh": {
+      "expected_sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "actual_sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "unchanged": true
+    },
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": {
+      "expected_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "actual_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "unchanged": true
+    },
+    "src/mlp_params.bpf.h": {
+      "expected_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "actual_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "unchanged": true
+    },
+    "src/.output/xdp": {
+      "expected_sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "actual_sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "unchanged": true
+    },
+    "src/.output/hot_updating": {
+      "expected_sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "actual_sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "unchanged": true
+    },
+    "src/.output/xdp.o": {
+      "expected_sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "actual_sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "unchanged": true
+    },
+    "src/.output/xdp.bpf.o": {
+      "expected_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "actual_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "unchanged": true
+    },
+    "src/.output/xdp.skel.h": {
+      "expected_sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "actual_sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "unchanged": true
+    },
+    "src/.output/vmlinux.h": {
+      "expected_sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "actual_sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "unchanged": true
+    },
+    ".output/bpftool/bpftool": {
+      "expected_sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "actual_sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "unchanged": true
+    },
+    ".output/libbpf/libbpf.a": {
+      "expected_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "actual_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "unchanged": true
+    },
+    "libbpf/CHECKPOINT-COMMIT": {
+      "expected_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "actual_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "unchanged": true
+    },
+    "bpftool/CHECKPOINT-COMMIT": {
+      "expected_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "actual_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "unchanged": true
+    },
+    "evaluation/requirements.txt": {
+      "expected_sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "actual_sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "unchanged": true
+    },
+    "/boot/config-6.8.0-138-generic": {
+      "expected_sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "actual_sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "unchanged": true
+    },
+    "/sys/kernel/btf/vmlinux": {
+      "expected_sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "actual_sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "unchanged": true
+    }
+  },
+  "real_interfaces_modified": false,
+  "new_packages_installed": false,
+  "original_XDP_cleanup_exception_applied": false,
+  "schema": {
+    "nn_abi": 2,
+    "event_version": 1,
+    "event_bytes": 256,
+    "endian": "little-endian x64, explicit marker 0x01020304"
+  },
+  "limitations": [
+    "Private namespace TC/skb granularity, not physical wire segmentation.",
+    "Labels 0/1 have unverified semantic names; no attack-detection or new accuracy claim.",
+    "Sequence IDs identify attempts, not cross-CPU delivery order.",
+    "Periodic flow telemetry retains at most 32 individually locked rows; total/truncation are explicit, not a global atomic snapshot.",
+    "Native stdout and journals stop at explicit byte/time bounds; this is an isolated lab service, not a production daemon."
+  ]
+}

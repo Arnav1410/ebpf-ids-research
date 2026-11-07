@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-S",
+    "-p",
+    "",
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "test_env",
+    "baseline",
+    "--out",
+    "/home/poggers/NN-eBPF/evidence/stage-02/live",
+    "--loader",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp",
+    "--updater",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/hot_updating",
+    "--bpftool",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+  ],
+  "started_utc": "2026-11-06T19:28:04.639527+00:00",
+  "exit_code": 1,
+  "stdout": "invoke.stdout.log",
+  "stderr": "invoke.stderr.log",
+  "authentication_input_recorded": false,
+  "evidence_ownership_repair": {
+    "argv": [
+      "/usr/bin/sudo",
+      "-n",
+      "chown",
+      "1000:1000",
+      "/home/poggers/NN-eBPF/evidence/stage-02"
+    ],
+    "exit_code": 0
+  }
+}

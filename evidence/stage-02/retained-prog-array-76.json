@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-n",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+    "-j",
+    "map",
+    "dump",
+    "id",
+    "76"
+  ],
+  "exit_code": 0,
+  "stdout": "[]\n",
+  "stderr": ""
+}

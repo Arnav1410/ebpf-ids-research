@@ -1,0 +1,97 @@
+{
+  "stage": "00",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "base_branch": "baseline-reproduction",
+  "work_branch": "test-env",
+  "initial_user_changes": [
+    "untracked UBUNTU_VM_IDS_AGENT_PLAN.md"
+  ],
+  "initial_plan_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+  "gitlinks": [
+    "160000 c3f5b472182cb1e149769e20fa646ecdc49a5ea6 0\tdataset-instance/intrusion/DVMA/brute-force",
+    "160000 792862f5c8cb98f9ffcb9fab245e2c663e3a1026 0\tdataset-instance/intrusion/GoldenEye"
+  ],
+  "files": {
+    "Makefile": {
+      "sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "bytes": 756
+    },
+    "src/Makefile": {
+      "sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "bytes": 1445
+    },
+    ".gitmodules": {
+      "sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "bytes": 163
+    },
+    ".gitignore": {
+      "sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "bytes": 31
+    },
+    "run-baseline.sh": {
+      "sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "bytes": 21651
+    },
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": {
+      "sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "bytes": 22705
+    },
+    "src/mlp_params.bpf.h": {
+      "sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "bytes": 9209
+    },
+    "src/.output/xdp": {
+      "sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "bytes": 1438536
+    },
+    "src/.output/hot_updating": {
+      "sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "bytes": 1285688
+    },
+    "src/.output/xdp.o": {
+      "sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "bytes": 170592
+    },
+    "src/.output/xdp.bpf.o": {
+      "sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "bytes": 142744
+    },
+    "src/.output/xdp.skel.h": {
+      "sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "bytes": 414816
+    },
+    "src/.output/vmlinux.h": {
+      "sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "bytes": 3151713
+    },
+    ".output/bpftool/bpftool": {
+      "sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "bytes": 1829088
+    },
+    ".output/libbpf/libbpf.a": {
+      "sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "bytes": 3148776
+    },
+    "libbpf/CHECKPOINT-COMMIT": {
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "bytes": 41
+    },
+    "bpftool/CHECKPOINT-COMMIT": {
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "bytes": 41
+    },
+    "evaluation/requirements.txt": {
+      "sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "bytes": 220
+    },
+    "/boot/config-6.8.0-138-generic": {
+      "sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "bytes": 287160
+    },
+    "/sys/kernel/btf/vmlinux": {
+      "sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "bytes": 6099393
+    }
+  },
+  "limitations": "A fingerprint inventory, not a rebuild, proof of attachment, or a complete binary archive. Existing .output artifacts remain ignored and in place."
+}

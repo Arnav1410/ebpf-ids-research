@@ -1,0 +1,1127 @@
+{
+  "stage": "05",
+  "status": "PASS",
+  "recorded_utc": "2026-11-07T00:08:28.471903+00:00",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "authoritative_current_source_run": "safety-accounted/test_original_pair_packets_faults_concurrency_and_owned_release/inference.json",
+  "root_regressions": {
+    "passed": 40,
+    "skipped": 0,
+    "privileged_cases": 8,
+    "log": "root-inference-safety-accounted.stderr.log"
+  },
+  "sample_selection": {
+    "count": 512,
+    "dataset_identity": {
+      "data_sha256": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+      "labels_sha256": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924"
+    },
+    "label_semantics": {
+      "0": "unverified",
+      "1": "unverified"
+    },
+    "membership_sha256": "ccdb2270da2c124e86585f4ca78781bb8de8de6ca74ef3499b028f5075fb448c",
+    "metric_population": "balanced selected subset, not natural dataset prevalence",
+    "numeric_label_counts": {
+      "0": 256,
+      "1": 256
+    },
+    "scope": "frozen local exact-feature-grouped held-out membership",
+    "selection": "seed2026-balanced-labels-without-prediction-selection-v1"
+  },
+  "sessions": [
+    {
+      "model_id": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756",
+      "vectors": 554,
+      "all_six_stages_exact": true,
+      "predicted_classes": [
+        0,
+        1
+      ],
+      "metrics": {
+        "accuracy": 0.89453125,
+        "confusion_matrix": {
+          "columns": "predicted [0,1]",
+          "counts": [
+            [
+              202,
+              54
+            ],
+            [
+              0,
+              256
+            ]
+          ],
+          "rows": "actual [0,1]"
+        },
+        "coverage": 1.0,
+        "label_mapping": {
+          "0": "unverified",
+          "1": "unverified"
+        },
+        "macro_f1": 0.8933448547224836,
+        "per_class": {
+          "0": {
+            "f1": 0.8820960698689956,
+            "false_positive_rate": 0.0,
+            "fn": 54,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 0.7890625,
+            "support": 256,
+            "tn": 256,
+            "tp": 202
+          },
+          "1": {
+            "f1": 0.9045936395759717,
+            "false_positive_rate": 0.2109375,
+            "fn": 0,
+            "fp": 54,
+            "precision": 0.8258064516129032,
+            "recall": 1.0,
+            "support": 256,
+            "tn": 202,
+            "tp": 256
+          }
+        },
+        "predictions": 512,
+        "samples": 512,
+        "undefined_metric_policy": "null when the denominator is zero"
+      },
+      "faults": [
+        {
+          "cb_restored": true,
+          "expected_status": 1,
+          "fault": "unready",
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 0,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 0,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 0,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 1,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 1,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 2,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 3,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 3,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 7,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 4,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 15,
+          "status": "pass"
+        },
+        {
+          "cb_restored": true,
+          "expected_status": 3,
+          "fault": 5,
+          "owned_slots_restored": true,
+          "partial_label": false,
+          "stage_bitmap": 31,
+          "status": "pass"
+        }
+      ],
+      "live": {
+        "status": "pass",
+        "capture_proof": {
+          "capture_loss": 0,
+          "capture_packets": 101,
+          "clock_source": "BPF ktime, clamped under the per-generation lock; AF_PACKET clocks are not substituted",
+          "iat_tolerance_ns": 0,
+          "observation_packets": 101,
+          "scope": "Header equality at TC/AF_PACKET granularity, not a wire-segmentation claim",
+          "status": "pass"
+        },
+        "trigger_proof": {
+          "feature_clock": "real monotonic lock-observed clamped kernel timestamps",
+          "lifecycle_difference": "new immutable flow generation resets RX history; original reused tuples do not",
+          "proofs": [
+            {
+              "flow_id": 1,
+              "label": 1,
+              "output": [
+                -359480,
+                311100
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 7
+            },
+            {
+              "flow_id": 3,
+              "label": 1,
+              "output": [
+                -359771,
+                311345
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 3
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359515,
+                311122
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 2
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359412,
+                311028
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 3
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359309,
+                310933
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 4
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359205,
+                310838
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 5
+            },
+            {
+              "flow_id": 6,
+              "label": 1,
+              "output": [
+                -334049,
+                288485
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 7,
+              "label": 1,
+              "output": [
+                -334049,
+                288485
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 8,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 9,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 10,
+              "label": 1,
+              "output": [
+                -334054,
+                288490
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 11,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 12,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 13,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            }
+          ],
+          "status": "pass",
+          "tolerance": 0,
+          "triggers": 14
+        }
+      },
+      "owned_program_ids": [
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183
+      ],
+      "owned_map_ids": [
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176
+      ],
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "model_id": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756",
+      "vectors": 554,
+      "all_six_stages_exact": true,
+      "predicted_classes": [
+        0,
+        1
+      ],
+      "metrics": {
+        "accuracy": 0.89453125,
+        "confusion_matrix": {
+          "columns": "predicted [0,1]",
+          "counts": [
+            [
+              202,
+              54
+            ],
+            [
+              0,
+              256
+            ]
+          ],
+          "rows": "actual [0,1]"
+        },
+        "coverage": 1.0,
+        "label_mapping": {
+          "0": "unverified",
+          "1": "unverified"
+        },
+        "macro_f1": 0.8933448547224836,
+        "per_class": {
+          "0": {
+            "f1": 0.8820960698689956,
+            "false_positive_rate": 0.0,
+            "fn": 54,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 0.7890625,
+            "support": 256,
+            "tn": 256,
+            "tp": 202
+          },
+          "1": {
+            "f1": 0.9045936395759717,
+            "false_positive_rate": 0.2109375,
+            "fn": 0,
+            "fp": 54,
+            "precision": 0.8258064516129032,
+            "recall": 1.0,
+            "support": 256,
+            "tn": 202,
+            "tp": 256
+          }
+        },
+        "predictions": 512,
+        "samples": 512,
+        "undefined_metric_policy": "null when the denominator is zero"
+      },
+      "faults": null,
+      "live": {
+        "status": "pass",
+        "capture_proof": {
+          "capture_loss": 0,
+          "capture_packets": 101,
+          "clock_source": "BPF ktime, clamped under the per-generation lock; AF_PACKET clocks are not substituted",
+          "iat_tolerance_ns": 0,
+          "observation_packets": 101,
+          "scope": "Header equality at TC/AF_PACKET granularity, not a wire-segmentation claim",
+          "status": "pass"
+        },
+        "trigger_proof": {
+          "feature_clock": "real monotonic lock-observed clamped kernel timestamps",
+          "lifecycle_difference": "new immutable flow generation resets RX history; original reused tuples do not",
+          "proofs": [
+            {
+              "flow_id": 1,
+              "label": 1,
+              "output": [
+                -360066,
+                311606
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 7
+            },
+            {
+              "flow_id": 3,
+              "label": 1,
+              "output": [
+                -360206,
+                311722
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 3
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359515,
+                311122
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 2
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359412,
+                311028
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 3
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359309,
+                310933
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 4
+            },
+            {
+              "flow_id": 4,
+              "label": 1,
+              "output": [
+                -359205,
+                310838
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 5
+            },
+            {
+              "flow_id": 6,
+              "label": 1,
+              "output": [
+                -334049,
+                288485
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 7,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 8,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 9,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 10,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 11,
+              "label": 1,
+              "output": [
+                -334052,
+                288488
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 12,
+              "label": 1,
+              "output": [
+                -334052,
+                288488
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            },
+            {
+              "flow_id": 13,
+              "label": 1,
+              "output": [
+                -334051,
+                288487
+              ],
+              "stage_bitmap": 63,
+              "status": "pass",
+              "tolerance": 0,
+              "trigger_ordinal": 8
+            }
+          ],
+          "status": "pass",
+          "tolerance": 0,
+          "triggers": 14
+        }
+      },
+      "owned_program_ids": [
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196
+      ],
+      "owned_map_ids": [
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194
+      ],
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "model_id": "93c43d06491da28519ab0de2d5a778de48974e060eac810a62ed32a154e7e54c",
+      "vectors": 554,
+      "all_six_stages_exact": true,
+      "predicted_classes": [
+        0,
+        1
+      ],
+      "metrics": {
+        "accuracy": 0.99609375,
+        "confusion_matrix": {
+          "columns": "predicted [0,1]",
+          "counts": [
+            [
+              254,
+              2
+            ],
+            [
+              0,
+              256
+            ]
+          ],
+          "rows": "actual [0,1]"
+        },
+        "coverage": 1.0,
+        "label_mapping": {
+          "0": "unverified",
+          "1": "unverified"
+        },
+        "macro_f1": 0.9960936903944457,
+        "per_class": {
+          "0": {
+            "f1": 0.996078431372549,
+            "false_positive_rate": 0.0,
+            "fn": 2,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 0.9921875,
+            "support": 256,
+            "tn": 256,
+            "tp": 254
+          },
+          "1": {
+            "f1": 0.9961089494163424,
+            "false_positive_rate": 0.0078125,
+            "fn": 0,
+            "fp": 2,
+            "precision": 0.9922480620155039,
+            "recall": 1.0,
+            "support": 256,
+            "tn": 254,
+            "tp": 256
+          }
+        },
+        "predictions": 512,
+        "samples": 512,
+        "undefined_metric_policy": "null when the denominator is zero"
+      },
+      "faults": null,
+      "live": null,
+      "owned_program_ids": [
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209
+      ],
+      "owned_map_ids": [
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212
+      ],
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "model_id": "c1137dd08888fefa6b10a1774505b79e39681ab477df6f952131b4e9ad094a80",
+      "vectors": 5,
+      "all_six_stages_exact": true,
+      "predicted_classes": [
+        0,
+        1
+      ],
+      "metrics": null,
+      "faults": null,
+      "live": null,
+      "owned_program_ids": [
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222
+      ],
+      "owned_map_ids": [
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230
+      ],
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "model_id": "a2ad9aff8ab053be9cb990372be05d4366ce6fd3ec5c1f3e09a50fd9af634bc5",
+      "vectors": 4,
+      "all_six_stages_exact": true,
+      "predicted_classes": [
+        1
+      ],
+      "metrics": null,
+      "faults": null,
+      "live": null,
+      "owned_program_ids": [
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235
+      ],
+      "owned_map_ids": [
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248
+      ],
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    }
+  ],
+  "paired_selected_same_membership": {
+    "TC_integer_metrics": {
+      "accuracy": 0.99609375,
+      "confusion_matrix": {
+        "columns": "predicted [0,1]",
+        "counts": [
+          [
+            254,
+            2
+          ],
+          [
+            0,
+            256
+          ]
+        ],
+        "rows": "actual [0,1]"
+      },
+      "coverage": 1.0,
+      "label_mapping": {
+        "0": "unverified",
+        "1": "unverified"
+      },
+      "macro_f1": 0.9960936903944457,
+      "per_class": {
+        "0": {
+          "f1": 0.996078431372549,
+          "false_positive_rate": 0.0,
+          "fn": 2,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 0.9921875,
+          "support": 256,
+          "tn": 256,
+          "tp": 254
+        },
+        "1": {
+          "f1": 0.9961089494163424,
+          "false_positive_rate": 0.0078125,
+          "fn": 0,
+          "fp": 2,
+          "precision": 0.9922480620155039,
+          "recall": 1.0,
+          "support": 256,
+          "tn": 254,
+          "tp": 256
+        }
+      },
+      "predictions": 512,
+      "samples": 512,
+      "undefined_metric_policy": "null when the denominator is zero"
+    },
+    "claim": "separate_actual_M3_checkpoint_float_to_its_quantized_TC_not_original",
+    "comparison": "numeric class decisions; floating logits are not required to equal Q16 logits",
+    "disagreement_count": 0,
+    "disagreement_rate": 0.0,
+    "disagreements": [],
+    "float_metrics": {
+      "accuracy": 0.99609375,
+      "confusion_matrix": {
+        "columns": "predicted [0,1]",
+        "counts": [
+          [
+            254,
+            2
+          ],
+          [
+            0,
+            256
+          ]
+        ],
+        "rows": "actual [0,1]"
+      },
+      "coverage": 1.0,
+      "label_mapping": {
+        "0": "unverified",
+        "1": "unverified"
+      },
+      "macro_f1": 0.9960936903944457,
+      "per_class": {
+        "0": {
+          "f1": 0.996078431372549,
+          "false_positive_rate": 0.0,
+          "fn": 2,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 0.9921875,
+          "support": 256,
+          "tn": 256,
+          "tp": 254
+        },
+        "1": {
+          "f1": 0.9961089494163424,
+          "false_positive_rate": 0.0078125,
+          "fn": 0,
+          "fp": 2,
+          "precision": 0.9922480620155039,
+          "recall": 1.0,
+          "support": 256,
+          "tn": 254,
+          "tp": 256
+        }
+      },
+      "predictions": 512,
+      "samples": 512,
+      "undefined_metric_policy": "null when the denominator is zero"
+    },
+    "population": "balanced selected frozen held-out membership",
+    "samples": 512,
+    "tie_rules": {
+      "float": "first maximum (class 0)",
+      "integer": "class 1"
+    }
+  },
+  "original_float_checkpoint": "ABSENT; no invented original float result",
+  "source_sha256": {
+    "test_env/Makefile": "efe6d9cd137a7e072ceecbb29eea723e75a3d0e467a81aaff68b0cb5b358618f",
+    "test_env/__main__.py": "36a8cc0eee307cb602cfcef9f1b184d0f2ce58d67a7f004964b4db8f70e727a5",
+    "test_env/probe_loader.c": "71a681ef5af3f54d8fbf12dd4c8d9c4a8ebaac52cbfce5bc3ac0c7c3123f0e53",
+    "test_env/flow.h": "65023230234208ab6d46601b49b4bf91eecebc77d42f0d44ed62d7c8c910552e",
+    "test_env/flow.bpf.c": "6c19e13a0ac10287ff7c7968020326dd223c5da6914f3c683538af6845b3569f",
+    "test_env/flow_controller.h": "f0fd0cceeca195ca13ee9417e38df40eef118b1e6439f9a57f6cf1b77f598792",
+    "test_env/flow_controller.c": "58f2bb8c26849c0465dbdbdc6fd71fed0963c1340973c7ff1ca6b1453a48a858",
+    "test_env/nn.h": "a8eeec0b2f21df00a2bcf5eb569ac6fefe53453cd2428cb2f4838f67f8888938",
+    "test_env/nn_bpf.h": "06621be9988d6f89b0d3602bb084015ea45986093fe735872d6fd0dbf7eee06b",
+    "test_env/nn.bpf.c": "f2bc6a942f2bfb598aa13124717e07d942134f3d230074bb653ccbbed7bff5ea",
+    "test_env/nn_controller.h": "cc2891806b94fad8d3360e489228bbfbc2ff431067367af0d1915e676d7cdf8b",
+    "test_env/nn_controller.c": "b9ecf33eafab313adfae5e9a54c7718839a5d77d50a51426881a48ab74eea2f2",
+    "test_env/nn_context.h": "6e836d3be23f0770326f33f00abb91e898f07f5cf60a0dd5b7e8fcdeee5382fb",
+    "test_env/nn_context.c": "d09d5fca76d52e393e6b7f93712c04ff42782b1d5b533ae0beaea9c4d6716bef",
+    "test_env/inference.py": "15df4053f3a8f325a239b9bd1a9a1de2f24a1ce7ca879ea9d744bf6a6a7503e6",
+    "test_env/inference_reference.py": "8904c2da1bc2263061dcfedca61674074f9dec0407160aabf14f1c9c001fb635",
+    "test_env/flows.py": "dafeaed791fefc2d715c4a47f7daba4a3c3a06da70223a6918079617949f2c5b",
+    "test_env/tc.py": "cfc6e9a7968a96264e8e0bc5dbfe80a73f56af9de281fb79b2a05dfe5a851e3f",
+    "test_env/lab.py": "b438ce5eb5c0d1f927d3e9d691b17d313300b46c513e64b0b89ac8831287020c",
+    "test_env/commands.py": "ff915dc56f61468aa0b9606e7203e35d999e102564bf36b64be18c3215f84e32",
+    "test_env/flow_fixture.py": "ee83a919a29dff444b09c425ae40fff52b6a1c5dd3172fc9e3d2977f863ac249",
+    "test_env/flow_reference.py": "2db5325fb15bae727673fe540528cb1450ad3e11adeb43e3ead69f89ff94a195",
+    "test_env/tests/test_inference.py": "7eeb3c04060240ad26dd8324f0c9050c7f5628f8ac51854f25a6fda16b141bdc",
+    "test_env/tests/test_flows.py": "4740cc2942f54fc14311fbae696365e167b3d59d9784635cb045dc4469290383",
+    "test_env/tests/test_lab.py": "6aedfe97a3e4c1a7b3bc597b95eb5e3b19cddb6e62d174395d91f8b2226fdf3b",
+    "test_env/tests/test_tc.py": "3eb8f28f946b1875a99cf096054f7e71366e6a9929c54aeaf96bbe97a9b5f6b3"
+  },
+  "artifact_sha256": {
+    ".output/test-env-stage-05/build/probe.bpf.o": "d517cbe5245bc6fdee4055d66c2a2c437a58dfae234135d0aee0c28effd99002",
+    ".output/test-env-stage-05/build/probe-loader": "85284d6046cd5e065452eea0d7003daff9638bf9622294d922a88e729c64f0be",
+    ".output/test-env-stage-05/build/flow.bpf.o": "5a42e908242b7f398c229e07d4d79dccfd21f35fd846c9c7e2977816f9681dac",
+    ".output/test-env-stage-05/build/flow-loader": "e12ef37b015071994b583cd94c7da18e3dceccafa4c764c64dc0367e777b306d",
+    ".output/test-env-stage-05/build/flow-inspect": "0eb4b54cd38b901d02c4c40f492131aee05a2000ba0f1ec2deb8e763cffa8c22",
+    ".output/test-env-stage-05/build/nn.bpf.o": "ac385b12d27ee86ee26ffbaa3b0293dd38edaaaee331ac058c1260dd9c0d68d1",
+    ".output/test-env-stage-05/build/nn-loader": "b01d23e6349fb5cef83cbd90991d6bb9e055bbdb81c4d914026b53c77d98ea34",
+    ".output/test-env-stage-05/build/nn-vectors": "6d314fb395abf8730dd43ab8104b9ef4d03ca477b76299d69cc29f1c98450a19",
+    ".output/test-env-stage-05/build/vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "preserved_original_fingerprints": [
+    {
+      "path": "Makefile",
+      "sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "matches": true
+    },
+    {
+      "path": "src/Makefile",
+      "sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "matches": true
+    },
+    {
+      "path": ".gitmodules",
+      "sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "matches": true
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "matches": true
+    },
+    {
+      "path": "run-baseline.sh",
+      "sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "matches": true
+    },
+    {
+      "path": "UBUNTU_VM_IDS_AGENT_PLAN.md",
+      "sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "matches": true
+    },
+    {
+      "path": "src/mlp_params.bpf.h",
+      "sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp",
+      "sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "matches": true
+    },
+    {
+      "path": "src/.output/hot_updating",
+      "sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.o",
+      "sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.bpf.o",
+      "sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.skel.h",
+      "sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "matches": true
+    },
+    {
+      "path": "src/.output/vmlinux.h",
+      "sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "matches": true
+    },
+    {
+      "path": ".output/bpftool/bpftool",
+      "sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "matches": true
+    },
+    {
+      "path": ".output/libbpf/libbpf.a",
+      "sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "matches": true
+    },
+    {
+      "path": "libbpf/CHECKPOINT-COMMIT",
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "matches": true
+    },
+    {
+      "path": "bpftool/CHECKPOINT-COMMIT",
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "matches": true
+    },
+    {
+      "path": "evaluation/requirements.txt",
+      "sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "matches": true
+    },
+    {
+      "path": "/boot/config-6.8.0-138-generic",
+      "sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "matches": true
+    },
+    {
+      "path": "/sys/kernel/btf/vmlinux",
+      "sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "matches": true
+    }
+  ],
+  "temporary_serialization_inputs_removed": 23,
+  "temporary_input_manifest": "temporary-binary-manifest.json",
+  "new_runtime_files": "private TemporaryDirectory, removed after owned process exit; no raw model/vector copies under evidence",
+  "original_XDP_cleanup_exception_applied": false,
+  "new_packages_installed": false,
+  "real_interfaces_modified": false,
+  "limitations": [
+    "Original floating checkpoint is absent; no original float metrics are claimed.",
+    "Original weight accuracy is diagnostic: training overlap unknown.",
+    "Numeric label semantics and dataset feature units are unverified.",
+    "Detect-only TC_ACT_OK; no throughput or prevention claim."
+  ]
+}

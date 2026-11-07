@@ -1,0 +1,40 @@
+{
+  "stage": "05",
+  "record_kind": "predeclared_acceptance_criteria",
+  "status_at_declaration": "NOT_VALIDATED",
+  "prerequisite": "Accepted evidence/stage-04/gate.md",
+  "scope": "Original RX-only six features and actual six-stage detect-only TC integer inference; no bidirectional-model retraining or prevention",
+  "models": {
+    "primary": "Unchanged src/mlp_params.bpf.h, Q16 [6,32,32,2], original float checkpoint unavailable",
+    "paired_control": "Existing real .output/evaluation/m3-train/float-model.json and quantized-model.json with validated frozen split; not the paper/original checkpoint",
+    "synthetic_edges": "Explicit separate private test models only for near-zero weights/ties/overflow boundaries; never overwrite original assets"
+  },
+  "features_in_order": ["max_rx_tcp_segment_bytes", "max_rx_gap_ns", "min_rx_tcp_segment_bytes", "rx_destination_port", "rx_tcp_header_bytes_sum", "rx_packets"],
+  "trigger": "Every matching-source RX FIN or RST after including that packet; not egress, full-biflow shutdown or only the first FIN",
+  "lifecycle_difference": "New immutable flow generations intentionally prevent original tuple accumulation across reused connections",
+  "vector_selection": "512 deterministic labeled rows including both binary labels; use validated saved held-out membership for the paired model; add signed-int64, normalization branch, near-zero, tie and wrap boundaries",
+  "integer_stage_tolerance": 0,
+  "required_integer_stages": ["normalized", "input_linear", "input_relu", "hidden_linear", "hidden_relu", "output"],
+  "floating_point_policy": "Report real paired float/quantized metrics and disagreements, not equality of floating and integer logits; never invent/dequantize the missing original float checkpoint",
+  "required_live_checks": [
+    "Actual primary TC hooks attach and process ordinary bidirectional TCP",
+    "Frozen RX features exactly match independent headers and actual lock-observed kernel clock reductions",
+    "Egress/bidirectional statistics never silently replace the model RX vector",
+    "Repeated FIN/RST triggers get independent {flow_id,ordinal} jobs",
+    "Eight simultaneous connections and repeated lifetimes do not share mutable stage scratch",
+    "Both numeric predicted classes are exercised on real kernel vectors",
+    "Uninitialized model slot produces no prediction and an observable reason",
+    "Missing tail-call stage produces an observable failure, no partial label, restored skb control buffer and no packet blocking",
+    "All five skb control-buffer words restored on success and failure",
+    "Full model identity/quantization and actual parameter-map readback match",
+    "All owned tail-call slots cleared safely before close; every new owned program/map disappears",
+    "Existing Flow/Probe runtime and resource-ownership regressions remain valid"
+  ],
+  "allowed_unexpected_integer_mismatches": 0,
+  "allowed_unexpected_tracking_loss": 0,
+  "allowed_remaining_owned_objects": 0,
+  "allowed_host_configuration_changes": 0,
+  "original_XDP_cleanup_exception_applies": false,
+  "claim_limits": ["Original static-weight accuracy remains diagnostic because training overlap is unknown", "Dataset provenance, feature units and binary-label semantics remain unverified", "No wire timing, throughput, latency, production-readiness or paper-reproduction claim"],
+  "failure_policy": "Retain raw failures, finish all reachable fixes within Stage05, do not advance to collector/UI until actual gate PASS"
+}

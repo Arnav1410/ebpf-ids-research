@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-S",
+    "-p",
+    "",
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "test_env",
+    "baseline",
+    "--out",
+    "/home/poggers/NN-eBPF/evidence/stage-02/live-netns",
+    "--loader",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp",
+    "--updater",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/hot_updating",
+    "--bpftool",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+  ],
+  "started_utc": "2026-11-06T19:35:40.330644+00:00",
+  "exit_code": 1,
+  "stdout": "invoke-netns.stdout.log",
+  "stderr": "invoke-netns.stderr.log",
+  "authentication_input_recorded": false
+}

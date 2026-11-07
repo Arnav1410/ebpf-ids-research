@@ -1,0 +1,35 @@
+{
+  "stage": "00",
+  "recorded_utc": "2026-11-06T19:03:22.069658+00:00",
+  "authorization": {
+    "source": "Explicit user selection in interactive question legacy_metadata_gate",
+    "selected_option": "Record a narrow exception"
+  },
+  "scope": "Treat only the known unmapped legacy attack-tool gitlinks as nonblocking for the IDS baseline Stage 00 gate",
+  "diagnostic": {
+    "argv": [
+      "git",
+      "submodule",
+      "status"
+    ],
+    "retained_exit_code": 128,
+    "error_path": "dataset-instance/intrusion/DVMA/brute-force",
+    "gitlinks_preserved": [
+      "160000 c3f5b472182cb1e149769e20fa646ecdc49a5ea6 0\tdataset-instance/intrusion/DVMA/brute-force",
+      "160000 792862f5c8cb98f9ffcb9fab245e2c663e3a1026 0\tdataset-instance/intrusion/GoldenEye"
+    ]
+  },
+  "findings": {
+    "both_checkout_directories_empty": true,
+    "legacy_traffic_launcher": "dataset-instance/intrusion/run.sh:4,11",
+    "legacy_attack_scripts_validated": false,
+    "repository_wide_submodule_integrity_claimed": false
+  },
+  "constraints": [
+    "Do not guess submodule URLs or download/execute attack tools",
+    "Do not remove or change the legacy gitlink references",
+    "Do not waive baseline build, verifier, attachment, packet processing, inference correctness or subsequent stage gates",
+    "Preserve original XDP/static model and management networking"
+  ],
+  "gate_effect": "Stage 00 PASS with this explicit exception; no other check failure waived"
+}

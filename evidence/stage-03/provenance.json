@@ -1,0 +1,81 @@
+{
+  "recorded_utc": "2026-11-06T20:29:47.674757+00:00",
+  "stage": "03",
+  "status": "PASS",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "source_sha256": {
+    "test_env/probe.bpf.c": "a2dd1649bd459ffdf5bad4b9dd4d0070b97ea2fe8fcfe6c793769709885dc831",
+    "test_env/probe_loader.c": "65d5b2c086e1e269965cd2faf40ff49a7c3093e174b768653941a06605a38d06",
+    "test_env/Makefile": "75a84ec6e77bbed68324277970a02fd5b14050b8d06a53a465d32705f64dcc0f",
+    "test_env/tc.py": "0b078aed67cfbd1d30f9da50152a441708f9e0282e7b79acc471187d6f036c76",
+    "test_env/__main__.py": "6833b3ed74c25d418623bd7bcd7a6da1cd04c0340a66ac54996fc55cb620b34d",
+    "test_env/lab.py": "b438ce5eb5c0d1f927d3e9d691b17d313300b46c513e64b0b89ac8831287020c",
+    "test_env/commands.py": "ff915dc56f61468aa0b9606e7203e35d999e102564bf36b64be18c3215f84e32",
+    "test_env/tests/test_tc.py": "3eb8f28f946b1875a99cf096054f7e71366e6a9929c54aeaf96bbe97a9b5f6b3",
+    "test_env/tests/test_lab.py": "6aedfe97a3e4c1a7b3bc597b95eb5e3b19cddb6e62d174395d91f8b2226fdf3b"
+  },
+  "artifact_sha256": {
+    ".output/test-env-stage-03/build/probe.bpf.o": "4b7ef238fa2f2f9f486492f7f70033f780da57f8b0507e021b012acfa1c06f5e",
+    ".output/test-env-stage-03/build/probe-loader": "99332d33fcc9e4108a09126f9dfead6a57eb245762b1cbebd39487fc399b2f73",
+    ".output/test-env-stage-03/build/vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "authoritative_live_report": "live-corrected/report.json",
+  "initial_parser_failure_retained": "live/report.json",
+  "cycles": [
+    {
+      "cycle": 1,
+      "program_ids": {
+        "egress": 451,
+        "ingress": 450
+      },
+      "map_ids": {
+        "hook_counts": 82
+      },
+      "ping_delta": {
+        "egress": 7,
+        "ingress": 7
+      },
+      "tcp_delta": {
+        "egress": 4,
+        "ingress": 6
+      },
+      "cleanup": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "cycle": 2,
+      "program_ids": {
+        "egress": 456,
+        "ingress": 455
+      },
+      "map_ids": {
+        "hook_counts": 83
+      },
+      "ping_delta": {
+        "egress": 7,
+        "ingress": 7
+      },
+      "tcp_delta": {
+        "egress": 4,
+        "ingress": 6
+      },
+      "cleanup": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    }
+  ],
+  "root_safety_regressions": {
+    "passed": 5,
+    "record": "namespace-tc-safety.stderr.log"
+  },
+  "original_XDP_exception_applied_to_new_TC_checks": false,
+  "model_inference": "NOT IMPLEMENTED IN THIS PROBE; Stage05",
+  "packet_action": "TC_ACT_OK",
+  "real_interfaces_modified": false,
+  "commit_created": false
+}

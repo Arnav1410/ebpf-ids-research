@@ -1,0 +1,46 @@
+{
+  "stage": "04",
+  "status": "PLANNED_NOT_VALIDATED",
+  "record_kind": "predeclared_acceptance_criteria",
+  "requires": ["Accepted Stage 03 gate", "Actual root execution inside only owned private namespaces"],
+  "scope": "Detect-only IPv4/TCP biflow state and inspection; no neural-network or prevention claim",
+  "architecture_invariants": [
+    "Canonical endpoint pair, protocol and interface context; namespace context is private map instance",
+    "TC ingress/egress is protected-host RX/TX, not dataset forward/backward",
+    "Unknown initiator without an observed initial SYN; no guessed direction label",
+    "Immutable generation identifiers prevent old-state expiration from deleting a replacement flow",
+    "Compound statistics/lifecycle updates serialize under the flow lock; helpers and tail calls outside the lock",
+    "A single observed FIN is half-close, not completed bidirectional shutdown",
+    "Closed and idle statistics really expire; canonical index storage remains explicitly bounded",
+    "No new owned BPF, qdisc, link or namespace remains after cleanup"
+  ],
+  "predeclared_tolerances": {
+    "packet_counts_and_bytes": "Exact against independently captured/parsed observations at documented skb granularity",
+    "canonical_endpoint_and_direction": "Exact",
+    "feature_integer_arithmetic": "Exact; no numerical tolerance",
+    "timing_arithmetic": "Exact recomputation from exported actual kernel observation timestamps, not an independent wire-clock claim",
+    "clock_bounds": "Kernel observations must fall within independently measured monotonic runtime bounds; no fabricated timestamps",
+    "unexpected_tracking_or_capture_loss": 0,
+    "cross_flow_statistics_sharing": 0,
+    "remaining_new_owned_program_or_map_ids": 0,
+    "host_configuration_changes": 0
+  },
+  "required_scenarios": [
+    "Actual bidirectional TCP handshake/data/shutdown uses one generation ID",
+    "Midstream trace without initial SYN remains explicitly unoriented",
+    "Variable IPv4 and TCP options parsed with validated header lengths",
+    "Truncated and inconsistent lengths skipped safely with counted reasons",
+    "VLAN, fragments, IPv6, unsupported protocols and nonlinear limits explicitly supported or counted as skipped",
+    "Duplicate/retransmitted observations follow a documented counting policy",
+    "FIN half-close remains separate from both-directions FIN/ACK completion",
+    "RST termination and idle/no-close expiration",
+    "Tuple reuse gets a new generation; old cleanup cannot delete it",
+    "Independent concurrent connections preserve their own exact statistics",
+    "Repeated topology/controller lifetimes leave no unexpected growth or new object retention",
+    "Existing TC counter probe and foreign-resource ownership regressions remain valid after shared-loader changes",
+    "Actual read-only inspection returns coherent current flow snapshots"
+  ],
+  "offload_limit": "Do not claim wire-packet exactness or throughput/latency from veth/skb validation. GRO/GSO/TSO and nonlinear limitations must be recorded, not silently disabled or ignored.",
+  "original_XDP_exception_applies": false,
+  "failure_policy": "Preserve failed raw results, correct only within Stage 04, and do not advance to Stage 05 until this gate passes. No suppressed checks or invented scores."
+}

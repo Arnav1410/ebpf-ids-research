@@ -1,0 +1,426 @@
+{
+  "maps": {
+    "argv": [
+      "/usr/bin/sudo",
+      "-n",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+      "-j",
+      "map",
+      "show"
+    ],
+    "exit_code": 0,
+    "stdout": "[{\"id\":2,\"type\":\"prog_array\",\"name\":\"hid_jmp_table\",\"flags\":0,\"bytes_key\":4,\"bytes_value\":4,\"max_entries\":1024,\"bytes_memlock\":8576,\"owner_prog_type\":\"tracing\",\"owner_jited\":true,\"frozen\":0},{\"id\":3,\"type\":\"hash\",\"name\":\"s_snapd_desktop\",\"flags\":0,\"bytes_key\":9,\"bytes_value\":1,\"max_entries\":1000,\"bytes_memlock\":89792,\"frozen\":0},{\"id\":4,\"type\":\"hash\",\"name\":\"s_snap_store_sn\",\"flags\":0,\"bytes_key\":9,\"bytes_value\":1,\"max_entries\":1000,\"bytes_memlock\":89792,\"frozen\":0},{\"id\":38,\"type\":\"hash\",\"name\":\"s_firefox_firef\",\"flags\":0,\"bytes_key\":9,\"bytes_value\":1,\"max_entries\":1000,\"bytes_memlock\":89792,\"frozen\":0},{\"id\":76,\"type\":\"prog_array\",\"name\":\"progs\",\"flags\":0,\"bytes_key\":4,\"bytes_value\":4,\"max_entries\":1024,\"bytes_memlock\":8576,\"owner_prog_type\":\"xdp\",\"owner_jited\":true,\"frozen\":0,\"btf_id\":133}]\n",
+    "stderr": "",
+    "parsed": [
+      {
+        "id": 2,
+        "type": "prog_array",
+        "name": "hid_jmp_table",
+        "flags": 0,
+        "bytes_key": 4,
+        "bytes_value": 4,
+        "max_entries": 1024,
+        "bytes_memlock": 8576,
+        "owner_prog_type": "tracing",
+        "owner_jited": true,
+        "frozen": 0
+      },
+      {
+        "id": 3,
+        "type": "hash",
+        "name": "s_snapd_desktop",
+        "flags": 0,
+        "bytes_key": 9,
+        "bytes_value": 1,
+        "max_entries": 1000,
+        "bytes_memlock": 89792,
+        "frozen": 0
+      },
+      {
+        "id": 4,
+        "type": "hash",
+        "name": "s_snap_store_sn",
+        "flags": 0,
+        "bytes_key": 9,
+        "bytes_value": 1,
+        "max_entries": 1000,
+        "bytes_memlock": 89792,
+        "frozen": 0
+      },
+      {
+        "id": 38,
+        "type": "hash",
+        "name": "s_firefox_firef",
+        "flags": 0,
+        "bytes_key": 9,
+        "bytes_value": 1,
+        "max_entries": 1000,
+        "bytes_memlock": 89792,
+        "frozen": 0
+      },
+      {
+        "id": 76,
+        "type": "prog_array",
+        "name": "progs",
+        "flags": 0,
+        "bytes_key": 4,
+        "bytes_value": 4,
+        "max_entries": 1024,
+        "bytes_memlock": 8576,
+        "owner_prog_type": "xdp",
+        "owner_jited": true,
+        "frozen": 0,
+        "btf_id": 133
+      }
+    ]
+  },
+  "programs": {
+    "argv": [
+      "/usr/bin/sudo",
+      "-n",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+      "-j",
+      "prog",
+      "show"
+    ],
+    "exit_code": 0,
+    "stdout": "[{\"id\":2,\"type\":\"tracing\",\"name\":\"hid_tail_call\",\"tag\":\"7cc47bbf07148bfe\",\"gpl_compatible\":true,\"loaded_at\":1793988504,\"uid\":0,\"bytes_xlated\":56,\"jited\":true,\"bytes_jited\":133,\"bytes_memlock\":4096,\"map_ids\":[2],\"btf_id\":2},{\"id\":33,\"type\":\"cgroup_device\",\"name\":\"s_snap_store_sn\",\"tag\":\"03b4eaae2f14641a\",\"gpl_compatible\":true,\"loaded_at\":1793988508,\"uid\":1000,\"bytes_xlated\":296,\"jited\":true,\"bytes_jited\":164,\"bytes_memlock\":4096,\"map_ids\":[4]},{\"id\":34,\"type\":\"cgroup_device\",\"name\":\"s_snapd_desktop\",\"tag\":\"03b4eaae2f14641a\",\"gpl_compatible\":true,\"loaded_at\":1793988509,\"uid\":1000,\"bytes_xlated\":296,\"jited\":true,\"bytes_jited\":164,\"bytes_memlock\":4096,\"map_ids\":[3]},{\"id\":38,\"type\":\"cgroup_device\",\"tag\":\"ee0e253c78993a24\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":416,\"jited\":true,\"bytes_jited\":260,\"bytes_memlock\":4096},{\"id\":39,\"type\":\"cgroup_device\",\"tag\":\"c8b47a902f1cc68b\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":464,\"jited\":true,\"bytes_jited\":290,\"bytes_memlock\":4096},{\"id\":40,\"type\":\"cgroup_device\",\"tag\":\"c8b47a902f1cc68b\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":464,\"jited\":true,\"bytes_jited\":290,\"bytes_memlock\":4096},{\"id\":41,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":42,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":43,\"type\":\"cgroup_device\",\"tag\":\"0ecd07b7b633809f\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":496,\"jited\":true,\"bytes_jited\":309,\"bytes_memlock\":4096},{\"id\":44,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":45,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":46,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":47,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":48,\"type\":\"cgroup_device\",\"tag\":\"ee0e253c78993a24\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":416,\"jited\":true,\"bytes_jited\":260,\"bytes_memlock\":4096},{\"id\":49,\"type\":\"cgroup_device\",\"tag\":\"e3dbd137be8d6168\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":504,\"jited\":true,\"bytes_jited\":311,\"bytes_memlock\":4096},{\"id\":50,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":51,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":52,\"type\":\"cgroup_device\",\"tag\":\"8b9c33f36f812014\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":744,\"jited\":true,\"bytes_jited\":449,\"bytes_memlock\":4096},{\"id\":53,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096},{\"id\":54,\"type\":\"cgroup_skb\",\"tag\":\"6deef7357e7b4530\",\"gpl_compatible\":true,\"loaded_at\":1793989687,\"uid\":0,\"bytes_xlated\":64,\"jited\":true,\"bytes_jited\":56,\"bytes_memlock\":4096}]\n",
+    "stderr": "",
+    "parsed": [
+      {
+        "id": 2,
+        "type": "tracing",
+        "name": "hid_tail_call",
+        "tag": "7cc47bbf07148bfe",
+        "gpl_compatible": true,
+        "loaded_at": 1793988504,
+        "uid": 0,
+        "bytes_xlated": 56,
+        "jited": true,
+        "bytes_jited": 133,
+        "bytes_memlock": 4096,
+        "map_ids": [
+          2
+        ],
+        "btf_id": 2
+      },
+      {
+        "id": 33,
+        "type": "cgroup_device",
+        "name": "s_snap_store_sn",
+        "tag": "03b4eaae2f14641a",
+        "gpl_compatible": true,
+        "loaded_at": 1793988508,
+        "uid": 1000,
+        "bytes_xlated": 296,
+        "jited": true,
+        "bytes_jited": 164,
+        "bytes_memlock": 4096,
+        "map_ids": [
+          4
+        ]
+      },
+      {
+        "id": 34,
+        "type": "cgroup_device",
+        "name": "s_snapd_desktop",
+        "tag": "03b4eaae2f14641a",
+        "gpl_compatible": true,
+        "loaded_at": 1793988509,
+        "uid": 1000,
+        "bytes_xlated": 296,
+        "jited": true,
+        "bytes_jited": 164,
+        "bytes_memlock": 4096,
+        "map_ids": [
+          3
+        ]
+      },
+      {
+        "id": 38,
+        "type": "cgroup_device",
+        "tag": "ee0e253c78993a24",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 416,
+        "jited": true,
+        "bytes_jited": 260,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 39,
+        "type": "cgroup_device",
+        "tag": "c8b47a902f1cc68b",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 464,
+        "jited": true,
+        "bytes_jited": 290,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 40,
+        "type": "cgroup_device",
+        "tag": "c8b47a902f1cc68b",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 464,
+        "jited": true,
+        "bytes_jited": 290,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 41,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 42,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 43,
+        "type": "cgroup_device",
+        "tag": "0ecd07b7b633809f",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 496,
+        "jited": true,
+        "bytes_jited": 309,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 44,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 45,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 46,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 47,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 48,
+        "type": "cgroup_device",
+        "tag": "ee0e253c78993a24",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 416,
+        "jited": true,
+        "bytes_jited": 260,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 49,
+        "type": "cgroup_device",
+        "tag": "e3dbd137be8d6168",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 504,
+        "jited": true,
+        "bytes_jited": 311,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 50,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 51,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 52,
+        "type": "cgroup_device",
+        "tag": "8b9c33f36f812014",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 744,
+        "jited": true,
+        "bytes_jited": 449,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 53,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      },
+      {
+        "id": 54,
+        "type": "cgroup_skb",
+        "tag": "6deef7357e7b4530",
+        "gpl_compatible": true,
+        "loaded_at": 1793989687,
+        "uid": 0,
+        "bytes_xlated": 64,
+        "jited": true,
+        "bytes_jited": 56,
+        "bytes_memlock": 4096
+      }
+    ]
+  },
+  "host_links": {
+    "argv": [
+      "ip",
+      "-j",
+      "-d",
+      "link",
+      "show"
+    ],
+    "exit_code": 0,
+    "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"promiscuity\":0,\"min_mtu\":0,\"max_mtu\":0,\"inet6_addr_gen_mode\":\"eui64\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535},{\"ifindex\":2,\"ifname\":\"enp1s0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"52:54:00:73:34:a0\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"promiscuity\":0,\"min_mtu\":68,\"max_mtu\":65535,\"inet6_addr_gen_mode\":\"none\",\"num_tx_queues\":1,\"num_rx_queues\":1,\"gso_max_size\":65536,\"gso_max_segs\":65535,\"parentbus\":\"virtio\",\"parentdev\":\"virtio0\"}]\n",
+    "stderr": "",
+    "parsed": [
+      {
+        "ifindex": 1,
+        "ifname": "lo",
+        "flags": [
+          "LOOPBACK",
+          "UP",
+          "LOWER_UP"
+        ],
+        "mtu": 65536,
+        "qdisc": "noqueue",
+        "operstate": "UNKNOWN",
+        "linkmode": "DEFAULT",
+        "group": "default",
+        "txqlen": 1000,
+        "link_type": "loopback",
+        "address": "00:00:00:00:00:00",
+        "broadcast": "00:00:00:00:00:00",
+        "promiscuity": 0,
+        "min_mtu": 0,
+        "max_mtu": 0,
+        "inet6_addr_gen_mode": "eui64",
+        "num_tx_queues": 1,
+        "num_rx_queues": 1,
+        "gso_max_size": 65536,
+        "gso_max_segs": 65535
+      },
+      {
+        "ifindex": 2,
+        "ifname": "enp1s0",
+        "flags": [
+          "BROADCAST",
+          "MULTICAST",
+          "UP",
+          "LOWER_UP"
+        ],
+        "mtu": 1500,
+        "qdisc": "fq_codel",
+        "operstate": "UP",
+        "linkmode": "DEFAULT",
+        "group": "default",
+        "txqlen": 1000,
+        "link_type": "ether",
+        "address": "52:54:00:73:34:a0",
+        "broadcast": "ff:ff:ff:ff:ff:ff",
+        "promiscuity": 0,
+        "min_mtu": 68,
+        "max_mtu": 65535,
+        "inet6_addr_gen_mode": "none",
+        "num_tx_queues": 1,
+        "num_rx_queues": 1,
+        "gso_max_size": 65536,
+        "gso_max_segs": 65535,
+        "parentbus": "virtio",
+        "parentdev": "virtio0"
+      }
+    ]
+  },
+  "namespaces": {
+    "argv": [
+      "ip",
+      "-j",
+      "netns",
+      "list"
+    ],
+    "exit_code": 0,
+    "stdout": "[]\n",
+    "stderr": "",
+    "parsed": []
+  }
+}

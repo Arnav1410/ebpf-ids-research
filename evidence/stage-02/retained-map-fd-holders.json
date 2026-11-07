@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-n",
+    "/usr/bin/python3",
+    "-B",
+    "-c",
+    "import json, pathlib\nholders=[]\nfor process in pathlib.Path('/proc').iterdir():\n if not process.name.isdigit(): continue\n try:\n  for info in (process/'fdinfo').iterdir():\n   try:\n    fields=dict(line.split(':',1) for line in info.read_text().splitlines() if ':' in line)\n    if fields.get('map_id','').strip()=='76':\n     holders.append({'pid':int(process.name),'fd':info.name,'comm':(process/'comm').read_text().strip()})\n   except (OSError,ValueError): pass\n except OSError: pass\nprint(json.dumps({'map_id':76,'fd_holders':holders}))"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"map_id\": 76, \"fd_holders\": []}\n",
+  "stderr": ""
+}

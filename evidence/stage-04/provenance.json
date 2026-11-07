@@ -1,0 +1,295 @@
+{
+  "recorded_utc": "2026-11-06T22:38:56.909341+00:00",
+  "stage": "04",
+  "status": "PASS",
+  "base_commit": "65c49c737b6791801cc98d9839b930b77ff42435",
+  "authoritative_current_source_run": "safety-final/test_real_bidirectional_generations_concurrency_and_expiration/flows.json",
+  "standalone_cli_run": "live-payload/report.json",
+  "root_regressions": {
+    "passed": 17,
+    "skipped": 0,
+    "privileged_cases": 7,
+    "record": "root-flow-safety-final.stderr.log"
+  },
+  "probe_compatibility": "probe-compatibility/report.json",
+  "cycles": [
+    {
+      "cycle": 1,
+      "program_ids": {
+        "egress": 124,
+        "gc": 125,
+        "ingress": 123
+      },
+      "map_ids": {
+        "flow_config": 86,
+        "flow_index": 89,
+        "flow_serial": 90,
+        "flow_stats": 87,
+        "hook_counts": 88,
+        "observations": 92,
+        "tracking": 91
+      },
+      "concurrent_tcp_connections": 8,
+      "capture_proof": {
+        "capture_loss": 0,
+        "capture_packets": 95,
+        "clock_source": "BPF ktime, clamped under the per-generation lock; AF_PACKET clocks are not substituted",
+        "iat_tolerance_ns": 0,
+        "observation_packets": 95,
+        "scope": "Header equality at TC/AF_PACKET granularity, not a wire-segmentation claim",
+        "status": "pass"
+      },
+      "read_only_inspection": "pass",
+      "cleanup": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    },
+    {
+      "cycle": 2,
+      "program_ids": {
+        "egress": 130,
+        "gc": 131,
+        "ingress": 129
+      },
+      "map_ids": {
+        "flow_config": 93,
+        "flow_index": 96,
+        "flow_serial": 97,
+        "flow_stats": 94,
+        "hook_counts": 95,
+        "observations": 99,
+        "tracking": 98
+      },
+      "concurrent_tcp_connections": 8,
+      "capture_proof": {
+        "capture_loss": 0,
+        "capture_packets": 95,
+        "clock_source": "BPF ktime, clamped under the per-generation lock; AF_PACKET clocks are not substituted",
+        "iat_tolerance_ns": 0,
+        "observation_packets": 95,
+        "scope": "Header equality at TC/AF_PACKET granularity, not a wire-segmentation claim",
+        "status": "pass"
+      },
+      "read_only_inspection": "pass",
+      "cleanup": true,
+      "remaining_owned_ids": {
+        "map": [],
+        "prog": []
+      }
+    }
+  ],
+  "expiration": {
+    "1": {
+      "expected_not_before_ns": 1182977192003,
+      "observed_absent_at_ns": 1183017733160,
+      "observed_present_at_ns": 1182803117250,
+      "scheduler_tolerance_ns": 5000000000
+    },
+    "2": {
+      "expected_not_before_ns": 1179477204922,
+      "observed_absent_at_ns": 1179628950603,
+      "observed_present_at_ns": 1179445255044,
+      "scheduler_tolerance_ns": 5000000000
+    },
+    "3": {
+      "expected_not_before_ns": 1183287963722,
+      "observed_absent_at_ns": 1183438028292,
+      "observed_present_at_ns": 1183223609263,
+      "scheduler_tolerance_ns": 5000000000
+    }
+  },
+  "source_sha256": {
+    "test_env/Makefile": "5f5d7e091b845ec0e2c01b91846517c6e5816ec806c5e941a13f2c11d5a49534",
+    "test_env/__init__.py": "7f9e72269f674bd87fed23980d15fbb4474559d7c5af1fbe9ae9fa6129b7d56e",
+    "test_env/__main__.py": "e5b8b227ac64cf38d0a9c4c19ab08dc5644b05189d8fd85a1d47e924ec5768c7",
+    "test_env/baseline.py": "9cdbe368f55efc2c4c82da6701d32a550d1a672e4e0a2af1fdce4429ad977387",
+    "test_env/commands.py": "ff915dc56f61468aa0b9606e7203e35d999e102564bf36b64be18c3215f84e32",
+    "test_env/flow.bpf.c": "93e58b5a73326020a55c2f604e296404af6587ca51ea307f19625dfbd37f8720",
+    "test_env/flow.h": "ea241ebcbaf67e65c69a66c688aaeaf21972b842f8bee2e97677306c2a09812a",
+    "test_env/flow_controller.c": "7c54cb40ad73c3ffefeabb9ba76670a62f394b9980b070eded46e7a298b9b081",
+    "test_env/flow_controller.h": "f0fd0cceeca195ca13ee9417e38df40eef118b1e6439f9a57f6cf1b77f598792",
+    "test_env/flow_fixture.py": "ee83a919a29dff444b09c425ae40fff52b6a1c5dd3172fc9e3d2977f863ac249",
+    "test_env/flow_reference.py": "2db5325fb15bae727673fe540528cb1450ad3e11adeb43e3ead69f89ff94a195",
+    "test_env/flows.py": "d4d67ac2ff21570f156eda364b2170b0ff8d34f7c9b08c4374411a086f0009aa",
+    "test_env/lab.py": "b438ce5eb5c0d1f927d3e9d691b17d313300b46c513e64b0b89ac8831287020c",
+    "test_env/probe.bpf.c": "a2dd1649bd459ffdf5bad4b9dd4d0070b97ea2fe8fcfe6c793769709885dc831",
+    "test_env/probe_loader.c": "4006a251e21c8a406f71682a30dee7b76091b05be1ef2c543b24f7fe8fd930c2",
+    "test_env/tc.py": "cfc6e9a7968a96264e8e0bc5dbfe80a73f56af9de281fb79b2a05dfe5a851e3f",
+    "test_env/tests/__init__.py": "c0ce518edca0d70c874d7972b01920d4f7a4dcf09f0fd667981d07b2e25496e3",
+    "test_env/tests/test_flows.py": "af404d7eef33e5c9a16f3837f8ac61b6061644954214fef94bf4751b33939f75",
+    "test_env/tests/test_lab.py": "6aedfe97a3e4c1a7b3bc597b95eb5e3b19cddb6e62d174395d91f8b2226fdf3b",
+    "test_env/tests/test_tc.py": "3eb8f28f946b1875a99cf096054f7e71366e6a9929c54aeaf96bbe97a9b5f6b3",
+    "test_env/traffic.py": "0d325a6fc7c8ecd5e50dfee281cdacbaf49038c6adc716ab097b884148172223"
+  },
+  "artifact_sha256": {
+    ".output/test-env-stage-04/build/flow-inspect": "2006626c49c8c3fcb0af67ec910903a3e0250cdc1a828e93943e2c0a72c8e691",
+    ".output/test-env-stage-04/build/flow-loader": "75d9ec257f0bceda35bf961f7a1ad437b95fa566cf60f86985f6b8823d574c2e",
+    ".output/test-env-stage-04/build/flow.bpf.o": "cc07290e1aa4511f8b9913b9e84146efdfa3eefbb9011896f3e04dfbf973cc94",
+    ".output/test-env-stage-04/build/probe-loader": "a35ee27d3189cf496d2dd0faffa1b15e20da30c066d9ee1a637be24c6921c3fc",
+    ".output/test-env-stage-04/build/probe.bpf.o": "79af5ea716cadc1bc931dec3561a3f8cd6746a0aae2212ffe6fd558d1f679c17",
+    ".output/test-env-stage-04/build/vmlinux.h": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+  },
+  "preserved_original_fingerprints": [
+    {
+      "path": "Makefile",
+      "sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "matches": true
+    },
+    {
+      "path": "src/Makefile",
+      "sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "matches": true
+    },
+    {
+      "path": ".gitmodules",
+      "sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "matches": true
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "matches": true
+    },
+    {
+      "path": "run-baseline.sh",
+      "sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "matches": true
+    },
+    {
+      "path": "UBUNTU_VM_IDS_AGENT_PLAN.md",
+      "sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "matches": true
+    },
+    {
+      "path": "src/mlp_params.bpf.h",
+      "sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp",
+      "sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "matches": true
+    },
+    {
+      "path": "src/.output/hot_updating",
+      "sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.o",
+      "sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.bpf.o",
+      "sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "matches": true
+    },
+    {
+      "path": "src/.output/xdp.skel.h",
+      "sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "matches": true
+    },
+    {
+      "path": "src/.output/vmlinux.h",
+      "sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "matches": true
+    },
+    {
+      "path": ".output/bpftool/bpftool",
+      "sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "matches": true
+    },
+    {
+      "path": ".output/libbpf/libbpf.a",
+      "sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "matches": true
+    },
+    {
+      "path": "libbpf/CHECKPOINT-COMMIT",
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "matches": true
+    },
+    {
+      "path": "bpftool/CHECKPOINT-COMMIT",
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "matches": true
+    },
+    {
+      "path": "evaluation/requirements.txt",
+      "sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "matches": true
+    },
+    {
+      "path": "/boot/config-6.8.0-138-generic",
+      "sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "matches": true
+    },
+    {
+      "path": "/sys/kernel/btf/vmlinux",
+      "sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "matches": true
+    }
+  ],
+  "failed_attempts_preserved": [
+    "build-initial.stderr.log",
+    "live-initial/report.json",
+    "live-bounded/report.json",
+    "live-contract/report.json"
+  ],
+  "original_XDP_exception_applied": false,
+  "new_packages_installed": false,
+  "real_interfaces_modified": false,
+  "model_inference": "NOT IMPLEMENTED; Stage05",
+  "limits": [
+    "x64 aligned 64-bit ID loads; compare-and-swap writes",
+    "skb/header granularity, no wire timing/segmentation claim",
+    "LRU index pressure may split a generation; stats table capped8192,index16384",
+    "Capture disabled by default; diagnostic/logger storage finite",
+    "Observed bounded concurrent scenarios, not proof of universal race freedom"
+  ],
+  "replacement_survived_old_gc": {
+    "flow": {
+      "a_to_b": {
+        "first_ns": 0,
+        "ipv4_bytes": 0,
+        "last_ns": 0,
+        "max_iat_ns": 0,
+        "max_segment_bytes": 0,
+        "min_segment_bytes": 0,
+        "packets": 0,
+        "tcp_header_bytes": 0,
+        "tcp_segment_bytes": 0
+      },
+      "b_to_a": {
+        "first_ns": 1177287963722,
+        "ipv4_bytes": 40,
+        "last_ns": 1177287963722,
+        "max_iat_ns": 0,
+        "max_segment_bytes": 20,
+        "min_segment_bytes": 20,
+        "packets": 1,
+        "tcp_header_bytes": 20,
+        "tcp_segment_bytes": 20
+      },
+      "closed_ns": 0,
+      "first_ns": 1177287963722,
+      "id": 3,
+      "initiator": "b",
+      "key": {
+        "a_addr": "33.33.33.1",
+        "a_port": 15011,
+        "b_addr": "33.33.33.73",
+        "b_port": 41011,
+        "ifindex": 2,
+        "protocol": 6
+      },
+      "last_ns": 1177287963722,
+      "ordinal": 1,
+      "state": "open"
+    },
+    "snapshot_ns": 1179628950603
+  }
+}

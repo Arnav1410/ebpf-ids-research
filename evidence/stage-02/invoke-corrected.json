@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/usr/bin/sudo",
+    "-S",
+    "-p",
+    "",
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "test_env",
+    "baseline",
+    "--out",
+    "/home/poggers/NN-eBPF/evidence/stage-02/live-corrected",
+    "--loader",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/xdp",
+    "--updater",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/build/hot_updating",
+    "--bpftool",
+    "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+  ],
+  "started_utc": "2026-11-06T19:32:41.030304+00:00",
+  "exit_code": 1,
+  "stdout": "invoke-corrected.stdout.log",
+  "stderr": "invoke-corrected.stderr.log",
+  "authentication_input_recorded": false
+}

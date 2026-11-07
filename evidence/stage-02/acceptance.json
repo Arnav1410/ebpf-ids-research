@@ -1,0 +1,16 @@
+{
+  "recorded_utc": "2026-11-06T20:11:14.481638+00:00",
+  "stage": "02",
+  "gate": "PASS with explicit original-XDP lifecycle exception",
+  "exception": "lifecycle-exception.json",
+  "raw_validation_status": "fail",
+  "cleanup_check_passed": false,
+  "raw_reports_preserved": {
+    "live-private/report.json": "022fa55dd5e7ba8202d258c5c280f7987f7f36a3c56c7e5038fc6d5e9251402e",
+    "live-private/baseline-cleanup.json": "7f14db47090e95fc0a45e84f457f7d858cd7f9ae04a5e71a710caf6c980299f9",
+    "provenance.json": "a4aaf4c75063cb0f4b3a90dbbb3432713cdf0352f530b21eef7d4404caa47216"
+  },
+  "owner": "User-assigned teammate; fix not verified",
+  "next_stage": "03",
+  "new_TC_cleanup_checks_waived": false
+}
