@@ -1,0 +1,293 @@
+{
+  "status": "pass",
+  "physical_stage08": "BLOCKED",
+  "unit_suite": {
+    "discovered": 77,
+    "passed": 68,
+    "privileged_skipped": 9
+  },
+  "file_service": {
+    "port": 8876,
+    "seconds": 12,
+    "interval": 0.05,
+    "exit_code": 0
+  },
+  "cli_override": {
+    "configured_port": 8876,
+    "actual_port": 8877,
+    "actual_seconds": 30,
+    "browser_simulated_banner": true
+  },
+  "read_only_preflight_exit_code": 1,
+  "management_interface_file_override_refused": true,
+  "invalid_live_inputs_exit_code": 2,
+  "invalid_live_inputs_created_no_output_or_lab": true,
+  "real_private_tcp_connections": 1,
+  "complete_actual_kernel_events": 1,
+  "event_matches_final_kernel_ledger": true,
+  "implicit_reader_follows_effective_loader": true,
+  "network_scope": {
+    "interface": "veth-idss",
+    "namespace": "ids_server",
+    "physical_config_applied": false,
+    "physical_config_scope": "Metadata for physical preflight only; never selects or reconfigures this backend",
+    "profile": "accepted-owned-private-lab"
+  },
+  "owned_cleanup": {
+    "cleanup_complete": true,
+    "complete": true,
+    "enumerations": [
+      {
+        "live_ids": {
+          "map": [
+            2,
+            3,
+            4,
+            269
+          ],
+          "prog": [
+            2,
+            32,
+            33,
+            259,
+            260,
+            261,
+            262,
+            263,
+            264,
+            265,
+            266,
+            267,
+            268,
+            269,
+            270,
+            271,
+            272,
+            273,
+            274,
+            275
+          ]
+        },
+        "remaining_owned_ids": {
+          "map": [],
+          "prog": []
+        }
+      }
+    ],
+    "errors": [],
+    "filters_before_removal": {
+      "egress": [],
+      "ingress": []
+    },
+    "loader_exit_code": 0,
+    "owned_ids": {
+      "map": [
+        620,
+        621,
+        622,
+        623,
+        624,
+        625,
+        626,
+        627,
+        628,
+        629,
+        630,
+        631,
+        632,
+        633,
+        634,
+        635,
+        636,
+        637,
+        638,
+        639
+      ],
+      "prog": [
+        526,
+        527,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535
+      ]
+    },
+    "qdisc_removed": true,
+    "qdiscs_after_removal": [
+      {
+        "handle": "0:",
+        "kind": "noqueue",
+        "options": {},
+        "refcnt": 2,
+        "root": true
+      }
+    ],
+    "qdiscs_before_removal": [
+      {
+        "handle": "0:",
+        "kind": "noqueue",
+        "options": {},
+        "refcnt": 2,
+        "root": true
+      },
+      {
+        "handle": "ffff:",
+        "kind": "clsact",
+        "options": {},
+        "parent": "ffff:fff1"
+      }
+    ],
+    "remaining_owned_ids": {
+      "map": [],
+      "prog": []
+    },
+    "stopped": {
+      "errors": [],
+      "event": "stopped",
+      "filters_detached": true,
+      "map_ids": {
+        "flow_config": 621,
+        "flow_index": 625,
+        "flow_serial": 626,
+        "flow_stats": 622,
+        "hook_counts": 624,
+        "nn_control": 631,
+        "nn_counts": 634,
+        "nn_event_seq": 639,
+        "nn_events": 638,
+        "nn_jobs": 629,
+        "nn_params": 620,
+        "nn_results": 633,
+        "nn_rx": 623,
+        "nn_slots": 630,
+        "nn_tails": 632,
+        "nn_traces": 637,
+        "nn_tzero": 636,
+        "nn_zero": 635,
+        "observations": 628,
+        "tracking": 627
+      },
+      "program_ids": {
+        "egress": 534,
+        "gc": 535,
+        "ingress": 533,
+        "linear0": 527,
+        "linear1": 529,
+        "normalize": 526,
+        "output": 531,
+        "relu0": 528,
+        "relu1": 530,
+        "vector": 532
+      },
+      "qdisc_created": true,
+      "schema_version": 1
+    }
+  },
+  "lab_cleanup_complete": true,
+  "all_service_exit_codes": {
+    "replay-file": 0,
+    "replay-cli-override": 0,
+    "live-file": 0
+  },
+  "automatic_root_env_consumed": true,
+  "preserved_baseline_files": {
+    "Makefile": {
+      "unchanged": true,
+      "sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d"
+    },
+    "src/Makefile": {
+      "unchanged": true,
+      "sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81"
+    },
+    ".gitmodules": {
+      "unchanged": true,
+      "sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd"
+    },
+    ".gitignore": {
+      "unchanged": false,
+      "sha256": "0c0868c5f0fba3dcce9082824638d340c24c0af2340c702840e15d2e78db113f"
+    },
+    "run-baseline.sh": {
+      "unchanged": true,
+      "sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba"
+    },
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": {
+      "unchanged": false,
+      "sha256": "754054fe4d25c04b4954cec0a586205533c937ce3148bfa3c238500ba147fb6d"
+    },
+    "src/mlp_params.bpf.h": {
+      "unchanged": true,
+      "sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11"
+    },
+    "src/.output/xdp": {
+      "unchanged": true,
+      "sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c"
+    },
+    "src/.output/hot_updating": {
+      "unchanged": true,
+      "sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a"
+    },
+    "src/.output/xdp.o": {
+      "unchanged": true,
+      "sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4"
+    },
+    "src/.output/xdp.bpf.o": {
+      "unchanged": true,
+      "sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76"
+    },
+    "src/.output/xdp.skel.h": {
+      "unchanged": true,
+      "sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e"
+    },
+    "src/.output/vmlinux.h": {
+      "unchanged": true,
+      "sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0"
+    },
+    ".output/bpftool/bpftool": {
+      "unchanged": true,
+      "sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2"
+    },
+    ".output/libbpf/libbpf.a": {
+      "unchanged": true,
+      "sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd"
+    },
+    "libbpf/CHECKPOINT-COMMIT": {
+      "unchanged": true,
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2"
+    },
+    "bpftool/CHECKPOINT-COMMIT": {
+      "unchanged": true,
+      "sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2"
+    },
+    "evaluation/requirements.txt": {
+      "unchanged": true,
+      "sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1"
+    },
+    "/boot/config-6.8.0-138-generic": {
+      "unchanged": true,
+      "sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c"
+    },
+    "/sys/kernel/btf/vmlinux": {
+      "unchanged": true,
+      "sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773"
+    }
+  },
+  "intentional_baseline_document_changes": {
+    ".gitignore": "Ignore local env files and retain portable template",
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": "Operator-approved native Windows client replaces mandatory WSL"
+  },
+  "source_sha256": {
+    "test_env/config.py": "f12415d4db0936765262910b61151afb51986d81caf56479f5b90381d90ae720",
+    "test_env/preflight.py": "9affc4eccd2fb6fd9d121d7fccb3bd816071d228a8ef43bc120735113a477924",
+    "test_env/serve.py": "170e1ba4d2566b37e9e792f0a689d1b3d68b0d15b18dad77321b96d19212339e",
+    "test_env/tests/test_config.py": "42c9d0dd50dde7a73dd01e0a0c61f964f3756a1ddedc37e7d82f830666a773c2",
+    ".env.example": "7b80ecf4d0e0fdad6b12cf44a73e11cf4fcb3014de70d13014af60736aebcd4c"
+  },
+  "portable_template_parsed": true,
+  "local_env_gitignored": true,
+  "all_smoke_services_exited": true
+}

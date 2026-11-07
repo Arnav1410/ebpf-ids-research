@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "scope": "Discovery/configuration only; no physical backend acceptance",
+  "commands": "/home/poggers/NN-eBPF/.output/test-env-stage-08/discovery-verification/commands/commands.json",
+  "regressions": {
+    "discovered": 90,
+    "passed": 81,
+    "privileged_skipped": 9,
+    "exit_code": 0
+  },
+  "linux_collector": {
+    "executed_on": "Ubuntu guest, intentionally not libvirt host",
+    "exit_code": 1,
+    "observed_network_nm_driver_sections": true,
+    "missing_host_libvirt_explicit": true,
+    "real_host_domain_branch": "Await operator report"
+  },
+  "windows_collector": {
+    "parser": "PowerShell7.4.22 official portable Linux runtime",
+    "parse_errors": [],
+    "unsupported_linux_execution_exit": 1,
+    "null_selected_adapter_and_errors": true,
+    "native_windows51_execution": "Not available here; await operator report"
+  },
+  "portable_runtime": {
+    "source": "https://api.github.com/repos/PowerShell/PowerShell/releases/tags/v7.4.22",
+    "asset": "powershell-7.4.22-linux-x64.tar.gz",
+    "sha256": "9de443bef974f219c98a33b0f4096aace7f30b42188f37a1b14c5da7e82c8a6a",
+    "system_install": false
+  },
+  "actual_import_cli": {
+    "input_reports": "Explicit synthetic protocol fixtures, not real host/Windows collector results",
+    "guest_inspection": "Actual guest links/addresses/all route tables",
+    "preview_exit": 0,
+    "preview_unchanged": true,
+    "apply_exit": 0,
+    "stale_target_fields_cleared": true,
+    "custom_dashboard_port_preserved": 9191,
+    "mode": "0600",
+    "active_env_modified": false,
+    "incomplete_host_exit": 2,
+    "refused_import_preserved_target": true
+  },
+  "actual_preflight": {
+    "exit_code": 1,
+    "stage08": "BLOCKED",
+    "new_collectors_suggested": true
+  },
+  "preservation": {
+    "identity_addresses_routes_unchanged": true,
+    "active_env_unchanged": true,
+    "raw_difference": "Only DHCP valid/preferred lifetime on192.168.122.20 counted down2632->2402 seconds; raw snapshots were not identical",
+    "network_configuration_changed": false,
+    "initial_raw_equality_check": "Failed on lease countdown; inspected retained before/after snapshots, did not rerun observations"
+  },
+  "gate_limit": "No host/Windows network changes, VM snapshot creation, second NIC or physical traffic/attachment; no Stage08 commit"
+}

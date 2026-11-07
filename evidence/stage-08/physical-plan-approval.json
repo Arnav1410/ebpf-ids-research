@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "source": "Operator answers to the physical-plan and rollback questions",
+  "approved_plan": {
+    "approval": "Approve isolated bridge plan",
+    "condition": "Host connection-profile and routing-policy checks must pass before changes",
+    "linux_candidate_port": "enp8s0",
+    "windows_candidate_port": "Ethernet, index5, MAC00:e0:4c:68:01:4c",
+    "proposed_host_bridge": "ids-br0",
+    "proposed_subnet": "192.168.77.0/24",
+    "previously_proposed_subnet": "192.168.50.0/24",
+    "subnet_update": "Operator selected Keep 192.168.77.0/24 after supplying the new host address; actual values must come from repeatable discovery, not permanent IP assumptions",
+    "second_vm_nic": true,
+    "preserve": ["Existing guest NAT management NIC and default route", "Wi-Fi", "VPN/overlay settings", "Existing firewall protections"]
+  },
+  "rollback": {
+    "operator_response": "I don't know what this is",
+    "readiness": "NOT ESTABLISHED",
+    "required": ["Usable VM snapshot/equivalent recovery point appropriate to actual storage", "Local Linux host and virt-manager guest console access", "Recorded host connection/profile state and exact scoped undo commands", "Recorded Windows Ethernet state and exact scoped undo commands"],
+    "important_limit": "A VM snapshot does not restore Linux host or Windows network settings"
+  },
+  "inputs_now_supplied": ["Actual host and native Windows discovery reports, no collection errors", "Host UP/LOWER_UP and192.168.77.1/24", "Windows up/static192.168.77.2/24", "Actual qcow2 driver,8GiB VM RAM and92.6GiB available host storage", "Empty managed snapshot/checkpoint lists"],
+  "actual_report_review": "operator-discovery-review.json",
+  "next_prerequisites": ["Create/inspect usable VM recovery point and establish local consoles", "Exact host rollback for the current connected-externally/manual profile; do not substitute old DHCP state", "Approved bridge/new guest NIC plus actual traffic and separate physical-backend validation"],
+  "physical_changes_authorized_to_execute_now": false,
+  "physical_changes_performed": false
+}

@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "stage": "stage08",
+  "status": "blocked",
+  "recorded_utc": "2026-11-07T08:33:43.136295+00:00",
+  "base_commit": "08c20c401224ed2ddf9feac7f690a143ea5a340d",
+  "branch": "test-env",
+  "operator_request": "start stage8; inspect and establish exact safe physical target before mutations",
+  "inspection_read_only": true,
+  "interfaces": [
+    {
+      "ifindex": 1,
+      "ifname": "lo",
+      "flags": [
+        "LOOPBACK",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 65536,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "linkmode": "DEFAULT",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "loopback",
+      "address": "00:00:00:00:00:00",
+      "broadcast": "00:00:00:00:00:00",
+      "promiscuity": 0,
+      "min_mtu": 0,
+      "max_mtu": 0,
+      "inet6_addr_gen_mode": "eui64",
+      "num_tx_queues": 1,
+      "num_rx_queues": 1,
+      "gso_max_size": 65536,
+      "gso_max_segs": 65535
+    },
+    {
+      "ifindex": 2,
+      "ifname": "enp1s0",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "operstate": "UP",
+      "linkmode": "DEFAULT",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "52:54:00:73:34:a0",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "promiscuity": 0,
+      "min_mtu": 68,
+      "max_mtu": 65535,
+      "inet6_addr_gen_mode": "none",
+      "num_tx_queues": 1,
+      "num_rx_queues": 1,
+      "gso_max_size": 65536,
+      "gso_max_segs": 65535,
+      "parentbus": "virtio",
+      "parentdev": "virtio0"
+    }
+  ],
+  "addresses": [
+    {
+      "ifindex": 1,
+      "ifname": "lo",
+      "flags": [
+        "LOOPBACK",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 65536,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "loopback",
+      "address": "00:00:00:00:00:00",
+      "broadcast": "00:00:00:00:00:00",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "127.0.0.1",
+          "prefixlen": 8,
+          "scope": "host",
+          "label": "lo",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "::1",
+          "prefixlen": 128,
+          "scope": "host",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 2,
+      "ifname": "enp1s0",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "52:54:00:73:34:a0",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "192.168.122.20",
+          "prefixlen": 24,
+          "broadcast": "192.168.122.255",
+          "scope": "global",
+          "dynamic": true,
+          "noprefixroute": true,
+          "label": "enp1s0",
+          "valid_life_time": 2123,
+          "preferred_life_time": 2123
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::471c:d5f6:2d72:7fc",
+          "prefixlen": 64,
+          "scope": "link",
+          "noprefixroute": true,
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "dst": "default",
+      "gateway": "192.168.122.1",
+      "dev": "enp1s0",
+      "protocol": "dhcp",
+      "metric": 100,
+      "flags": []
+    },
+    {
+      "dst": "169.254.0.0/16",
+      "dev": "enp1s0",
+      "scope": "link",
+      "metric": 1000,
+      "flags": []
+    },
+    {
+      "dst": "192.168.122.0/24",
+      "dev": "enp1s0",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "192.168.122.20",
+      "metric": 100,
+      "flags": []
+    },
+    {
+      "type": "local",
+      "dst": "127.0.0.0/8",
+      "dev": "lo",
+      "table": "local",
+      "protocol": "kernel",
+      "scope": "host",
+      "prefsrc": "127.0.0.1",
+      "flags": []
+    },
+    {
+      "type": "local",
+      "dst": "127.0.0.1",
+      "dev": "lo",
+      "table": "local",
+      "protocol": "kernel",
+      "scope": "host",
+      "prefsrc": "127.0.0.1",
+      "flags": []
+    },
+    {
+      "type": "broadcast",
+      "dst": "127.255.255.255",
+      "dev": "lo",
+      "table": "local",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "127.0.0.1",
+      "flags": []
+    },
+    {
+      "type": "local",
+      "dst": "192.168.122.20",
+      "dev": "enp1s0",
+      "table": "local",
+      "protocol": "kernel",
+      "scope": "host",
+      "prefsrc": "192.168.122.20",
+      "flags": []
+    },
+    {
+      "type": "broadcast",
+      "dst": "192.168.122.255",
+      "dev": "enp1s0",
+      "table": "local",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "192.168.122.20",
+      "flags": []
+    },
+    {
+      "dst": "::1",
+      "dev": "lo",
+      "protocol": "kernel",
+      "metric": 256,
+      "flags": [],
+      "pref": "medium"
+    },
+    {
+      "dst": "fe80::/64",
+      "dev": "enp1s0",
+      "protocol": "kernel",
+      "metric": 1024,
+      "flags": [],
+      "pref": "medium"
+    },
+    {
+      "type": "local",
+      "dst": "::1",
+      "dev": "lo",
+      "table": "local",
+      "protocol": "kernel",
+      "metric": 0,
+      "flags": [],
+      "pref": "medium"
+    },
+    {
+      "type": "local",
+      "dst": "fe80::471c:d5f6:2d72:7fc",
+      "dev": "enp1s0",
+      "table": "local",
+      "protocol": "kernel",
+      "metric": 0,
+      "flags": [],
+      "pref": "medium"
+    },
+    {
+      "type": "multicast",
+      "dst": "ff00::/8",
+      "dev": "enp1s0",
+      "table": "local",
+      "protocol": "kernel",
+      "metric": 256,
+      "flags": [],
+      "pref": "medium"
+    }
+  ],
+  "virtualization": "kvm",
+  "protected_interfaces": [
+    "enp1s0"
+  ],
+  "non_management_ethernet_candidates": [],
+  "current_enp1s0_tc_filters": {
+    "ingress": [],
+    "egress": []
+  },
+  "named_namespaces": [],
+  "host_access": {
+    "configured_tool_ssh_hosts": [],
+    "operator_host_destination": "not supplied",
+    "host_bridge_mode": "not verified; guest IP alone does not prove NAT or bridge"
+  },
+  "required_operator_inputs": [
+    "VM host OS/manager and read-only host access or diagnostics",
+    "Wired physical adapter, host bridge and second guest NIC identity/MAC",
+    "Actual Windows-host/WSL source addressing and route to the demo guest NIC",
+    "Working VM snapshot/rollback and local console confirmed",
+    "Approval of the exact non-management interface before attachment"
+  ],
+  "software_constraints": {
+    "current_loader_scope": "Private ids_server namespace, veth-idss veth only; guard retained",
+    "source_filter": "Matching RX TCP source33.33.33.73; do not assume Windows/WSL emits that source",
+    "physical_backend": "Not yet implemented or tested; must remain separate from accepted private profile"
+  },
+  "actions_not_performed": [
+    "No interface/address/route/firewall/qdisc changes",
+    "No eBPF verifier load or attachment",
+    "No traffic sent to any physical host",
+    "No package installs or model/source changes",
+    "No commit: Stage08 has not passed"
+  ],
+  "guest_tool_paths": {
+    "ip": "/usr/sbin/ip",
+    "tc": "/usr/sbin/tc",
+    "bridge": "/usr/sbin/bridge",
+    "tcpdump": "/usr/bin/tcpdump",
+    "ethtool": null,
+    "iperf3": null,
+    "virsh": null
+  }
+}

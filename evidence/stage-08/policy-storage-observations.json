@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "source": "Latest operator-supplied Linux host policy-route and libvirt output; not host commands executed by the agent",
+  "rules": [
+    {"priority": 0, "action": "lookup local"},
+    {"priority": 5209, "match": "not fwmark 0x100cf", "action": "lookup 65743"},
+    {"priority": 5210, "match": "fwmark 0x80000/0xff0000", "action": "lookup main"},
+    {"priority": 5230, "match": "fwmark 0x80000/0xff0000", "action": "lookup default"},
+    {"priority": 5250, "match": "fwmark 0x80000/0xff0000", "action": "unreachable"},
+    {"priority": 5270, "action": "lookup 52"},
+    {"priority": 32766, "action": "lookup main"},
+    {"priority": 32767, "action": "lookup default"}
+  ],
+  "main_table": {
+    "default": {"gateway": "10.145.0.2", "interface": "wlan0", "source": "10.145.127.35", "metric": 20300},
+    "wired_connected": {"subnet": "192.168.77.0/24", "interface": "enp8s0", "source": "192.168.77.1"},
+    "management_nat": {"subnet": "192.168.122.0/24", "interface": "virbr0", "source": "192.168.122.1"},
+    "wifi": "10.145.0.0/17",
+    "zerotier": "10.27.236.0/24"
+  },
+  "warp_policy": {
+    "table": 65743,
+    "interface": "CloudflareWARP",
+    "observation": "Supplied prefixes do not cover 192.168.0.0/16; no WARP route for the candidate 192.168.50.0/24 or existing 192.168.77.0/24 appears",
+    "table52_lab_route": "No matching lab route supplied",
+    "expected_unmarked_host_route_to_192_168_77_peer": "WARP lookup has no match, then main-table connected route selects enp8s0/source192.168.77.1",
+    "limit": "Routing-table analysis, not proof of firewall permission, stable carrier or actual delivery; verify the route after final bridge setup"
+  },
+  "state_change": {
+    "new_runtime_wired_address": "192.168.77.1/24",
+    "assigned_by_agent": false,
+    "current_nm_ipv4_method": "Not supplied after this address change; could be persistent configuration or a runtime-only assignment",
+    "windows_current_static_address": "Not supplied after this host change",
+    "action": "Preserve the observed host address. Do not renumber to the earlier proposed 192.168.50.0/24 or restore the stale DHCP profile state blindly. Confirm desired lab subnet and current rollback settings."
+  },
+  "libvirt_storage": {
+    "domain": "ubuntu22.04",
+    "listed_managed_snapshots": [],
+    "other_backups": "Not established by this output",
+    "disk": {"type": "file", "device": "disk", "target": "vda", "source": "/var/lib/libvirt/images/ubuntu22.04.qcow2"},
+    "cdrom": {"type": "file", "device": "cdrom", "target": "sda", "source": null},
+    "driver_format_and_snapshot_defaults": "Not verified by filename or domblklist alone",
+    "host_free_space_and_assigned_vm_memory": "Not supplied"
+  },
+  "not_performed": ["No host/Windows/guest addressing or bridge changes", "No VM snapshot creation/revert", "No copied live disk image", "No direct qemu-img snapshot operation", "No physical eBPF attachment"],
+  "carrier": "No new link-state observation in this output; a connected route alone does not establish stable carrier"
+}

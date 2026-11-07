@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "source": "Latest operator-supplied Linux host output, not commands executed by the agent on that host",
+  "wired_device": {
+    "name": "enp8s0",
+    "mac": "38:a7:46:4f:4c:83",
+    "ip_link_observation": "DOWN, NO-CARRIER, administratively UP",
+    "ipv4_address": null,
+    "networkmanager_state_observation": "70: connecting (getting IP configuration)",
+    "observation_limit": "Commands were sequential; the differing carrier and NetworkManager snapshots do not establish a stable restored link. Do not overwrite the reported NO-CARRIER observation with the older UP/LOWER_UP state."
+  },
+  "original_connection": {
+    "id": "Wired connection 1",
+    "uuid": "8a6b10ff-31bc-32fd-893f-980fada13b0a",
+    "type": "802-3-ethernet",
+    "interface_name": "enp8s0",
+    "autoconnect": true,
+    "autoconnect_priority": 100,
+    "controller": null,
+    "port_type": null,
+    "ipv4": {
+      "method": "auto",
+      "addresses": [],
+      "gateway": null,
+      "dns": [],
+      "routes": [],
+      "route_metric": 100,
+      "never_default": false,
+      "ignore_auto_routes": false,
+      "ignore_auto_dns": false,
+      "may_fail": true
+    },
+    "ipv6": {
+      "method": "auto",
+      "addresses": [],
+      "gateway": null,
+      "dns": [],
+      "routes": [],
+      "route_metric": 100,
+      "never_default": false,
+      "may_fail": true
+    },
+    "rollback_anchor": "Preserve this existing profile/UUID. Future rollback must restore its recorded settings/activation, not delete it or flush unrelated networking. New bridge/port profiles, if approved and created, must be tracked separately by their actual UUIDs."
+  },
+  "paste_error": {
+    "observed": "bridge linkcommand -v nmcli",
+    "interpretation": "Two commands were concatenated; this is not evidence of a broken bridge. Subsequent successful nmcli output already establishes nmcli availability; no repeat detection check needed."
+  },
+  "missing_outputs": [
+    "ip -4 rule show",
+    "ip -4 route show table all",
+    "virsh --readonly --connect qemu:///system snapshot-list ubuntu22.04",
+    "virsh --readonly --connect qemu:///system domblklist ubuntu22.04 --details"
+  ],
+  "next_prerequisites": [
+    "Correct physical cable/adapter power/peer connection, then observe restored carrier after that corrective action",
+    "Obtain the four missing policy/storage outputs individually at a normal shell prompt",
+    "Establish VM snapshot/equivalent and host/guest console recovery plus separate host/Windows network undo"
+  ],
+  "interfaces_changed": false,
+  "profiles_changed": false,
+  "snapshot_created_or_restored": false,
+  "physical_attachment_performed": false
+}

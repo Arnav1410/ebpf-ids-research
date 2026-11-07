@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "plan_status": "PROPOSED_NOT_APPLIED",
+  "candidate_subnet": "192.168.50.0/24",
+  "candidate_addresses": {
+    "host_bridge": "192.168.50.1/24",
+    "native_windows": "192.168.50.2/24",
+    "guest_second_nic": "192.168.50.3/24"
+  },
+  "overlap_check": {
+    "source": "Operator-supplied address networks plus fixed namespace reference, not all host policy routes",
+    "compared_networks": [
+      "192.168.122.0/24",
+      "10.145.0.0/17",
+      "10.27.236.0/24",
+      "10.147.128.0/17",
+      "172.22.16.0/20",
+      "169.254.0.0/16",
+      "172.16.0.2/32",
+      "33.33.33.0/24"
+    ],
+    "overlaps": [],
+    "reachability_or_availability_proven": false
+  },
+  "actual_guest_check": {
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.preflight",
+      "--env",
+      ".env",
+      "--out",
+      ".output/test-env-stage-08/cable-layout-preflight"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED",
+    "interface_names": [
+      "lo",
+      "enp1s0"
+    ],
+    "command_errors": [],
+    "physical_target_fields_still_unset": true
+  },
+  "raw_preflight": {
+    "path": ".output/test-env-stage-08/cable-layout-preflight",
+    "sha256": "c1f2882d0821976b86f00b47eb59ef663f63e2fa989021d6a50aea13b07f5cbd"
+  },
+  "missing": [
+    "Host connection/profile ownership and full IPv4 VPN-policy inspection",
+    "VM snapshot list and disk mapping to select a supported recovery method",
+    "Confirmed host/guest local consoles and separate host/Windows network undo procedures",
+    "Configured and observed second guest NIC and stable Windows/guest IPv4",
+    "Accepted actual-interface TC backend and physical end-to-end validation"
+  ],
+  "host_or_windows_changes_performed": false,
+  "bpf_attachment_performed": false,
+  "operator_approval": "Conditional approval received for isolated bridge/subnet/second NIC; profile and routing checks must pass first",
+  "rollback_readiness": "NOT ESTABLISHED; operator requested explanation"
+}

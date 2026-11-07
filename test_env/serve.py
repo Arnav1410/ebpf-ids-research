@@ -13,11 +13,11 @@ import threading
 import time
 
 from .commands import Recorder
+from .config import ConfigError, ROOT, load_config
 from .dashboard import ReplayState, create_app
 from .lab import Lab, SERVER_IF, SERVER_NS
 from .tc import _need
 
-ROOT = Path(__file__).resolve().parents[1]
 
 
 class LiveView:
@@ -110,34 +110,94 @@ def _interrupt(signum, _frame):
     raise InterruptedError('Operator signal ' + str(signum))
 
 
+def _input_file(parser, name, path, *, executable=False):
+    try:
+        resolved = path.resolve()
+        if not resolved.is_file() or not os.access(resolved, os.R_OK):
+            parser.error(f'--{name} requires an existing readable regular file: {path}')
+        if executable and not os.access(resolved, os.X_OK):
+            parser.error(f'--{name} requires an executable file: {path}')
+    except (OSError, RuntimeError, ValueError) as exc:
+        parser.error(f'Invalid --{name} path: {exc}')
+    return resolved
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='mode', required=True)
     for mode in ('live', 'replay'):
         command = commands.add_parser(mode)
-        command.add_argument('--out', type=Path, required=True, help='New log directory; never reused')
-        command.add_argument('--port', type=int, default=8765, choices=range(1024, 65536), metavar='1024..65535')
-        command.add_argument('--seconds', type=int, default=120, choices=range(1, 241), metavar='1..240')
+        command.add_argument('--env', type=Path, help='Literal config file; defaults to optional root .env')
+        command.add_argument('--out', type=Path, help='New log directory; never reused (or IDS_OUT)')
+        command.add_argument('--port', type=int, choices=range(1024, 65536), metavar='1024..65535')
+        command.add_argument('--seconds', type=int, choices=range(1, 241), metavar='1..240')
         if mode == 'live':
-            command.add_argument('--loader', type=Path, required=True)
-            command.add_argument('--object', type=Path, required=True)
-            command.add_argument('--bpftool', type=Path, required=True)
+            command.add_argument('--loader', type=Path)
+            command.add_argument('--object', type=Path)
+            command.add_argument('--bpftool', type=Path)
             command.add_argument('--reader', type=Path)
-            command.add_argument('--model', type=Path, default=ROOT / 'src/mlp_params.bpf.h')
+            command.add_argument('--model', type=Path)
         else:
-            command.add_argument('--sample', type=Path, required=True)
-            command.add_argument('--interval', type=float, default=0.5, help='Replay step seconds (0.05..10)')
+            command.add_argument('--sample', type=Path, help='Recorded classifications (or IDS_SAMPLE)')
+            command.add_argument('--interval', type=float, help='Replay step seconds (0.05..10)')
     args = parser.parse_args(argv)
+    try:
+        settings = load_config(args.env)
+    except ConfigError as exc:
+        parser.error(str(exc))
+    fields = {'out': 'out', 'port': 'dashboard_port', 'seconds': 'run_seconds'}
+    if args.mode == 'live':
+        fields.update(loader='loader', object='bpf_object', bpftool='bpftool',
+                      reader='reader', model='model')
+    else:
+        fields.update(sample='sample', interval='replay_interval')
+    for name, field in fields.items():
+        if getattr(args, name) is None:
+            setattr(args, name, getattr(settings, field))
+    if args.out is None:
+        parser.error('--out is required unless IDS_OUT is configured')
+    if args.mode == 'replay' and args.sample is None:
+        parser.error('--sample is required unless IDS_SAMPLE is configured')
     if args.mode == 'live' and os.geteuid() != 0:
         parser.error('Live mode requires sudo in the isolated VM; replay needs no root')
     if args.mode == 'replay' and not 0.05 <= args.interval <= 10:
         parser.error('Replay interval must be finite and within 0.05..10 seconds')
-    recorder = Recorder(args.out.resolve())
+    if args.mode == 'live':
+        args.reader = args.reader if args.reader is not None else args.loader.parent / 'nn-collect'
+        for name in ('loader', 'object', 'bpftool', 'reader', 'model'):
+            setattr(args, name, _input_file(parser, name, getattr(args, name),
+                                           executable=name in ('loader', 'bpftool', 'reader')))
+    else:
+        args.sample = _input_file(parser, 'sample', args.sample)
+    try:
+        args.out = args.out.resolve()
+        if args.out.exists():
+            parser.error('--out must be a new directory; refusing reuse: ' + str(args.out))
+        recorder = Recorder(args.out)
+    except (OSError, RuntimeError, ValueError) as exc:
+        parser.error('Invalid --out: ' + str(exc))
+    config_path = args.env if args.env is not None else ROOT / '.env'
+    effective = {
+        'schema_version': 1,
+        'config_file': str(config_path.resolve()) if args.env is not None or config_path.exists() else None,
+        'configured': settings.as_dict(),
+        'service': {'mode': args.mode, 'bind_host': '127.0.0.1',
+                    **{name: str(getattr(args, name)) if isinstance(getattr(args, name), Path)
+                       else getattr(args, name) for name in fields}},
+        'network_scope': {
+            'profile': 'accepted-owned-private-lab' if args.mode == 'live' else 'offline-replay',
+            'namespace': SERVER_NS if args.mode == 'live' else None,
+            'interface': SERVER_IF if args.mode == 'live' else None,
+            'physical_config_applied': False,
+            'physical_config_scope': 'Metadata for physical preflight only; never selects or reconfigures this backend',
+        },
+    }
     report = {'schema_version': 1, 'stage': '07', 'mode': args.mode,
               'simulated': args.mode == 'replay', 'status': 'fail', 'errors': []}
     errors = report['errors']
     previous_term = signal.signal(signal.SIGTERM, _interrupt)
     try:
+        recorder.write_json('effective-config.json', effective)
         if args.mode == 'replay':
             state = ReplayState(args.sample.resolve())
             try:
@@ -157,8 +217,7 @@ def main(argv=None):
                     collector = None
                     try:
                         report['producer_ready'] = producer.start()
-                        reader = args.reader or args.loader.parent / 'nn-collect'
-                        collector = Collector(recorder, producer, reader, label='dashboard-collector')
+                        collector = Collector(recorder, producer, args.reader, label='dashboard-collector')
                         report['reader_ready'] = collector.start()
                         state = LiveView(collector, producer)
                         try:

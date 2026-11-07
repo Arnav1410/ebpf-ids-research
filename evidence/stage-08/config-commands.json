@@ -1,0 +1,203 @@
+[
+  {
+    "label": "config-full-pure-suite",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "test_env/tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "config-full-pure-suite.stdout.log",
+    "stderr": "config-full-pure-suite.stderr.log"
+  },
+  {
+    "label": "configured-guest-preflight",
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.preflight",
+      "--env",
+      "/home/poggers/NN-eBPF/.env",
+      "--out",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/preflight-env"
+    ],
+    "exit_code": 1,
+    "stdout": "configured-guest-preflight.stdout.log",
+    "stderr": "configured-guest-preflight.stderr.log"
+  },
+  {
+    "label": "replay-file",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "replay",
+      "--env",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/replay.env"
+    ],
+    "pid": 51085,
+    "spawned": true
+  },
+  {
+    "label": "replay-cli-override",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "replay",
+      "--env",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/replay.env",
+      "--port",
+      "8877",
+      "--seconds",
+      "30",
+      "--out",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/replay-override"
+    ],
+    "pid": 51105,
+    "spawned": true
+  },
+  {
+    "label": "actual-management-target-refused",
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.preflight",
+      "--env",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/reject-management.env",
+      "--out",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/preflight-management"
+    ],
+    "exit_code": 1,
+    "stdout": "actual-management-target-refused.stdout.log",
+    "stderr": "actual-management-target-refused.stderr.log"
+  },
+  {
+    "label": "invalid-live-input-before-lab",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "live",
+      "--env",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/live.env",
+      "--out",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/must-not-be-created"
+    ],
+    "exit_code": 2,
+    "stdout": "invalid-live-input-before-lab.stdout.log",
+    "stderr": "invalid-live-input-before-lab.stderr.log"
+  },
+  {
+    "label": "live-file",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "live",
+      "--env",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/live.env",
+      "--loader",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-06/build/nn-loader"
+    ],
+    "pid": 51197,
+    "spawned": true
+  },
+  {
+    "label": "env-private-tcp-client",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_client",
+      "--",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.flow_fixture",
+      "clients",
+      "--count",
+      "1"
+    ],
+    "exit_code": 0,
+    "stdout": "env-private-tcp-client.stdout.log",
+    "stderr": "env-private-tcp-client.stderr.log"
+  },
+  {
+    "label": "env-tcp-server",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_server",
+      "--",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.flow_fixture",
+      "server",
+      "--ready",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/tcp-ready.json",
+      "--count",
+      "1"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "configured-live-stop",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "kill",
+      "-TERM",
+      "51198"
+    ],
+    "exit_code": 0,
+    "stdout": "configured-live-stop.stdout.log",
+    "stderr": "configured-live-stop.stderr.log"
+  },
+  {
+    "label": "automatic-root-env-replay",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "replay",
+      "--out",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-08/replay-auto",
+      "--seconds",
+      "1",
+      "--port",
+      "8879"
+    ],
+    "exit_code": 0,
+    "stdout": "automatic-root-env-replay.stdout.log",
+    "stderr": "automatic-root-env-replay.stderr.log"
+  }
+]

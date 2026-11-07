@@ -1,0 +1,129 @@
+[
+  {
+    "argv": [
+      "git",
+      "status",
+      "--short",
+      "--branch"
+    ],
+    "exit_code": 0,
+    "observed": "test-env, clean before Stage08 evidence"
+  },
+  {
+    "argv": [
+      "ip",
+      "-j",
+      "-d",
+      "link",
+      "show"
+    ],
+    "exit_code": 0,
+    "stdout": "guest-inspection.stdout.log"
+  },
+  {
+    "argv": [
+      "ip",
+      "-j",
+      "address",
+      "show"
+    ],
+    "exit_code": 0,
+    "stdout": "guest-inspection.stdout.log"
+  },
+  {
+    "argv": [
+      "ip",
+      "-j",
+      "route",
+      "show",
+      "table",
+      "all"
+    ],
+    "exit_code": 0,
+    "stdout": "guest-inspection.stdout.log"
+  },
+  {
+    "argv": [
+      "systemd-detect-virt"
+    ],
+    "exit_code": 0,
+    "observed": "kvm"
+  },
+  {
+    "argv": [
+      "ip",
+      "-j",
+      "rule",
+      "show"
+    ],
+    "exit_code": 0,
+    "observed_priorities": [
+      0,
+      32766,
+      32767
+    ]
+  },
+  {
+    "argv": [
+      "tc",
+      "-j",
+      "qdisc",
+      "show"
+    ],
+    "exit_code": 0,
+    "observed": {
+      "lo": "noqueue",
+      "enp1s0": "fq_codel"
+    }
+  },
+  {
+    "argv": [
+      "tc",
+      "-j",
+      "filter",
+      "show",
+      "dev",
+      "enp1s0",
+      "ingress"
+    ],
+    "exit_code": 0,
+    "stdout": []
+  },
+  {
+    "argv": [
+      "tc",
+      "-j",
+      "filter",
+      "show",
+      "dev",
+      "enp1s0",
+      "egress"
+    ],
+    "exit_code": 0,
+    "stdout": []
+  },
+  {
+    "argv": [
+      "ip",
+      "netns",
+      "list"
+    ],
+    "exit_code": 0,
+    "stdout": ""
+  },
+  {
+    "argv": [
+      "git",
+      "log",
+      "-1",
+      "--format=%H"
+    ],
+    "exit_code": 0,
+    "stdout": "08c20c401224ed2ddf9feac7f690a143ea5a340d"
+  },
+  {
+    "tool": "read",
+    "path": "ssh://",
+    "observed": "No SSH hosts are configured; no operator host destination supplied"
+  }
+]

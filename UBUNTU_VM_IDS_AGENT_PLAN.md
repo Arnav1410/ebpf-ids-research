@@ -3,7 +3,7 @@
 **Execution environment:** Ubuntu 22.04 VM (all implementation and local tests run here).  
 **Starting point:** The team's actual local project repository, adapting the DSN 2024 `IntelligentDDS/NN-eBPF` baseline.  
 **Initial operating mode:** DETECT ONLY. No kernel-side blocking until explicitly approved after validation.  
-**Target demo:** WSL2 client on Laptop A → physical Ethernet → bridged Ubuntu VM on Laptop B → TC ingress/egress + in-kernel inference → event collector → live dashboard.
+**Target demo:** Native Windows client on Laptop A → physical Ethernet → bridged Ubuntu VM on Laptop B → TC ingress/egress + in-kernel inference → event collector → live dashboard. WSL is optional, not a Stage 08 prerequisite (operator-approved client-scope change).
 
 ## Non-negotiable agent operating rules
 
@@ -164,18 +164,20 @@ sudo bpftool prog show
 
 ## Stage 08 — Two-laptop Ethernet integration (separate approval gate)
 
-**Goal:** Use physical traffic from WSL2 to the Ubuntu VM without risking connectivity during the demo.
+**Goal:** Use physical traffic from a native Windows client to the Ubuntu VM without risking connectivity during the demo. Packet generation does not require WSL; inference remains in the Ubuntu kernel.
 
 **Prerequisite:** Confirm with the operator that the VM hypervisor supports bridging to the **wired** Ethernet adapter; ensure adequate permissions and a working snapshot/rollback. Configure static *demo-only* addresses or predictable DHCP reservations on the Ethernet segment; determine actual adapter names/IPs by inspection. Avoid using the VM management NIC until the route and remote-access impact are understood.
 
 **Work:**
-- Start with Windows-host ↔ VM basic ICMP and TCP connectivity; then test WSL2 initiated TCP to the VM (default WSL2 NAT typically supports outgoing connections). Verify the actual packets on the VM interface before any eBPF attachment.
+- Discovery/configuration milestone: run standalone `test_env/discover-host.sh` on the Linux virtualization host and `test_env/discover-windows.ps1` on native Windows; import their versioned reports with `python -m test_env.configure`. Use actual changing identities/IPs, clear stale targets, and preserve management/default-route guards. These are read-only discovery plus local `.env` updates, not network setup or attachment permission.
+- Recovery/setup milestone: inspect actual disk driver/memory/free space and snapshot/checkpoint inventory; establish VM/console recovery plus exact host/Windows undo steps. Preserve the observed host `.77.1` address and operator-retained `.77/24` intent unless a later explicit change is approved. Do not treat proposed peer addresses as observed values.
+- Start with native Windows client ↔ VM basic ICMP and TCP connectivity, then controlled native TCP exchanges. Verify the actual packets and source address on the VM interface before any eBPF attachment. WSL-origin traffic is optional and outside the required acceptance path.
 - Attach TC ingress and egress to the VM's verified **bridged guest interface**, not to a guessed port/IP; document ifindex, addresses, tool commands and rollback.
 - Generate only authorized, contained traffic: `iperf3`, `curl`, an SSH login to a lab account, short controlled connection bursts and locally owned negative-case fixtures if available. Prefer scripted labeled demo traffic to uncontrolled attacks.
 - Check both directions: source client→VM and VM→client; compare what VM TC observes to guest tcpdump and namespace tests, accounting for VM NIC offloading.
 - Use the dashboard on the VM or via a deliberately opened authorized port; keep backend authentication/network exposure minimal and documented.
 
-**PASS gate:** Host and WSL2 can both reach the VM service as expected; real packets reach the correct TC hooks; at least one known benign flow produces an **actual** in-kernel inference event and correct UI record; labeled negative-case traffic is demonstrated only if a matching trained model/ground truth exists; rollback restores original networking. No claim of demonstrated attack detection without genuine labeled evidence.
+**PASS gate:** The native Windows client can reach the VM service as expected; real packets reach the correct TC hooks; at least one known benign flow produces an **actual** in-kernel inference event and correct UI record; labeled negative-case traffic is demonstrated only if a matching trained model/ground truth exists; rollback restores original networking. No claim of demonstrated attack detection without genuine labeled evidence. WSL execution is not required.
 
 ## Stage 09 — Research evaluation and reproducible benchmark
 
@@ -225,4 +227,4 @@ NEXT ACTION: <next stage only if PASS; otherwise specific remediation>
 - Linux veth namespaces: https://man7.org/linux/man-pages/man4/veth.4.html
 - libbpf BPF app lifecycle: https://docs.kernel.org/bpf/libbpf/libbpf_overview.html
 - Kernel BPF ring buffer: https://docs.kernel.org/bpf/ringbuf.html
-- WSL networking behavior: https://learn.microsoft.com/en-us/windows/wsl/networking
+- Optional WSL networking reference (not required for Stage 08): https://learn.microsoft.com/en-us/windows/wsl/networking

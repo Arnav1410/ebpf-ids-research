@@ -1,0 +1,12 @@
+{
+  "stage08": "BLOCKED",
+  "operator_selection": "Keep 192.168.77.0/24",
+  "approved_intent": {"host": "192.168.77.1/24 on the future isolated bridge", "windows": "192.168.77.2/24 proposed, not observed", "guest": "192.168.77.3/24 proposed for the new NIC, not observed"},
+  "discovery_request": "Provide standalone Linux-host and native Windows collectors; import their current observations into ignored configuration rather than relying on permanent IP/interface assumptions",
+  "routing_analysis": "Supplied WARP table excludes this RFC1918 subnet. For an ordinary unmarked nonlocal 192.168.77.x destination, the supplied rules fall through to the main connected route on enp8s0. This is not live packet/firewall proof.",
+  "recovery_method_selected_for_preparation": "Libvirt-managed atomic full-system internal snapshot, subject to verified qcow2 driver/storage support, available host disk space, assigned VM memory and checkpoint constraints. Do not create until those prerequisites are inspected. No --disk-only, --live, --halt, direct qemu-img operation, copied active disk or external overlay is proposed.",
+  "method_limits": ["No snapshot was created or restored", "No listed managed snapshots does not rule out unrelated backups", "Full snapshot can pause the guest and consumes host storage", "Internal snapshot shares the VM image and is not an independent disk-failure backup", "VM snapshot cannot undo host or Windows network changes", "Restoration can discard work after capture and requires a separate decision"],
+  "official_sources": ["https://www.libvirt.org/manpages/virsh.html#snapshot-create-as", "https://libvirt.org/formatsnapshot.html"],
+  "collection_needed": ["Current active host IPv4 profile after new .77.1 address", "Host disk driver, memory, filesystem available bytes and checkpoint state", "Carrier after reconnecting peers", "Current Windows wired addresses and rollback settings"],
+  "network_or_storage_changes_performed": false
+}

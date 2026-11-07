@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "stage08": "BLOCKED",
+  "source": "Operator-supplied actual Linux-host and native Windows discovery reports; not agent remote execution",
+  "inputs": {
+    "host-discovery.json": {
+      "sha256": "aedccff698797a70f724ec5d4df8bcff222bd052b7f275dfa722435b77316352",
+      "bytes": 123598
+    },
+    "windows-discovery.json": {
+      "sha256": "44b0c3af89f8143d4573d9520b4e0ac31adb68d4be99db4aba13e27a77a5aaec",
+      "bytes": 79638
+    }
+  },
+  "collected_at": {
+    "host": "2026-11-07T12:11:54.416904Z",
+    "windows": "2026-11-07T12:10:16.6018298Z"
+  },
+  "collector_errors": {
+    "host": [],
+    "windows": []
+  },
+  "host_wired": {
+    "interface": "enp8s0",
+    "mac": "38:a7:46:4f:4c:83",
+    "carrier": "UP/LOWER_UP",
+    "ipv4": "192.168.77.1/24",
+    "bridge_master": null,
+    "driver": {
+      "name": "r8169",
+      "module": "r8169"
+    },
+    "active_nm_profile": {
+      "device": {
+        "GENERAL.DEVICE": "enp8s0",
+        "GENERAL.TYPE": "ethernet",
+        "GENERAL.STATE": "100 (connected (externally))",
+        "GENERAL.CONNECTION": "enp8s0",
+        "GENERAL.CON-UUID": "fe6361a5-d2e1-4012-997f-d5b161098d9a"
+      },
+      "profile": {
+        "connection.id": "enp8s0",
+        "connection.uuid": "fe6361a5-d2e1-4012-997f-d5b161098d9a",
+        "connection.type": "802-3-ethernet",
+        "connection.interface-name": "enp8s0",
+        "connection.master": "",
+        "connection.autoconnect": "yes",
+        "connection.autoconnect-priority": "0",
+        "ipv4.method": "manual",
+        "ipv4.addresses": "192.168.77.1/24",
+        "ipv4.gateway": "",
+        "ipv4.dns": "",
+        "ipv4.dns-search": "",
+        "ipv4.routes": "",
+        "ipv4.route-metric": "-1",
+        "ipv4.ignore-auto-dns": "no",
+        "ipv4.ignore-auto-routes": "no",
+        "ipv4.never-default": "no",
+        "ipv6.method": "ignore",
+        "ipv6.addresses": "",
+        "ipv6.gateway": "",
+        "ipv6.dns": "",
+        "ipv6.dns-search": "",
+        "ipv6.routes": "",
+        "ipv6.route-metric": "-1",
+        "ipv6.ignore-auto-dns": "no",
+        "ipv6.ignore-auto-routes": "no",
+        "ipv6.never-default": "no"
+      }
+    },
+    "rollback_caution": "NM reports connected externally; current fe6361a5-d2e1-4012-997f-d5b161098d9a profile must not be assumed durable, nor replaced by the earlier DHCP profile on rollback"
+  },
+  "windows_wired": {
+    "adapter": {
+      "name": "Ethernet",
+      "interface_index": 5,
+      "mac": "00:e0:4c:68:01:4c",
+      "status": "Up",
+      "hardware_interface": true,
+      "virtual": false,
+      "interface_description": "Realtek USB GbE Family Controller",
+      "link_speed": "100 Mbps"
+    },
+    "addresses": [
+      {
+        "address": "192.168.77.2",
+        "prefix_length": 24,
+        "address_state": "Preferred",
+        "prefix_origin": "Manual",
+        "suffix_origin": "Manual"
+      }
+    ],
+    "ip_interface": {
+      "dhcp": "Disabled",
+      "interface_metric": 35,
+      "connection_state": "Connected"
+    },
+    "ipv4_dns": [],
+    "default_on_selected_adapter": false,
+    "powershell_version": "5.1.26100.9711"
+  },
+  "vm": {
+    "name": "ubuntu22.04",
+    "uuid": "f279e55f-8bf7-4533-95fb-2350e6db543b",
+    "nic_count": 1,
+    "management_mac": "52:54:00:73:34:a0",
+    "demo_nic": null,
+    "disk_driver": "qcow2",
+    "ram_bytes": 8589934592,
+    "disk_filesystem_available_bytes": 99467259904,
+    "managed_snapshot_names": [],
+    "checkpoint_names": []
+  },
+  "route_analysis": "Reported tables have wired192.168.77.0/24 connected routes on both machines; no matching WARP route was found for the tested peer destinations. This does not prove actual packet delivery.",
+  "configuration": {
+    "preview_exit": 0,
+    "apply_exit": 0,
+    "status": "IMPORTED",
+    "env_content_changed": false,
+    "observed_config": {
+      "IDS_VM_NAME": "ubuntu22.04",
+      "IDS_LIBVIRT_URI": "qemu:///system",
+      "IDS_HOST_WIRED_IFACE": "enp8s0",
+      "IDS_GUEST_MANAGEMENT_IFACE": "enp1s0",
+      "IDS_GUEST_MANAGEMENT_MAC": "52:54:00:73:34:a0",
+      "IDS_GUEST_DEMO_IFACE": "",
+      "IDS_GUEST_DEMO_MAC": "",
+      "IDS_CLIENT_IPV4": "192.168.77.2",
+      "IDS_GUEST_DEMO_IPV4": ""
+    },
+    "unrelated_settings_preserved": true
+  },
+  "guest_preflight": {
+    "exit_code": 1,
+    "status": "BLOCKED",
+    "interfaces": [
+      "lo",
+      "enp1s0"
+    ],
+    "command_errors": [],
+    "blockers": [
+      "Missing IDS_GUEST_DEMO_IFACE; no fallback target is assumed.",
+      "Missing IDS_GUEST_DEMO_MAC; no fallback target is assumed.",
+      "Missing IDS_GUEST_DEMO_IPV4; no fallback target is assumed.",
+      "Physical backend is not accepted: the live service still uses only the owned private namespace/veth lab and its fixed native source filter. Read-only inspection cannot establish Stage08 PASS or authorize a physical attachment."
+    ]
+  },
+  "runtime_evidence": ".output/test-env-stage-08/operator-reports-20261107T121951944894Z",
+  "next_action": "Create and inspect a libvirt-managed atomic full-system VM recovery snapshot from the Linux host; establish local console and exact host/Windows rollback before bridge/NIC changes",
+  "limits": [
+    "No end-to-end host/Windows or Windows/VM packets tested",
+    "No snapshot created or restored by agent",
+    "No bridge, NIC, address, route, firewall or BPF changes by agent",
+    "No Stage08 PASS or commit"
+  ]
+}

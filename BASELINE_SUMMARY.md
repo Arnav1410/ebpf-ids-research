@@ -324,4 +324,27 @@ Numeric label meanings remain unverified; no accuracy or attack-detection claim.
 FastAPI/Uvicorn are pinned in a separate ignored virtual environment, not the
 evaluation environment. `python -B -m test_env.serve live|replay` serves localhost
 only and owns a bounded lab lifetime with graceful cleanup. Physical Stage 08
-requires separate operator approval and host/WSL/bridge details.
+requires separate operator approval and host/native-Windows/bridge details; WSL
+is optional following the operator's client-scope change.
+
+Lab service parameters now support a literal, gitignored root `.env`, with
+`.env.example` as the template and explicit CLI flags taking precedence.
+See [configuration usage and scopes](test_env/CONFIGURATION.md).
+The actual dashboard consumes configured paths/port/lifetime/replay/output;
+the read-only `test_env.preflight` consumes physical target metadata and refuses
+management/default-route interfaces. Changing an env field does not select a
+physical NIC for the accepted private backend or change its fixed source filter.
+Configuration/private runtime proof is in
+[Stage 08 configuration verification](evidence/stage-08/config-verification.json);
+it does not make the physical Stage 08 gate pass.
+
+Repeatable physical-machine discovery is available as standalone
+`test_env/discover-host.sh` (Linux libvirt host) and `test_env/discover-windows.ps1`
+(native PowerShell5.1). Their JSON reports feed `python -m test_env.configure`,
+which cross-checks the actual guest and previews or atomically imports observed
+fields into ignored `.env`, preserving unrelated settings and clearing stale
+targets. These tools do not configure the network, create recovery points or
+attach BPF. The operator retained the now-observed host `.77/24` subnet;
+peer addresses and the second guest NIC still require real setup/validation.
+Discovery/import verification and native-platform limits are recorded in
+[Stage08 discovery proof](evidence/stage-08/discovery-verification.json).
