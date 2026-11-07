@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "execution": "Host data inspection only",
+  "rows": 18840,
+  "columns": 6,
+  "feature_dtype": "int64",
+  "label_dtype": "float64",
+  "label_counts": {
+    "0": 5585,
+    "1": 13255
+  },
+  "unique_vectors": 18561,
+  "duplicate_rows": 279,
+  "vectors_with_conflicting_labels": 0,
+  "moments": [
+    {
+      "column": 0,
+      "min": 20,
+      "max": 1480,
+      "mean": 571.5456475583865,
+      "population_std": 451.43051139813525,
+      "header_mean": 572,
+      "header_scale": 451,
+      "rounded_moments_match": true
+    },
+    {
+      "column": 1,
+      "min": 0,
+      "max": 827560563008,
+      "mean": 11161066668.226486,
+      "population_std": 24027934608.29914,
+      "header_mean": 11161066668,
+      "header_scale": 24027934608,
+      "rounded_moments_match": true
+    },
+    {
+      "column": 2,
+      "min": 20,
+      "max": 984,
+      "mean": 35.61135881104034,
+      "population_std": 54.3031859733505,
+      "header_mean": 36,
+      "header_scale": 54,
+      "rounded_moments_match": true
+    },
+    {
+      "column": 3,
+      "min": 20,
+      "max": 12865,
+      "mean": 496.4864118895966,
+      "population_std": 1671.7533750058217,
+      "header_mean": 496,
+      "header_scale": 1672,
+      "rounded_moments_match": true
+    },
+    {
+      "column": 4,
+      "min": 20,
+      "max": 233512,
+      "mean": 12145.089596602973,
+      "population_std": 49931.98427985485,
+      "header_mean": 12145,
+      "header_scale": 49932,
+      "rounded_moments_match": true
+    },
+    {
+      "column": 5,
+      "min": 1,
+      "max": 7297,
+      "mean": 379.2812101910828,
+      "population_std": 1560.374886057913,
+      "header_mean": 379,
+      "header_scale": 1560,
+      "rounded_moments_match": true
+    }
+  ],
+  "hashes": {
+    "dataset/reproduction-xdp-data.npy": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+    "dataset/reproduction-xdp-label.npy": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924",
+    "src/mlp_params.bpf.h": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11"
+  },
+  "scaler_provenance": "All six rounded full-dataset moments match header; weights/training membership not established",
+  "original_train_split": "Not saved; train_test_split has no random_state, StandardScaler fits all rows",
+  "scaling_calibration_rows": 4996,
+  "scaling_heldout_rows": 13844,
+  "original_training_membership": "UNKNOWN",
+  "intended_paper_label_map": {
+    "0": "benign",
+    "1": "intrusion"
+  },
+  "stored_label_collection_manifest": "NOT FOUND",
+  "labeled_effectiveness_gate": "NOT RUN: encoded-label diagnostics possible; independently labeled held-out protocol unavailable",
+  "cic_csv_availability": "No CIC CSV found in project/research or inspected Windows Downloads/Desktop/Documents; search is not an exhaustive disk inventory"
+}
