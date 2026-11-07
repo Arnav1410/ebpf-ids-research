@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "stage": "stage07",
+  "status": "predeclared",
+  "scope": "Localhost-only, read-only dashboard; private owned namespace TC backend; separate explicitly simulated replay",
+  "required": [
+    "Install inspected pinned FastAPI/Uvicorn only in a separate ignored virtual environment and record resolved dependencies",
+    "Serve actual health, summary, flow and event endpoints from collector-side state without packet-path or UI inference",
+    "Open the actual browser surface; generate real traffic and compare displayed predictions/events/flows against saved collector events and owned map snapshots",
+    "Show real pending/unclassified flow separately from scored flows; keep numeric label semantics explicitly unverified",
+    "Stop and restart the native reader against the same producer; observe visible disconnected state and recovery in the browser",
+    "Exercise browser network loss with stale/disconnected presentation and recovery",
+    "Replay retained genuine JSONL deterministically with an unmistakable persistent SIMULATED mode and no live connectivity claim",
+    "Confirm eBPF event tests still pass with UI stopped",
+    "Prove reader-before-producer close, owned object/filter/namespace release, unchanged management network and preserved original artifacts"
+  ],
+  "advance_only_after": "Every check passes; physical integration requires separate operator approval"
+}

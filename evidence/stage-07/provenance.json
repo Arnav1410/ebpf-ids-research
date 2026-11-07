@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "stage": "stage07",
+  "status": "pass",
+  "base_commit": "b6c5b48",
+  "recorded_utc": "2026-11-07T05:57:11.140235+00:00",
+  "source_sha256": {
+    "test_env/dashboard.py": "2852ad8fcced9cfa01e80c76a8aef671fb5cfc1d702ea97907d221eee49063c9",
+    "test_env/serve.py": "5d2a5c093d86f0d34f162a5c4b60c6354fed0ab8af02102ee3a038180e66345c",
+    "test_env/requirements-dashboard.txt": "7d4ddad9ecc64a0bab2eac2074b5e093fe1d33aaf146a6c3bb944b36af0635d3",
+    "test_env/tests/test_dashboard.py": "163d86ff31850c3c8243eb19e02e8936b74a52933edd3482476e2a11e0bbc562",
+    "test_env/web/index.html": "3cf2be6439a54b8806944923f09aa37064271d169d61fa2a69d28737757bd261",
+    "test_env/web/app.js": "0cd855a5a69bc461ba88ecfe335f482fdb910a47dc936bb38526f4df5ac66dc8",
+    "test_env/web/style.css": "a60b59a948186b6e1682b510de6d436a5b380b9f66e20044a54fd3479f81caba"
+  },
+  "original_fingerprints": {
+    "Makefile": {
+      "expected_sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "actual_sha256": "da51f880987b69541f38843f6dcec493dbd8133678d5eb9c15a6814406bdd36d",
+      "unchanged": true
+    },
+    "src/Makefile": {
+      "expected_sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "actual_sha256": "a141a844b584bfe4a3311f1e597c019ca50ac62391f18d4eb5be06d47b52aa81",
+      "unchanged": true
+    },
+    ".gitmodules": {
+      "expected_sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "actual_sha256": "ffb40dfe1097be39b9f9e50706c5aa15deeca2f5e07244d519d880824df8bdfd",
+      "unchanged": true
+    },
+    ".gitignore": {
+      "expected_sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "actual_sha256": "e6d86c3c22bd8c82c44ef16353c25a0f7e445d1400d2d0f21a4d09046b498a5d",
+      "unchanged": true
+    },
+    "run-baseline.sh": {
+      "expected_sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "actual_sha256": "c34181e6abc0e0f3defa6b2a34a0215fc940b19f7cdb13e16f509068790879ba",
+      "unchanged": true
+    },
+    "UBUNTU_VM_IDS_AGENT_PLAN.md": {
+      "expected_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "actual_sha256": "793066ff7fed78dae1f1926c0e46f0c4c203019c4912d9496ec22f629be9d400",
+      "unchanged": true
+    },
+    "src/mlp_params.bpf.h": {
+      "expected_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "actual_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+      "unchanged": true
+    },
+    "src/.output/xdp": {
+      "expected_sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "actual_sha256": "8ed5580b4a68ff637180de33288528a9a2721fd84a99d8a8013f8d87b5204a0c",
+      "unchanged": true
+    },
+    "src/.output/hot_updating": {
+      "expected_sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "actual_sha256": "e0b444058e5257c5031a255236d1e238ef1d5484c40b6e55c909bc45a88f1a0a",
+      "unchanged": true
+    },
+    "src/.output/xdp.o": {
+      "expected_sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "actual_sha256": "d6ae3201ca961f761127f3ad9a0a09d94093fadbfe3ddaecff77cc2393a66cd4",
+      "unchanged": true
+    },
+    "src/.output/xdp.bpf.o": {
+      "expected_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "actual_sha256": "b2b45afbe73941934575bcf086c93bb9f86f5c4ab162655eb133597aa3aa5c76",
+      "unchanged": true
+    },
+    "src/.output/xdp.skel.h": {
+      "expected_sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "actual_sha256": "3e9e901b1dfab21508466f67c53ae7eef266ad8f4d402ca85f5da30495c0e77e",
+      "unchanged": true
+    },
+    "src/.output/vmlinux.h": {
+      "expected_sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "actual_sha256": "20c8af112c3b191301691942b50e24bfdd6da3add87255b8c9e21392b9d6fda0",
+      "unchanged": true
+    },
+    ".output/bpftool/bpftool": {
+      "expected_sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "actual_sha256": "68a18933005686b1e16a47ef1ec0906514f8680a4deadc09f3dcde43a3f14bc2",
+      "unchanged": true
+    },
+    ".output/libbpf/libbpf.a": {
+      "expected_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "actual_sha256": "0edb239dca269c835d4157328262579ed9661f9790ced855d00c3aa797cb37bd",
+      "unchanged": true
+    },
+    "libbpf/CHECKPOINT-COMMIT": {
+      "expected_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "actual_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "unchanged": true
+    },
+    "bpftool/CHECKPOINT-COMMIT": {
+      "expected_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "actual_sha256": "f4a9236072b3669678993cdfeb5ad423b4546228b98751c6bb193d51a0b4e3b2",
+      "unchanged": true
+    },
+    "evaluation/requirements.txt": {
+      "expected_sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "actual_sha256": "83091f9fd84f3e474a3b21d5f0f6e5d410a94a1a2063bddb4da436f676d36dc1",
+      "unchanged": true
+    },
+    "/boot/config-6.8.0-138-generic": {
+      "expected_sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "actual_sha256": "0ffca159bcee00c87b27e093889b710fe680ccfa37149e4e1ef8d5053e1e644c",
+      "unchanged": true
+    },
+    "/sys/kernel/btf/vmlinux": {
+      "expected_sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "actual_sha256": "3eab61c9c1fde515c548552ad83db2007c79f11f77597ec495de6ae85e589773",
+      "unchanged": true
+    }
+  },
+  "source_models_changed": false,
+  "management_network_changed": false,
+  "dependencies": {
+    "isolated_venv": ".output/test-env-stage-07/venv",
+    "locked_requirements": "test_env/requirements-dashboard.txt",
+    "resolved_log": "resolved-dashboard-dependencies.stdout.log",
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "system_and_evaluation_environment_modified": false
+  },
+  "checks": {
+    "pure_suite": {
+      "discovered": 55,
+      "passed": 46,
+      "root_skipped": 9
+    },
+    "ui_stopped_event_checks": {
+      "passed": 8,
+      "skipped": 0,
+      "seconds": 11.467
+    },
+    "real_ui_connections": 8,
+    "exact_public_kernel_results": 8,
+    "pending_flow_verified": true,
+    "reader_restart_visible": true,
+    "browser_offline_recovery": true,
+    "replay_exact_records": 16,
+    "responsive_viewport": {
+      "width": 390,
+      "height": 844,
+      "body_overflow": false
+    },
+    "http_rejections": {
+      "post": 405,
+      "foreign_host": 400,
+      "source_path": 404
+    },
+    "producer_cleanup_complete": true,
+    "lab_cleanup_complete": true,
+    "reader_exit_codes": [
+      0,
+      0
+    ]
+  },
+  "raw_artifacts": {
+    "evidence/stage-07/live-ui/service-report.json": {
+      "bytes": 38444,
+      "sha256": "36a617e4c23ea851da75803b73ebbca9a94f04c86c18a8e1af1f5f7289042620",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/live-ui/final-map-snapshot.json": {
+      "bytes": 7113,
+      "sha256": "cd06a3e52979aab2e2838016f3d7945cbbe723279de042e2fb0af25eda54907b",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/live-ui/final-collector.json": {
+      "bytes": 18564,
+      "sha256": "bd5be9639fba794e64844f45d9504231e3199de48f7498af3444d1587c36140c",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/replay-initial/service-report.json": {
+      "bytes": 2134,
+      "sha256": "4648bc386cf7afda6b276fe54c7665e56df7b88196dfee42df360543e414ade0",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/ui-stopped-kernel-events.stderr.log": {
+      "bytes": 1058,
+      "sha256": "a0ca61d214fd29b2c89cb019559fa8bdc6853fcaa4272c71148e40e86201190d",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/replay-render.webp": {
+      "bytes": 226054,
+      "sha256": "e29b1c3ce3514847e15b693f9384dbbe4326b1a5cb3e91cd681a73884de11c64",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/live-render.webp": {
+      "bytes": 217406,
+      "sha256": "a604c1be16c9b02d44a897c5c64578d5040a94a7b1390ed482d856c0aef72d40",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/reader-disconnected.webp": {
+      "bytes": 95496,
+      "sha256": "ff617dde263fa9240ed3391588f9a6305ef1b5c0940c5cda8066beb9d4333406",
+      "storage": "local, excluded from Git"
+    },
+    "evidence/stage-07/mobile-render.webp": {
+      "bytes": 25208,
+      "sha256": "70d428a06f2e7e0df7f95dd6dd396be47f274b234f7703fcad498c125d5a40ba",
+      "storage": "local, excluded from Git"
+    }
+  },
+  "limitations": [
+    "Private namespace TC/skb validation, not physical wire/Ethernet integration.",
+    "Numeric label meanings remain unverified; no benign/attack or accuracy claim.",
+    "Live lab service is localhost-only, read-only, bounded to at most240seconds; no production-daemon claim.",
+    "Kernel monotonic clocks are not wall-clock timestamps; unsafe JS integers display unavailable.",
+    "A bounded per-row map snapshot is not an atomic global transaction.",
+    "Physical Stage08 requires separate operator approval and host/WSL/bridge information."
+  ]
+}

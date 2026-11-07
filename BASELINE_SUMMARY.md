@@ -314,3 +314,14 @@ proved forwarding/inference continue while real ring/queue losses remain visible
 All 48 regressions passed with strict release of the new owned resources.
 Use `python -B -m test_env events` for isolated acceptance. Genuine live JSONL
 is retained for a separately gated, explicitly simulated dashboard replay.
+
+The read-only [Stage 07 dashboard](evidence/stage-07/gate.md) passes actual browser
+validation: eight real concurrent TCP connections produced eight exact displayed
+kernel results; a SYN-only flow remained pending. Reader restart and browser
+network loss showed stale/disconnected state and recovered. Replay preserves
+16 genuine recorded events under a persistent **SIMULATED REPLAY** banner.
+Numeric label meanings remain unverified; no accuracy or attack-detection claim.
+FastAPI/Uvicorn are pinned in a separate ignored virtual environment, not the
+evaluation environment. `python -B -m test_env.serve live|replay` serves localhost
+only and owns a bounded lab lifetime with graceful cleanup. Physical Stage 08
+requires separate operator approval and host/WSL/bridge details.

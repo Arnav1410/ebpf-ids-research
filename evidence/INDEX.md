@@ -13,8 +13,9 @@ Reference commit: `65c49c737b6791801cc98d9839b930b77ff42435` on preserved `basel
 | 04 — Bidirectional flow tracking | PASS | [Gate report](stage-04/gate.md), [provenance](stage-04/provenance.json) | Exact independent header/statistics parity, simultaneous TCP flows, same-key generation-safe GC, inspector and all 17 regressions passed; new resources released |
 | 05 — Original RX features and TC inference | PASS | [Gate report](stage-05/gate.md), [provenance](stage-05/provenance.json) | Exact six-stage integer parity; live repeated FIN/RST and concurrent flows; readiness/tail faults; all 40 regressions passed; new objects released |
 | 06 — Kernel-to-user event pipeline | PASS | [Gate report](stage-06/gate.md), [provenance](stage-06/provenance.json) | Versioned native events match kernel/oracle/packet prefixes; actual ring and queue overflow are visible; restart and all 48 regressions passed; new objects released |
+| 07 — Live dashboard and simulated replay | PASS | [Gate report](stage-07/gate.md), [provenance](stage-07/provenance.json), [browser proof](stage-07/live-browser-proof.json) | Actual Chromium live/map/result parity, reader and browser reconnect, explicit replay, responsive layout and UI-stopped kernel checks passed; new resources released |
 
-Stages 00–06 are accepted, with only the explicitly recorded original-baseline exceptions. Stage 07 and later require their own validation gates. Stage 10 remains optional and requires separate approval after Stage 09. Original raw failure evidence is not rewritten by gate acceptance.
+Stages 00–07 are accepted, with only the explicitly recorded original-baseline exceptions. Stage 08 is blocked on separate physical-network approval and host/WSL/bridge configuration; later stages retain their gates. Stage 10 remains optional and requires separate approval after Stage 09. Original raw failure evidence is not rewritten by gate acceptance.
 
 ## Stage 00 evidence files
 

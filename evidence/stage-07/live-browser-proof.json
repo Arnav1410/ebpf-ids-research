@@ -1,0 +1,120 @@
+{
+  "status": "pass",
+  "event_count": 8,
+  "pending_flows_observed": 1,
+  "concurrent_tcp_connections": 8,
+  "exact_rendered_sequence_flow_trigger_timestamp_and_label": true,
+  "exact_model_identity": true,
+  "read_only_map_flow_rows_equal": 1,
+  "source": {
+    "owner_pid": 42288,
+    "ring_map_id": 558,
+    "counters_map_id": 554,
+    "sequence_map_id": 559,
+    "slots_map_id": 550,
+    "control_map_id": 551,
+    "hook_counts_map_id": 544,
+    "flow_stats_map_id": 542,
+    "model_id": "036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756"
+  },
+  "reader_before": 42505,
+  "reader_after": 42660,
+  "reader_generation": 2,
+  "producer_identity_preserved": true,
+  "offline_status": "DISCONNECTED \u00b7 STALE",
+  "offline_notice": "Fetch failed. All values below are the last successful snapshot and are STALE. Retrying automatically every second.",
+  "recovered_status": "LIVE READER CONNECTED",
+  "browser_event_rows": [
+    [
+      "8",
+      "9",
+      "8",
+      "21776399320133",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "7",
+      "7",
+      "8",
+      "21776399307195",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "6",
+      "6",
+      "8",
+      "21776399147871",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "5",
+      "8",
+      "8",
+      "21776399140209",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "4",
+      "5",
+      "8",
+      "21776398695213",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "3",
+      "4",
+      "8",
+      "21776398504264",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "2",
+      "3",
+      "8",
+      "21776398460493",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ],
+    [
+      "1",
+      "2",
+      "8",
+      "21776398356746",
+      "1 \u00b7 UNVERIFIED",
+      "0 \u00b7 completed",
+      "fin",
+      "8"
+    ]
+  ],
+  "exact_final_kernel_result_ledger": true,
+  "owned_program_map_release": true,
+  "remaining_owned_ids": {
+    "map": [],
+    "prog": []
+  },
+  "lab_cleanup_complete": true,
+  "reader_exit_codes": [
+    0,
+    0
+  ]
+}

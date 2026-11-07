@@ -1,0 +1,7 @@
+{
+  "notes": [
+    "Initial parent readiness helper tried to read the root-private live log directory; corrected to observe the parent-owned stdout readiness line without weakening permissions. The service itself had started successfully.",
+    "Initial browser assertion used the wrong caption word order (retained/shown); corrected to inspect the actual event-count element and compare every rendered event against API and kernel ledger. No application failure was suppressed."
+  ],
+  "services_exited_cleanly": true
+}

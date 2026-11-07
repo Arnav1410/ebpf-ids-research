@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Kernel flow observatory</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="heading-row">
+      <div><p class="eyebrow">Localhost · read-only observability</p><h1>Kernel flow observatory</h1></div>
+      <div class="connection"><span id="connection-status" role="status" aria-live="polite">CONNECTING</span><span id="poll-status">Waiting for the first snapshot</span></div>
+    </div>
+    <div id="mode-banner" class="mode-banner unknown" role="status">WAITING FOR SOURCE — mode not yet known</div>
+    <p id="freshness-notice" class="notice" role="status">No data received. The dashboard does not perform inference or control the producer.</p>
+  </header>
+
+  <main id="dashboard" aria-label="Telemetry dashboard">
+    <section aria-labelledby="overview-heading">
+      <div class="section-heading"><h2 id="overview-heading">At a glance</h2><span class="muted">Kernel-produced results · no client-side inference</span></div>
+      <div class="metrics">
+        <article class="metric"><h3>TC ingress / RX</h3><p class="metric-value" id="ingress-rate">unavailable</p><p class="muted">packets / second · hook observation</p></article>
+        <article class="metric"><h3>TC egress / TX</h3><p class="metric-value" id="egress-rate">unavailable</p><p class="muted">packets / second · hook observation</p></article>
+        <article class="metric"><h3>Inference completions</h3><p class="metric-value" id="inference-rate">unavailable</p><p class="muted">per second · measured counter delta</p></article>
+        <article class="metric"><h3>Last retained kernel prediction</h3><p class="metric-value" id="last-prediction">unavailable</p><p class="muted" id="prediction-context">Latest arrival, not highest sequence</p></article>
+      </div>
+      <p class="scope-note" id="rate-scope">Rates unavailable until measured. RX/TX are TC hooks, not canonical A → B / B → A flow directions.</p>
+      <div class="panel label-summary">
+        <div><span class="small-label">Numeric label 0</span><strong id="label-zero">unavailable</strong><span class="tag">meaning UNVERIFIED</span></div>
+        <div><span class="small-label">Numeric label 1</span><strong id="label-one">unavailable</strong><span class="tag">meaning UNVERIFIED</span></div>
+        <div><span class="small-label">Failed classifications</span><strong id="failed-classifications">unavailable</strong></div>
+        <p id="label-scope" class="muted">No accuracy or class meaning is implied by numeric labels.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="flows-heading">
+      <div class="section-heading"><h2 id="flows-heading">Flow inspection</h2><span id="flow-counts" class="muted">Waiting for flow data</span></div>
+      <p id="flow-scope" class="scope-note">Flow inspection is bounded; a missing row does not mean the flow never existed.</p>
+      <div class="flow-layout">
+        <div class="panel table-panel">
+          <div class="table-scroll" tabindex="0" aria-label="Flow table, scroll horizontally for all columns">
+            <table id="flow-table">
+              <caption>Retained flows · select a row for observed counts and kernel result</caption>
+              <thead><tr><th scope="col">Flow ID</th><th scope="col">Canonical tuple A ↔ B</th><th scope="col">Classification</th><th scope="col">Flow state</th><th scope="col">Packets A → B / B → A</th><th scope="col">Inspect</th></tr></thead>
+              <tbody id="flow-body"><tr><td colspan="6" class="empty">Waiting for the first snapshot</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <aside class="panel flow-detail" aria-labelledby="details-heading">
+          <div class="section-heading"><h3 id="details-heading">Flow details</h3><button id="clear-selection" type="button" disabled>Clear</button></div>
+          <div id="flow-details"><p class="muted">Select a flow to inspect its recorded state. Pending / unclassified is not a numeric prediction.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section aria-labelledby="events-heading">
+      <div class="section-heading"><h2 id="events-heading">Classification events <span id="event-count" class="count">—</span></h2><label class="filter"><input id="selected-only" type="checkbox" disabled> Selected flow only</label></div>
+      <p id="event-scope" class="scope-note">Complete bounded arrival history is refreshed each poll, including out-of-order sequences. Newest arrivals first below.</p>
+      <div class="panel table-panel"><div class="table-scroll" tabindex="0" aria-label="Classification events, scroll horizontally for all columns">
+        <table id="event-table">
+          <caption id="event-caption">Waiting for retained events</caption>
+          <thead><tr><th scope="col">Sequence</th><th scope="col">Flow ID</th><th scope="col">Trigger ordinal</th><th scope="col">Kernel monotonic timestamp (ns)</th><th scope="col">Numeric label</th><th scope="col">Status</th><th scope="col">Trigger</th><th scope="col">Counts ordinal</th></tr></thead>
+          <tbody id="event-body"><tr><td colspan="8" class="empty">Waiting for the first snapshot</td></tr></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <section aria-labelledby="loss-heading">
+      <div class="section-heading"><h2 id="loss-heading">Loss & retention</h2><span class="muted">Independent observations — never summed</span></div>
+      <div class="loss-grid">
+        <article class="panel"><h3>Kernel ring-buffer drops</h3><p class="metric-value" id="kernel-drops">unavailable</p><p class="muted">Producer event_dropped counter; unavailable before source telemetry.</p></article>
+        <article class="panel"><h3>Python queue drops</h3><p class="metric-value" id="python-drops">unavailable</p><p id="queue-status" class="muted">Queue occupancy unavailable</p></article>
+        <article class="panel"><h3>Unobserved sequence holes</h3><p class="metric-value" id="sequence-holes">unavailable</p><p id="sequence-scope" class="muted">Not a drop total. Recent holes can heal after cross-CPU reordering.</p></article>
+      </div>
+      <details class="panel diagnostics"><summary>Retention, journal & diagnostics</summary><dl id="diagnostic-details" class="facts"><dt>Collector</dt><dd>unavailable</dd></dl><div id="collector-errors"></div></details>
+    </section>
+
+    <section class="panel source-panel" aria-labelledby="source-heading">
+      <div class="section-heading"><h2 id="source-heading">Source identity</h2><span class="muted">Reported identity, not a provenance certificate</span></div>
+      <dl id="source-details" class="facts"><dt>Source</dt><dd>unavailable</dd></dl>
+      <details><summary>Raw observed counters & attachment metadata</summary><pre id="source-counters">unavailable</pre></details>
+      <p class="scope-note">Hook program IDs, when present, were verified at start only; they do not prove current attachment. Kernel clocks stay in monotonic nanoseconds, never wall-clock time.</p>
+    </section>
+    <p id="precision-notice" class="notice precision">Integer safety: values outside JavaScript’s exact integer range are displayed as unavailable, not rounded claims.</p>
+  </main>
+  <footer>Local collector surface · read-only GET requests · refresh every second · no external assets</footer>
+</body>
+</html>

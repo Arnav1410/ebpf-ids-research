@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "layout": {
+    "viewport": 390,
+    "bodyWidth": 390,
+    "banner": "SIMULATED REPLAY \u2014 recorded data only \u00b7 not a live producer"
+  },
+  "security_statuses": {
+    "post": 405,
+    "foreign_host": 400,
+    "source_path": 404
+  },
+  "headers": {
+    "date": "Sat, 07 Nov 2026 05:55:36 GMT",
+    "server": "uvicorn",
+    "content-length": "854",
+    "content-type": "application/json",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "cache-control": "no-store",
+    "Connection": "close"
+  }
+}

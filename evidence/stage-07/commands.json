@@ -1,0 +1,317 @@
+[
+  {
+    "label": "create-isolated-venv",
+    "argv": [
+      "/usr/bin/python3",
+      "-m",
+      "venv",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv"
+    ],
+    "exit_code": 0,
+    "stdout": "create-isolated-venv.stdout.log",
+    "stderr": "create-isolated-venv.stderr.log"
+  },
+  {
+    "label": "install-dashboard-dependencies",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "pip",
+      "install",
+      "--only-binary=:all:",
+      "-r",
+      "/home/poggers/NN-eBPF/test_env/requirements-dashboard.txt"
+    ],
+    "exit_code": 0,
+    "stdout": "install-dashboard-dependencies.stdout.log",
+    "stderr": "install-dashboard-dependencies.stderr.log"
+  },
+  {
+    "label": "resolved-dashboard-dependencies",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "pip",
+      "freeze",
+      "--all"
+    ],
+    "exit_code": 0,
+    "stdout": "resolved-dashboard-dependencies.stdout.log",
+    "stderr": "resolved-dashboard-dependencies.stderr.log"
+  },
+  {
+    "label": "pure-regressions",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "test_env/tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "pure-regressions.stdout.log",
+    "stderr": "pure-regressions.stderr.log"
+  },
+  {
+    "label": "replay-initial",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "replay",
+      "--out",
+      "/home/poggers/NN-eBPF/evidence/stage-07/replay-initial",
+      "--port",
+      "8765",
+      "--seconds",
+      "240",
+      "--sample",
+      "/home/poggers/NN-eBPF/evidence/stage-06/safety/test_live_event_parity_overflows_restart_and_owned_release/sample-live-events.jsonl",
+      "--interval",
+      "0.1"
+    ],
+    "pid": 41764,
+    "spawned": true
+  },
+  {
+    "label": "replay-initial-exit",
+    "pid": 41764,
+    "exit_code": 0,
+    "report": "replay-initial/service-report.json"
+  },
+  {
+    "label": "live-ui",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "live",
+      "--out",
+      "/home/poggers/NN-eBPF/evidence/stage-07/live-ui",
+      "--port",
+      "8765",
+      "--seconds",
+      "240",
+      "--loader",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-06/build/nn-loader",
+      "--object",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-06/build/nn.bpf.o",
+      "--bpftool",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool"
+    ],
+    "pid": 42142,
+    "spawned": true
+  },
+  {
+    "label": "send-pending-flow",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_client",
+      "--",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.flow_fixture",
+      "send",
+      "--interface",
+      "veth-idsc",
+      "--manifest",
+      "/home/poggers/NN-eBPF/evidence/stage-07/pending-frames.json"
+    ],
+    "exit_code": 0,
+    "stdout": "send-pending-flow.stdout.log",
+    "stderr": "send-pending-flow.stderr.log"
+  },
+  {
+    "label": "tcp8-clients",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_client",
+      "--",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.flow_fixture",
+      "clients",
+      "--count",
+      "8"
+    ],
+    "exit_code": 0,
+    "stdout": "tcp8-clients.stdout.log",
+    "stderr": "tcp8-clients.stderr.log"
+  },
+  {
+    "label": "tcp8-server",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_server",
+      "--",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "test_env.flow_fixture",
+      "server",
+      "--ready",
+      "/home/poggers/NN-eBPF/evidence/stage-07/tcp8-ready.json",
+      "--count",
+      "8"
+    ],
+    "exit_code": 0
+  },
+  {
+    "label": "stop-native-reader",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "kill",
+      "-TERM",
+      "42505"
+    ],
+    "exit_code": 0,
+    "stdout": "stop-native-reader.stdout.log",
+    "stderr": "stop-native-reader.stderr.log"
+  },
+  {
+    "label": "restart-native-reader",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "kill",
+      "-HUP",
+      "42143"
+    ],
+    "exit_code": 0,
+    "stdout": "restart-native-reader.stdout.log",
+    "stderr": "restart-native-reader.stderr.log"
+  },
+  {
+    "label": "read-only-owned-flow-inspection",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "nsenter",
+      "--net=/run/netns/ids_server",
+      "--",
+      "/home/poggers/NN-eBPF/.output/test-env-stage-06/build/flow-inspect",
+      "542",
+      "veth-idss",
+      "/run/netns/ids_server",
+      "--owner-pid",
+      "42288"
+    ],
+    "exit_code": 0,
+    "stdout": "read-only-owned-flow-inspection.stdout.log",
+    "stderr": "read-only-owned-flow-inspection.stderr.log"
+  },
+  {
+    "label": "live-ui-stop",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "kill",
+      "-TERM",
+      "42143"
+    ],
+    "exit_code": 0,
+    "stdout": "live-ui-stop.stdout.log",
+    "stderr": "live-ui-stop.stderr.log"
+  },
+  {
+    "label": "live-ui-exit",
+    "pid": 42142,
+    "exit_code": 0,
+    "report": "live-ui/service-report.json"
+  },
+  {
+    "label": "ui-stopped-kernel-events",
+    "argv": [
+      "sudo",
+      "-S",
+      "-p",
+      "",
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=10s",
+      "180s",
+      "env",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "NN_EBPF_RUN_LAB_TESTS=1",
+      "NN_EBPF_LAB_EVIDENCE_ROOT=/home/poggers/NN-eBPF/evidence/stage-07/ui-stopped-safety",
+      "NN_EBPF_TC_LOADER=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/probe-loader",
+      "NN_EBPF_TC_OBJECT=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/probe.bpf.o",
+      "NN_EBPF_FLOW_LOADER=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/flow-loader",
+      "NN_EBPF_FLOW_OBJECT=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/flow.bpf.o",
+      "NN_EBPF_NN_LOADER=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/nn-loader",
+      "NN_EBPF_NN_OBJECT=/home/poggers/NN-eBPF/.output/test-env-stage-06/build/nn.bpf.o",
+      "NN_EBPF_BPFTOOL=/home/poggers/NN-eBPF/.output/test-env-stage-01/deps/bpftool/bpftool",
+      "/home/poggers/NN-eBPF/.output/evaluation-venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "test_env.tests.test_events",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "ui-stopped-kernel-events.stdout.log",
+    "stderr": "ui-stopped-kernel-events.stderr.log"
+  },
+  {
+    "label": "replay-mobile",
+    "argv": [
+      "/home/poggers/NN-eBPF/.output/test-env-stage-07/venv/bin/python",
+      "-B",
+      "-m",
+      "test_env.serve",
+      "replay",
+      "--out",
+      "/home/poggers/NN-eBPF/evidence/stage-07/replay-mobile",
+      "--port",
+      "8765",
+      "--seconds",
+      "30",
+      "--sample",
+      "/home/poggers/NN-eBPF/evidence/stage-06/safety/test_live_event_parity_overflows_restart_and_owned_release/sample-live-events.jsonl",
+      "--interval",
+      "0.05"
+    ],
+    "pid": 45051,
+    "spawned": true
+  },
+  {
+    "label": "replay-mobile-exit",
+    "pid": 45051,
+    "exit_code": 0,
+    "report": "replay-mobile/service-report.json"
+  }
+]

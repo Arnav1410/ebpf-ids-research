@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "api_event_count": 16,
+  "exact_recorded_events": true,
+  "simulated_envelopes": true,
+  "native_connected": false,
+  "banner": "SIMULATED REPLAY \u2014 recorded data only \u00b7 not a live producer",
+  "connection": "REPLAY API CONNECTED",
+  "flow_details": "Scored \u00b7 numeric label 1\n\nFlow ID\n4\nCanonical tuple\n33.33.33.1:15020 \u2194 33.33.33.73:41020\nProtocol / ifindex\n6 / 2\nInitiator\nunavailable\nState\nreset\nCurrently active\nunavailable\nObserved ordinal\n5\nFirst (monotonic ns)\nunavailable\nLast (monotonic ns)\n20500662762572\nClosed (monotonic ns)\nunavailable\nCanonical direction observations\nObserved field\tA \u2192 B\tB \u2192 A\nPackets\t0\t5\nIPv4 bytes\t0\t200\nTCP segment bytes\t0\t100\nTCP header bytes\t0\t100\nMin segment bytes\tunavailable\tunavailable\nMax segment bytes\tunavailable\tunavailable\nFirst monotonic ns\tunavailable\tunavailable\nLast monotonic ns\tunavailable\tunavailable\nMax IAT ns\tunavailable\tunavailable\n\nCanonical directions are not RX/TX. Zero-valued fields are shown as reported; missing values are unavailable.\n\nLast retained kernel classification\nNumeric label\n1\nLabel meaning\nUNVERIFIED\nStatus code\n0\nSequence\n6\nTrigger\nrst\nTrigger ordinal\n5\nTimestamp (monotonic ns)\n20500662762572\nModel ID\n036d6da2f963ef21c63ecb6f2d3a45a22cde4269929fc7c85c917f6e74c6c756\nStage bitmap\n63\nFeatures (recorded)\n[ 20, 16468, 20, 15020, 100, 5 ]\nOutput (recorded)\n[ -359205, 310838 ]\nCounts valid\nyes\nCounts ordinal\n5\nCounts timestamp (monotonic ns)\n20500662762572"
+}
