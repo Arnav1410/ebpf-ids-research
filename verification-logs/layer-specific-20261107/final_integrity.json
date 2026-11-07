@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "baseline_commit": "791e25932e01a8e457c81237fdc8da2ea971b32e",
+  "branch": "feature/layer-specific-fixed-point",
+  "new_commits": 0,
+  "protected_paths_unchanged": [
+    "src",
+    "validation",
+    "run-baseline.sh",
+    "Makefile",
+    "tc/abi.h",
+    "tc/flow_key.h",
+    "tc/traffic.py",
+    "tc/packet_witness.py"
+  ],
+  "git_diff_check": "PASS",
+  "report_local_links": "PASS",
+  "benchmark_manifest_changes_after_review": [
+    "tc/README.md",
+    "quantization/README.md"
+  ],
+  "note": "Only final README evidence descriptions changed after benchmark; all inference sources and binaries still match. Fresh preparations required for reruns."
+}

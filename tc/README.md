@@ -5,6 +5,13 @@ at **TC ingress**. It preserves the XDP source, baseline runner, model arrays,
 training scripts and validation framework. Work is restricted to a `feature/`
 branch; this implementation was prepared on `feature/tc-ingress-prototype`.
 
+The optional [offline-calibrated arithmetic experiment](../quantization/README.md)
+adds `--mode layer_specific` as a separately built inference variant.
+`--mode static_q16` remains the default. Both modes passed actual attached
+ingress/egress regression tests and private kernel benchmarking. The calibrated
+mode improved numerical fidelity but was slower in the measured WSL2 workloads.
+Neither mode changes the monitoring directions or six ingress-based MLP features.
+
 ## Phase 1 concurrency update (kernel gate passed)
 
 Phase 1 was developed on `feature/tc-concurrency-bidirectional`, based

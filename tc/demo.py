@@ -19,6 +19,7 @@ from zoneinfo import ZoneInfo
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 sys.path.insert(0, str(ROOT / 'validation'))
 sys.path.insert(0, str(ROOT / 'tc/tests'))
 from reference import Model, STAGES
@@ -70,6 +71,21 @@ def branch():
     return r.stdout.strip()
 
 
+def controller_for(mode):
+    return ROOT/('tc/.output/controller_layer' if mode=='layer_specific' else 'tc/.output/controller')
+
+
+def object_for(mode):
+    return ROOT/('tc/.output/tc_ids_layer.bpf.o' if mode=='layer_specific' else 'tc/.output/tc_ids.bpf.o')
+
+
+def reference_for(mode):
+    if mode=='layer_specific':
+        from quantization.reference import LayerModel
+        return LayerModel.load()
+    return Model.load(ROOT/'src/mlp_params.bpf.h')
+
+
 def finish(output, result):
     (output/'results.json').write_text(json.dumps(result, indent=2)+'\n')
     display=result
@@ -94,31 +110,47 @@ def prepare(args):
     out = (args.output or ROOT/'verification-logs'/('tc-prepare-'+stamp())).resolve()
     out.mkdir(parents=True,exist_ok=False)
     log = Log(out); before = protected()
-    result = dict(preparation='FAIL', runtime='NOT RUN', optional_egress='NOT IMPLEMENTED')
+    result = dict(preparation='FAIL',runtime='NOT RUN',optional_egress='NOT RUN',inference_mode=args.mode,kernel_only=args.kernel_only)
     try:
         result['branch'] = branch()
         result['commit'] = log.command(['git','rev-parse','HEAD'],'commit').stdout.strip()
         result['kernel'] = log.command(['uname','-r'],'kernel').stdout.strip()
         log.command(['clang-12','--version'],'compiler')
         log.command([ROOT/'.output/bpftool/bpftool','version'],'bpftool')
-        log.command(['make','-C','tc'],'build')
-        for name in ('tc_min','tc_ids'):
+        if args.mode=='layer_specific':
+            host=json.loads((ROOT/'verification-logs/layer-specific-20261107/host_results.json').read_text())
+            metrics=json.loads((ROOT/'verification-logs/layer-specific-20261107/numerical_metrics.json').read_text())
+            need(host['status']=='PASS' and host['mismatches']==0 and not metrics['arithmetic_events'],'Earlier numerical gates did not pass')
+            need(host['parameter_sha256']==reference_for(args.mode).config['parameter_sha256'],'Gate 3 parameters differ')
+        log.command(['make','-C','tc']+(['layer-specific'] if args.mode=='layer_specific' else []),'build')
+        inspections=[('tc_min','static_q16'),('tc_ids','static_q16')]
+        if args.mode=='layer_specific':inspections.append(('tc_ids_layer','layer_specific'))
+        for name,arithmetic in inspections:
             directory = out/name; directory.mkdir()
-            log.command([ROOT/'tc/.output/controller','--inspect',ROOT/f'tc/.output/{name}.bpf.o',directory], 'inspect-'+name)
-        log.command(['clang-12','-O3','-shared','-fPIC','-pthread','-I'+str(ROOT/'tc/tests/include'),
-                     '-I'+str(ROOT/'validation/include'),ROOT/'tc/tests/native.c','-o',out/'host-tc.so'],'build-host-tests')
-        test_tc.CONTEXT = out/'host-tc.so', ROOT
-        with (out/'tests.log').open('w') as stream:
-            tests = unittest.TextTestRunner(stream=stream, verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test_tc))
-        need(tests.wasSuccessful(),'TC host tests failed; see tests.log')
-        result['nonprivileged_tests'] = dict(run=tests.testsRun, failures=len(tests.failures), errors=len(tests.errors))
+            log.command([controller_for(arithmetic),'--inspect',ROOT/f'tc/.output/{name}.bpf.o',directory], 'inspect-'+name)
+        result['nonprivileged_tests']={}
+        for arithmetic in (('static_q16','layer_specific') if args.kernel_only else (args.mode,)):
+            target=out/f'host-tc-{arithmetic}.so'
+            log.command(['clang-12','-O3','-shared','-fPIC','-pthread']+(['-DIDS_LAYER_SPECIFIC'] if arithmetic=='layer_specific' else [])+
+                        ['-I'+str(ROOT/'tc/tests/include'),'-I'+str(ROOT/'validation/include'),ROOT/'tc/tests/native.c','-o',target],'build-host-'+arithmetic)
+            test_tc.CONTEXT=target,ROOT,arithmetic
+            with (out/f'tests-{arithmetic}.log').open('w') as stream:
+                tests=unittest.TextTestRunner(stream=stream,verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test_tc))
+            need(tests.wasSuccessful(),f'TC host tests failed for {arithmetic}')
+            result['nonprivileged_tests'][arithmetic]=dict(run=tests.testsRun,failures=len(tests.failures),errors=len(tests.errors))
         need(before == protected(),'Protected baseline files changed')
         result['protected_files'] = 'UNCHANGED'
         manifest = {str(p.relative_to(ROOT)): sha(p) for p in (ROOT/'tc').rglob('*') if p.is_file() and '__pycache__' not in p.parts}
+        manifest.update({str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'quantization').rglob('*')
+                         if p.is_file() and '__pycache__' not in p.parts and '.output' not in p.parts})
         manifest['run-tc-smoke.sh'] = sha(ROOT/'run-tc-smoke.sh')
         (out/'manifest.json').write_text(json.dumps(dict(protected=before, prototype=manifest),indent=2)+'\n')
         result['preparation'] = 'PASS'
         result['approval_command'] = f'sudo -n /usr/bin/python3 {ROOT / "tc/demo.py"} --run {out}'
+        result['approval_command']+=f' --mode {args.mode}'
+        if args.kernel_only:
+            result['approval_command']+=' --kernel-only'
+            result['arithmetic_kernel_gate']='PENDING: real verifier and kernel tensors required'
         if args.phase1:
             result['approval_command'] += ' --phase1'
             result['phase1_gate'] = 'PENDING: actual kernel suite and live ingress tests required'
@@ -135,13 +167,13 @@ def prepare(args):
 
 
 class Loader:
-    def __init__(self, log, mode, inode):
+    def __init__(self, log, mode, inode, arithmetic='static_q16'):
         self.directory = log.output/mode; self.directory.mkdir()
         self.events = []; self.log = log; self.ready = None; self.pending = b''; self.stopped = False
         self.err = (self.directory/'controller.log').open('w')
         minimal=mode in ('minimal','egress-counter')
-        argv = ['ip','netns','exec',SERVER,str(ROOT/'tc/.output/controller'),'--run',
-                str(ROOT/f'tc/.output/{"tc_min" if minimal else "tc_ids"}.bpf.o'),SIF,str(inode),str(self.directory)]
+        argv = ['ip','netns','exec',SERVER,str(controller_for('static_q16' if minimal else arithmetic)),'--run',
+                str(ROOT/'tc/.output/tc_min.bpf.o' if minimal else object_for(arithmetic)),SIF,str(inode),str(self.directory)]
         if mode=='egress-counter': argv.append('--egress-counter')
         if mode.startswith('bidirectional'):argv.append('--bidirectional')
         if not minimal:argv+=['--client-ip','33.33.33.73']
@@ -236,8 +268,8 @@ def verify_private_ids(log, directory, identity):
         program_ids=identity['program_ids'], map_ids=identity['map_ids'],
         all_absent=True, method='BPF_*_GET_NEXT_ID; no object FDs opened'), indent=2)+'\n')
 
-def compare_records(records):
-    model=Model.load(ROOT/'src/mlp_params.bpf.h')
+def compare_records(records,mode='static_q16'):
+    model=reference_for(mode)
     for r in records:
         need(r['mask']==63 and r['model_slot']==0,'Incomplete six-stage prediction')
         arithmetic=[]; expected,label=model.infer(r['features'],arithmetic)
@@ -247,10 +279,10 @@ def compare_records(records):
                 integers=sum(sum(len(t) for t in r['tensors']) for r in records))
 
 
-def kernel_checks(log,bidirectional=False):
+def kernel_checks(log,bidirectional=False,mode='static_q16'):
     name='bidirectional-kernel-checks' if bidirectional else 'kernel-checks'
     directory=log.output/name; directory.mkdir()
-    r=log.command([ROOT/'tc/.output/controller','--bidirectional-tests' if bidirectional else '--kernel-tests',ROOT/'tc/.output/tc_ids.bpf.o',directory],
+    r=log.command([controller_for(mode),'--bidirectional-tests' if bidirectional else '--kernel-tests',object_for(mode),directory],
                   name,check=False)
     (directory/'events.jsonl').write_text(r.stdout)
     (directory/'controller.log').write_text(r.stderr)
@@ -258,6 +290,10 @@ def kernel_checks(log,bidirectional=False):
     loaded=next((e for e in events if e['event']=='loaded'),None)
     if loaded: verify_private_ids(log,directory,loaded)
     need(r.returncode==0,'Kernel concurrency/failure suite failed; inspect kernel-checks.log and verifier logs')
+    recorded_model=next(e for e in events if e['event']=='model')
+    need(recorded_model['bytes_per_slot']==len(reference_for(mode).packed()) and recorded_model['slots_verified']==2,'Wrong model representation loaded')
+    snapshot=next(e for e in events if e['event']=='snapshot')
+    need(snapshot['inference_mode']==mode,'Kernel numerical mode mismatch')
     cases={e['name'] for e in events if e['event']=='kernel_case' and e['assertions']=='PASS'}
     if bidirectional:
         need(cases=={'fixed_mean_above_below_full_chain','bidirectional_same_flow','bidirectional_distinct_flows',
@@ -271,7 +307,7 @@ def kernel_checks(log,bidirectional=False):
         need(same['packets']==514 and same['hooks']['ingress']['packets']==514
              and same['hooks']['egress']['packets']==514,'Bidirectional same-flow counts')
         need(all(f['state']==2 for f in s['flows']),'Bidirectional flow not complete')
-        comparisons=compare_records(s['results'])
+        comparisons=compare_records(s['results'],mode)
         (directory/'comparisons.json').write_text(json.dumps(comparisons,indent=2)+'\n')
         return dict(status='PASS',cases=sorted(cases),numerical=comparisons,same_flow=same,
                     scheduling='CPU-pinned workers on both programs; exact overlap not forced',cleanup='PASS')
@@ -287,7 +323,7 @@ def kernel_checks(log,bidirectional=False):
     need(same['packets']==4*257+5 and same['bytes']==20*same['packets'] and same['duplicates']==8,
          'Same-flow counters inconsistent')
     need(all(f['state']==2 for f in s['flows']),'Flow left running or retry incomplete')
-    comparisons=compare_records(s['results'])
+    comparisons=compare_records(s['results'],mode)
     (directory/'comparisons.json').write_text(json.dumps(comparisons,indent=2)+'\n')
     return dict(status='PASS', cases=sorted(cases), numerical=comparisons,
                 same_flow=same, scheduling='CPU-pinned workers; exact overlap not forced',
@@ -304,6 +340,43 @@ def qdisc_cleanup(log, directory):
     q=json.loads(log.command(['ip','netns','exec',SERVER,'tc','-j','qdisc','show','dev',SIF]).stdout)
     if any(v['kind']=='clsact' for v in q):
         log.command(['ip','netns','exec',SERVER,'tc','qdisc','del','dev',SIF,'clsact'])
+
+
+def numerical_kernel_checks(log):
+    directory=log.output/'numerical-rejections';directory.mkdir()
+    r=log.command([controller_for('layer_specific'),'--numerical-tests',object_for('layer_specific'),directory],
+                  'numerical-rejections',check=False)
+    (directory/'events.jsonl').write_text(r.stdout);(directory/'controller.log').write_text(r.stderr)
+    events=[json.loads(s) for s in r.stdout.splitlines()]
+    loaded=next((e for e in events if e['event']=='loaded'),None)
+    if loaded:verify_private_ids(log,directory,loaded)
+    need(r.returncode==0,'Kernel rejection suite failed; inspect numerical-rejections.log')
+    snapshot=next(e for e in events if e['event']=='snapshot')
+    need(snapshot['numerical_diagnostics']==dict(configuration=0,range=6,overflow=1,parameters=1),'Wrong numerical diagnostics')
+    need(snapshot['predictions']==0 and not snapshot['results'] and snapshot['inference_failures']==8,'Invalid arithmetic published success')
+    need(len(snapshot['flows'])==8 and all(f['state']==0 and f['failures']==1 for f in snapshot['flows']),'Numerical failure did not unwind')
+    return dict(status='PASS',rejected_fixtures=8,diagnostics=snapshot['numerical_diagnostics'],cleanup='PASS')
+
+
+def run_kernel_only(args,manifest,out):
+    result=dict(kernel_execution='FAIL',network_attachments='NOT RUN; no interfaces or namespaces created',
+                live_tc='NOT RUN (later gate)',benchmark='NOT RUN',kernel_modes={})
+    try:
+        for mode in ('static_q16','layer_specific'):
+            directory=out/mode;directory.mkdir();log=Log(directory)
+            result['kernel_modes'][mode]=dict(regression=kernel_checks(log,mode=mode),
+                bidirectional_concurrency=kernel_checks(log,True,mode))
+            if mode=='layer_specific':result['numerical_rejections']=numerical_kernel_checks(log)
+        result['kernel_execution']='PASS'
+    except Exception as error:result['error']=str(error)
+    finally:
+        directories=[p.parent for p in out.rglob('events.jsonl')]
+        result['cleanup']='PASS' if directories and all((p/'ids-absent.json').exists() and
+            json.loads((p/'ids-absent.json').read_text())['all_absent'] for p in directories) else 'NOT VERIFIED'
+        result['protected_files']='UNCHANGED' if all(sha(ROOT/name)==expected for name,expected in manifest['protected'].items()) else 'CHANGED'
+        result['arithmetic_kernel_gate']='PASS' if result['kernel_execution']=='PASS' and result['cleanup']=='PASS' and result['protected_files']=='UNCHANGED' else 'FAIL'
+        finish(out,result)
+    return int(result['arithmetic_kernel_gate']!='PASS')
 
 
 def cleanup_loader(log, loader):
@@ -358,23 +431,27 @@ def traffic(log, mode, port, count=1, repeat=1):
 def run(args):
     need(os.geteuid()==0,'--run needs an approved sudo invocation')
     bundle=args.run.resolve(); manifest=json.loads((bundle/'manifest.json').read_text())
-    need(json.loads((bundle/'results.json').read_text())['preparation']=='PASS','Preparation did not pass')
+    prepared=json.loads((bundle/'results.json').read_text())
+    need(prepared['preparation']=='PASS','Preparation did not pass')
+    need(prepared.get('inference_mode','static_q16')==args.mode,'Run mode differs from prepared mode')
+    need(prepared.get('kernel_only',False)==args.kernel_only,'Run scope differs from approved/prepared scope')
     branch()
     for group in manifest.values():
         for name, expected in group.items(): need(sha(ROOT/name)==expected,f'Prepared source/build changed: {name}; prepare again')
     out=bundle/('run-'+stamp()); out.mkdir(); print(f'TC evidence: {out}',flush=True)
+    if args.kernel_only:return run_kernel_only(args,manifest,out)
     log=Log(out); owned={}; loader=None; witness=None; lock=None
-    result=dict(minimal_ingress='NOT RUN', full_inference='NOT RUN', cleanup='NOT RUN', optional_egress='NOT IMPLEMENTED')
+    result=dict(minimal_ingress='NOT RUN',full_inference='NOT RUN',cleanup='NOT RUN',optional_egress='NOT RUN',inference_mode=args.mode)
     try:
         lock=open('/run/tcids-demo.lock','a+'); fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         names=[s.split()[0] for s in log.command(['ip','netns','list'],'namespaces-before').stdout.splitlines()]
         need(SERVER not in names and CLIENT not in names,'Demo namespace names already exist')
         if args.phase1 or args.phase2:
             result['kernel_checks']='FAIL'
-            result['kernel_checks']=kernel_checks(log)
+            result['kernel_checks']=kernel_checks(log,mode=args.mode)
         if args.phase2:
             result['bidirectional_kernel_checks']='FAIL'
-            result['bidirectional_kernel_checks']=kernel_checks(log,True)
+            result['bidirectional_kernel_checks']=kernel_checks(log,True,args.mode)
         for name in (SERVER,CLIENT):
             log.command(['ip','netns','add',name]); owned[name]=(Path('/run/netns')/name).stat().st_ino
             (out/'owned.json').write_text(json.dumps(owned,indent=2)+'\n')
@@ -396,7 +473,7 @@ def run(args):
             if mode=='inference' and args.minimal_only: break
             info=json.loads(log.command(['ip','-n',SERVER,'-j','-d','link','show','dev',SIF]).stdout)[0]
             need(info['linkinfo']['info_kind']=='veth' and info.get('ifalias')==token,'Interface ownership mismatch')
-            loader=Loader(log,mode,owned[SERVER])
+            loader=Loader(log,mode,owned[SERVER],args.mode)
             loader.read('ready')
             filters=log.command(['ip','netns','exec',SERVER,'tc','-j','filter','show','dev',SIF,'ingress'],mode+'-attachment')
             require_attached_filter(filters.stdout, loader.ready['program_id'])
@@ -448,7 +525,9 @@ def run(args):
                 need(all(v>=1 for v in snapshot['stages']),'Not all six tail-call stages executed')
                 records=[r for r in snapshot['results'] if port<=r['source_port']<port+count]
                 need(len(records)==count,'Missing or mixed controlled-flow predictions')
-                comparisons=compare_records(records)
+                need(snapshot['inference_mode']==args.mode,'Live inference mode mismatch')
+                comparisons=compare_records(records,args.mode)
+                if args.mode=='layer_specific':need(not any(snapshot['numerical_diagnostics'].values()),'Unexpected numerical rejection in live traffic')
                 for r in records:
                     need(r['features'][3]==5001 and r['features'][5]>=3,'Wrong controlled-flow features')
                     need(r['sequence']==1,'Unexpected inference repetition')
@@ -523,8 +602,13 @@ def main():
     p.add_argument('--phase1',action='store_true',help='Run private kernel SMP/failure suite, ingress regression and ten live flows')
     p.add_argument('--phase2',action='store_true',help='Ingress regression, two-hook kernel stress and attached bidirectional packet comparisons')
     p.add_argument('--egress-counter',action='store_true',help='Phase 2 first gate: attach minimal ingress/egress counters only')
+    p.add_argument('--mode',choices=('static_q16','layer_specific'),default='static_q16')
+    p.add_argument('--kernel-only',action='store_true',help='Gate 4: both modes in private test-runs; no networking changes')
     p.add_argument('--output',type=Path)
     args=p.parse_args()
+    need(not(args.kernel_only and (args.phase1 or args.phase2 or args.minimal_only or args.egress_counter)),
+         '--kernel-only is separate from attached packet tests')
+    need(not args.kernel_only or args.mode=='layer_specific','--kernel-only prepares both numerical modes; select --mode layer_specific')
     need(not(args.phase1 and args.minimal_only),'--phase1 requires full inference')
     need(not(args.phase2 and (args.phase1 or args.minimal_only or args.egress_counter)),'--phase2 is a separate integrated suite')
     need(not(args.egress_counter and (args.phase1 or args.minimal_only or args.phase2)),

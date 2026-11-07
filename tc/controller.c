@@ -22,7 +22,14 @@ typedef uint32_t u32;
 #define __type(n, v) v *n
 #define SEC(n)
 #define LIBBPF_PIN_BY_NAME 1
+#ifdef IDS_LAYER_SPECIFIC
+#include "../quantization/params.bpf.h"
+#include "../quantization/calibrated.h"
+#define INFERENCE_MODE "layer_specific"
+#else
 #include "../src/params.bpf.h"
+#define INFERENCE_MODE "static_q16"
+#endif
 #undef PARAMS_BPF_H
 #include "../src/mlp_params.bpf.h"
 #include "abi.h"
@@ -70,9 +77,9 @@ static int snapshot(struct bpf_object *obj, int minimal)
     uint32_t zero = 0;
     struct ids_tc_stats s;
     if (bpf_map_lookup_elem(bpf_object__find_map_fd_by_name(obj, "stats"), &zero, &s)) return die("stats lookup");
-    printf("{\"event\":\"snapshot\",\"packets\":%llu,\"bytes\":%llu,\"matched\":%llu,"
+    printf("{\"event\":\"snapshot\",\"inference_mode\":\"%s\",\"packets\":%llu,\"bytes\":%llu,\"matched\":%llu,"
            "\"rejected\":%llu,\"predictions\":%llu,\"tail_failures\":%llu,\"stages\":[",
-           (unsigned long long)s.packets, (unsigned long long)s.bytes, (unsigned long long)s.matched,
+           INFERENCE_MODE,(unsigned long long)s.packets, (unsigned long long)s.bytes, (unsigned long long)s.matched,
            (unsigned long long)s.rejected, (unsigned long long)s.predictions, (unsigned long long)s.tail_failures);
     for (int i = 0; i < 6; ++i) printf("%s%llu", i ? "," : "", (unsigned long long)s.stages[i]);
     printf("],\"flow_full\":%llu,\"workspace_busy\":%llu,\"duplicate_triggers\":%llu,"
@@ -129,12 +136,26 @@ static int snapshot(struct bpf_object *obj, int minimal)
         }
         if (errno != ENOENT) return die("flow key iteration");
     }
-    printf("]}\n"); fflush(stdout);
+    printf("]");
+    #ifdef IDS_LAYER_SPECIFIC
+    if(!minimal){
+        u64 diagnostics[4]={};
+        if(bpf_map_lookup_elem(bpf_object__find_map_fd_by_name(obj,"ls_diagnostics"),&zero,diagnostics))return die("numerical diagnostics");
+        printf(",\"numerical_diagnostics\":{\"configuration\":%llu,\"range\":%llu,\"overflow\":%llu,\"parameters\":%llu}",
+               (unsigned long long)diagnostics[0],(unsigned long long)diagnostics[1],
+               (unsigned long long)diagnostics[2],(unsigned long long)diagnostics[3]);
+    }
+    #endif
+    printf("}\n"); fflush(stdout);
     return 0;
 }
 
 #include "kernel_checks.h"
 #include "bidirectional_checks.h"
+#include "../quantization/benchmark.h"
+#ifdef IDS_LAYER_SPECIFIC
+#include "../quantization/kernel_checks.h"
+#endif
 
 static int detach_owned(struct bpf_tc_hook *hook, u32 program_id, const char *direction)
 {
@@ -165,7 +186,12 @@ int main(int argc, char **argv)
     int inspect = argc == 4 && !strcmp(argv[1], "--inspect");
     int kernel_test = argc == 4 && !strcmp(argv[1], "--kernel-tests");
     int bidirectional_test=argc==4 && !strcmp(argv[1],"--bidirectional-tests");
-    kernel_test|=bidirectional_test;
+    int numerical_test=argc==4 && !strcmp(argv[1],"--numerical-tests");
+    int benchmark=argc==4 && !strcmp(argv[1],"--benchmark-kernel");
+    kernel_test|=bidirectional_test|numerical_test|benchmark;
+    #ifndef IDS_LAYER_SPECIFIC
+    if(numerical_test){fprintf(stderr,"Numerical rejection suite requires layer_specific controller\n");return 2;}
+    #endif
     int serve=argc>=5 && !strcmp(argv[1],"--serve");
     int run=argc>=6 && !strcmp(argv[1],"--run");
     if (!inspect && !kernel_test && !run && !serve) {
@@ -222,6 +248,10 @@ int main(int argc, char **argv)
         fprintf(stderr,"Egress counter requires minimal object; bidirectional requires full object\n"); rc=1; goto out;
     }
     if (!minimal) {
+        map=bpf_object__find_map_by_name(obj,"nn_parameters");
+        if(!map || bpf_map__value_size(map)!=sizeof(struct Net) || bpf_map__key_size(map)!=4 || bpf_map__max_entries(map)!=2){
+            fprintf(stderr,"Model/mode ABI mismatch: expected %zu parameter bytes for %s\n",sizeof(struct Net),INFERENCE_MODE);rc=1;goto out;
+        }
         const char *names[]={"flow_map","workspace","results"};
         const enum bpf_map_type types[]={BPF_MAP_TYPE_HASH,BPF_MAP_TYPE_PERCPU_ARRAY,BPF_MAP_TYPE_HASH};
         const size_t values[]={sizeof(struct tc_flow),sizeof(struct tc_workspace),sizeof(struct tc_result)};
@@ -254,6 +284,8 @@ int main(int argc, char **argv)
         if (bpf_prog_get_info_by_fd(bpf_program__fd(p), &info, &len)) { rc = die("program metadata"); goto out; }
         if (info.type != BPF_PROG_TYPE_SCHED_CLS) { rc = die("wrong loaded type"); goto out; }
         program_ids[pi++] = info.id;
+        if(benchmark)printf("{\"event\":\"program_resources\",\"name\":\"%s\",\"id\":%u,\"bytecode_bytes\":%u,\"jit_bytes\":%u}\n",
+                            bpf_program__name(p),info.id,info.xlated_prog_len,info.jited_prog_len);
     }
     bpf_object__for_each_map(map, obj) {
         struct bpf_map_info info = {}; uint32_t len = sizeof(info);
@@ -279,6 +311,16 @@ int main(int argc, char **argv)
         memcpy(net.layer_1_weight, layer_1_weight, sizeof(layer_1_weight));
         memcpy(net.layer_2_weight, layer_2_weight, sizeof(layer_2_weight));
         memcpy(net.mean, mean, sizeof(mean)); memcpy(net.scale, scale, sizeof(scale));
+        #ifdef IDS_LAYER_SPECIFIC
+        net.calibration=ls_calibrated_metadata;
+        if(ls_valid(&net.calibration)){fprintf(stderr,"Invalid calibrated scales\n");rc=1;goto out;}
+        printf("{\"event\":\"inference_mode\",\"mode\":\"layer_specific\",\"q_normalized\":%u,"
+               "\"q_weights\":[%u,%u,%u],\"q_outputs\":[%u,%u,%u],\"parameter_sha256\":\"%s\"}\n",
+               net.calibration.q_normalized,net.calibration.q_weight[0],net.calibration.q_weight[1],net.calibration.q_weight[2],
+               net.calibration.q_output[0],net.calibration.q_output[1],net.calibration.q_output[2],LS_PARAMETER_SHA256);
+        #else
+        printf("{\"event\":\"inference_mode\",\"mode\":\"static_q16\",\"tensor_exponents\":[16,16,16,16,16,16]}\n");
+        #endif
         int params = bpf_object__find_map_fd_by_name(obj, "nn_parameters");
         int index_fd = bpf_object__find_map_fd_by_name(obj, "nn_idx");
         int progs_fd = bpf_object__find_map_fd_by_name(obj, "progs");
@@ -306,6 +348,10 @@ int main(int argc, char **argv)
     }
     if (kernel_test) {
         if (minimal) { fprintf(stderr,"Kernel suite requires the full TC object\n"); rc=1; }
+        else if(benchmark)rc=bench_serve(obj);
+        #ifdef IDS_LAYER_SPECIFIC
+        else if(numerical_test)rc=kernel_numerical_checks(obj);
+        #endif
         else rc=bidirectional_test?kernel_bidirectional_checks(obj):kernel_checks(obj);
         goto out;
     }

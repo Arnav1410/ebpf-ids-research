@@ -1,0 +1,15 @@
+{
+  "execution": "Compiled object inspection only; no latency measurement",
+  "static_instruction_slots": 4655,
+  "experimental_instruction_slots": 13308,
+  "parameter_bytes_per_slot": {
+    "static_q16": 5216,
+    "layer_specific": 5304
+  },
+  "parameter_slots": 2,
+  "extra_numerical_diagnostic_value_bytes": 32,
+  "network_function_instruction_bytes_equal": {
+    "tc_entry": true,
+    "tc_egress": true
+  }
+}

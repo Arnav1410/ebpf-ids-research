@@ -1,0 +1,118 @@
+{
+  "static_q16": {
+    "tc_egress": {
+      "processed_instructions": 553,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 27,
+      "peak_states": 27
+    },
+    "tc_entry": {
+      "processed_instructions": 1734,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 5,
+      "total_states": 107,
+      "peak_states": 105
+    },
+    "tc_hidden_linear": {
+      "processed_instructions": 15685,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 4,
+      "total_states": 203,
+      "peak_states": 203
+    },
+    "tc_hidden_relu": {
+      "processed_instructions": 517,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 38,
+      "peak_states": 38
+    },
+    "tc_input_linear": {
+      "processed_instructions": 1652,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 0,
+      "total_states": 17,
+      "peak_states": 17
+    },
+    "tc_input_relu": {
+      "processed_instructions": 519,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 38,
+      "peak_states": 38
+    },
+    "tc_output_linear": {
+      "processed_instructions": 1062,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 4,
+      "total_states": 33,
+      "peak_states": 33
+    },
+    "tc_preprocessing": {
+      "processed_instructions": 335,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 0,
+      "total_states": 24,
+      "peak_states": 24
+    }
+  },
+  "layer_specific": {
+    "tc_egress": {
+      "processed_instructions": 553,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 27,
+      "peak_states": 27
+    },
+    "tc_entry": {
+      "processed_instructions": 1734,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 5,
+      "total_states": 107,
+      "peak_states": 105
+    },
+    "tc_hidden_linear": {
+      "processed_instructions": 205716,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 16,
+      "total_states": 4425,
+      "peak_states": 2432
+    },
+    "tc_hidden_relu": {
+      "processed_instructions": 517,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 38,
+      "peak_states": 38
+    },
+    "tc_input_linear": {
+      "processed_instructions": 13206,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 952,
+      "peak_states": 952
+    },
+    "tc_input_relu": {
+      "processed_instructions": 519,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 1,
+      "total_states": 38,
+      "peak_states": 38
+    },
+    "tc_output_linear": {
+      "processed_instructions": 12748,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 16,
+      "total_states": 321,
+      "peak_states": 197
+    },
+    "tc_preprocessing": {
+      "processed_instructions": 1078,
+      "instruction_limit": 1000000,
+      "max_states_per_instruction": 2,
+      "total_states": 82,
+      "peak_states": 74
+    }
+  }
+}

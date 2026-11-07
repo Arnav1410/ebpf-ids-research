@@ -15,6 +15,10 @@
 #undef stats
 #undef PARAMS_BPF_H
 #include "../../src/mlp_params.bpf.h"
+#ifdef IDS_LAYER_SPECIFIC
+#include "../../quantization/calibrated.h"
+static u64 numerical_counters[4];
+#endif
 #define HOST_CAPACITY 64
 static struct tc_key keys[HOST_CAPACITY];
 static struct tc_flow attrs[HOST_CAPACITY];
@@ -57,6 +61,9 @@ void *validation_lookup(void *map, const void *key)
 {
     assert(!held);
     if (map == &stats || map == &minimal_stats) return stats_missing ? NULL : &counters;
+    #ifdef IDS_LAYER_SPECIFIC
+    if(map==&ls_diagnostics)return numerical_counters;
+    #endif
     if (map == &tc_configuration) return &configuration;
     if (map == &workspace) return &work;
     if (map == &nn_idx) return &active;
@@ -102,6 +109,9 @@ void host_reset(void)
     capacity = HOST_CAPACITY; held = 0;
     configuration=(struct tc_config){.client_filter=1,.client_ipv4=__builtin_bswap32(555819337)};
     memset(&counters, 0, sizeof(counters)); memset(&work, 0, sizeof(work));
+    #ifdef IDS_LAYER_SPECIFIC
+    memset(numerical_counters,0,sizeof(numerical_counters));
+    #endif
     memset(keys, 0, sizeof(keys)); memset(attrs, 0, sizeof(attrs));
     memset(records, 0, sizeof(records)); memset(recorded, 0, sizeof(recorded));
     memset(&last_key, 0, sizeof(last_key));
@@ -109,6 +119,9 @@ void host_reset(void)
     memcpy(model.layer_1_weight, layer_1_weight, sizeof(layer_1_weight));
     memcpy(model.layer_2_weight, layer_2_weight, sizeof(layer_2_weight));
     memcpy(model.mean, mean, sizeof(mean)); memcpy(model.scale, scale, sizeof(scale));
+    #ifdef IDS_LAYER_SPECIFIC
+    model.calibration=ls_calibrated_metadata;
+    #endif
 }
 int host_packet(const unsigned char *data, unsigned int len, uint64_t timestamp)
 {

@@ -1,0 +1,53 @@
+{
+  "scope": "Python-only ablation; not a third production or kernel mode",
+  "mode": "uniform_q16_nearest_even",
+  "tensor_exponents": [
+    16,
+    16,
+    16,
+    16,
+    16,
+    16
+  ],
+  "weights": "unchanged Q16",
+  "held_out_rows": 13844,
+  "arithmetic_events": {},
+  "errors": {
+    "normalized": {
+      "max_abs": 7.629379864280161e-06,
+      "values": 83064,
+      "mean_abs": 4.2745140967545655e-06
+    },
+    "linear0": {
+      "max_abs": 1.9675357198547403e-05,
+      "values": 443008,
+      "mean_abs": 5.0678403749998175e-06
+    },
+    "relu0": {
+      "max_abs": 1.9675357198547403e-05,
+      "values": 443008,
+      "mean_abs": 3.27129533571818e-06
+    },
+    "linear1": {
+      "max_abs": 4.273448955721273e-05,
+      "values": 443008,
+      "mean_abs": 8.68669049991139e-06
+    },
+    "relu1": {
+      "max_abs": 4.273448955721273e-05,
+      "values": 443008,
+      "mean_abs": 6.588358427517021e-06
+    },
+    "logits": {
+      "max_abs": 0.00014349993561538305,
+      "values": 27688,
+      "mean_abs": 4.724905078155742e-05
+    }
+  },
+  "agreement": {
+    "compared": 13844,
+    "modes_agree": 13844,
+    "static_reference_agree": 13844,
+    "experimental_reference_agree": 13844
+  }
+}

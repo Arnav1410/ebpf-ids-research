@@ -1,0 +1,9 @@
+{
+  "baseline_commit": "791e25932e01a8e457c81237fdc8da2ea971b32e",
+  "static_q16_program_bytes_equal": true,
+  "original_tc_section_bytes": 37240,
+  "current_tc_section_bytes": 37240,
+  "original_tc_sha256": "34f3b8fb405ce3362398cf11b93040614f25244fa27a555e88bc610f5170fe7b",
+  "current_tc_sha256": "34f3b8fb405ce3362398cf11b93040614f25244fa27a555e88bc610f5170fe7b",
+  "scope": "Compiled BPF instruction bytes in tc section; not a new kernel-execution claim"
+}

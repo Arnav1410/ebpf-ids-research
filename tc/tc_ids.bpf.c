@@ -3,7 +3,11 @@
 #include <vmlinux.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
+#ifdef IDS_LAYER_SPECIFIC
+#include "../quantization/params.bpf.h"
+#else
 #include "../src/params.bpf.h"
+#endif
 #include "../src/mlp.bpf.h"
 #include "abi.h"
 #include "flow_key.h"
@@ -44,6 +48,14 @@ struct {
     __type(key, u32);
     __type(value, struct tc_config);
 } tc_configuration SEC(".maps");
+#ifdef IDS_LAYER_SPECIFIC
+struct {
+    __uint(type,BPF_MAP_TYPE_ARRAY);
+    __uint(max_entries,1);
+    __type(key,u32);
+    __type(value,struct ls_diagnostic_counters);
+} ls_diagnostics SEC(".maps");
+#endif
 
 static __always_inline struct ids_tc_stats *tc_counters(void)
 {
@@ -141,6 +153,16 @@ static __always_inline int tc_finish(struct tc_workspace *w, int success)
     tc_release(w);
     return TC_ACT_OK;
 }
+
+#ifdef IDS_LAYER_SPECIFIC
+static __always_inline int tc_numerical_failure(struct tc_workspace *w,int error)
+{
+    u32 zero=0;u64 *counters=bpf_map_lookup_elem(&ls_diagnostics,&zero);
+    if(counters && error>=LS_CONFIG && error<=LS_PARAMETERS)
+        __sync_fetch_and_add(&counters[error-1],1);
+    return tc_finish(w,0);
+}
+#endif
 
 static __always_inline struct tc_workspace *tc_stage(u32 expected)
 {
@@ -295,8 +317,14 @@ int tc_preprocessing(struct __sk_buff *skb)
     struct tc_workspace *w = tc_stage(0);
     if (!w) return TC_ACT_OK;
     struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    #ifdef IDS_LAYER_SPECIFIC
+    if(!net)return tc_numerical_failure(w,LS_PARAMETERS);
+    int error=ls_normalize(w->record.features,w->hidden2,net->mean,net->scale,&net->calibration);
+    if(error)return tc_numerical_failure(w,error);
+    #else
     if (!net) return tc_finish(w, 0);
     standard_scaler(w->record.features, w->hidden2, net->mean, net->scale, 6);
+    #endif
     tc_capture(w, 0); return tc_next(skb, w, 1);
 }
 SEC("tc")
@@ -305,8 +333,16 @@ int tc_input_linear(struct __sk_buff *skb)
     struct tc_workspace *w = tc_stage(1);
     if (!w) return TC_ACT_OK;
     struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    #ifdef IDS_LAYER_SPECIFIC
+    if(!net)return tc_numerical_failure(w,LS_PARAMETERS);
+    if(ls_valid(&net->calibration))return tc_numerical_failure(w,LS_CONFIG);
+    int error=ls_linear(net->layer_0_weight,w->hidden2,w->hidden1,32,6,
+                       net->calibration.q_normalized+16-net->calibration.q_output[0]);
+    if(error)return tc_numerical_failure(w,error);
+    #else
     if (!net) return tc_finish(w, 0);
     linear_layer(net->layer_0_weight, w->hidden2, w->hidden1, 32, 6);
+    #endif
     tc_capture(w, 1); return tc_next(skb, w, 2);
 }
 SEC("tc")
@@ -322,8 +358,16 @@ int tc_hidden_linear(struct __sk_buff *skb)
     struct tc_workspace *w = tc_stage(3);
     if (!w) return TC_ACT_OK;
     struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    #ifdef IDS_LAYER_SPECIFIC
+    if(!net)return tc_numerical_failure(w,LS_PARAMETERS);
+    if(ls_valid(&net->calibration))return tc_numerical_failure(w,LS_CONFIG);
+    int error=ls_linear(net->layer_1_weight,w->hidden1,w->hidden2,32,32,
+                       net->calibration.q_output[0]+16-net->calibration.q_output[1]);
+    if(error)return tc_numerical_failure(w,error);
+    #else
     if (!net) return tc_finish(w, 0);
     linear_layer(net->layer_1_weight, w->hidden1, w->hidden2, 32, 32);
+    #endif
     tc_capture(w, 3); return tc_next(skb, w, 4);
 }
 SEC("tc")
@@ -339,8 +383,16 @@ int tc_output_linear(struct __sk_buff *skb)
     struct tc_workspace *w = tc_stage(5);
     if (!w) return TC_ACT_OK;
     struct Net *net = bpf_map_lookup_elem(&nn_parameters, &w->record.model_slot);
+    #ifdef IDS_LAYER_SPECIFIC
+    if(!net)return tc_numerical_failure(w,LS_PARAMETERS);
+    if(ls_valid(&net->calibration))return tc_numerical_failure(w,LS_CONFIG);
+    int error=ls_linear(net->layer_2_weight,w->hidden2,w->hidden1,2,32,
+                       net->calibration.q_output[1]+16-net->calibration.q_output[2]);
+    if(error)return tc_numerical_failure(w,error);
+    #else
     if (!net) return tc_finish(w, 0);
     linear_layer(net->layer_2_weight, w->hidden2, w->hidden1, 2, 32);
+    #endif
     tc_capture(w, 5);
     w->record.label = w->hidden1[0] > w->hidden1[1] ? 0 : 1;
     return tc_finish(w, 1);

@@ -1,0 +1,114 @@
+{
+  "gate1_mathematics": "PASS",
+  "gate2_python": {
+    "status": "PASS",
+    "tests": 21,
+    "calibration_rows": 4996,
+    "held_out_rows": 13844,
+    "prediction_flips": 0
+  },
+  "gate3_host": {
+    "status": "PASS",
+    "gate": 3,
+    "execution": "Host compiled C only; not kernel",
+    "records": 19004,
+    "dataset_rows": 18840,
+    "stage_tensors": 114024,
+    "integers": 2584544,
+    "boundary_checks": 121,
+    "parameter_bytes": 5304,
+    "parameter_sha256": "7238efdcabc885400037d118e99accc8a440c3fec3140be415b60d304da5347a",
+    "tensor_sha256": "ec22cf1ccf4fd63163715a414f6fc01f62c1720599a8d962aebcfe933d8b9bce",
+    "mismatches": 0,
+    "ubsan": "PASS",
+    "ubsan_output": "UBSan: 19004 supported network fixtures; boundary guards passed"
+  },
+  "gate4_kernel": {
+    "status": "PASS",
+    "review": "Read-only replay of saved kernel evidence; no privileged rerun",
+    "runtime": "verification-logs/layer-specific-20261107/kernel-ready/run-20261107-114247-586965",
+    "checked_runtime_files": 88,
+    "prepared_hashes": 71,
+    "source_changes": [],
+    "comparisons": {
+      "static_q16": {
+        "records": 38,
+        "stage_tensors": 228,
+        "integers": 5168,
+        "mismatches": 0
+      },
+      "layer_specific": {
+        "records": 38,
+        "stage_tensors": 228,
+        "integers": 5168,
+        "mismatches": 0
+      }
+    },
+    "program_ids_released": 40,
+    "map_ids_released": 43,
+    "rejected_fixtures": 8
+  },
+  "gate5_live_tc": {
+    "status": "PASS",
+    "review": "live_review.json",
+    "modes": {
+      "static_q16": {
+        "status": "PASS",
+        "runtime": "verification-logs/layer-specific-20261107/live-static/run-20261107-115920-155573",
+        "checksum_entries": 240,
+        "records": 61,
+        "stage_tensors": 366,
+        "integers": 8296,
+        "mismatches": 0,
+        "programs_released": 58,
+        "maps_released": 57
+      },
+      "layer_specific": {
+        "status": "PASS",
+        "runtime": "verification-logs/layer-specific-20261107/live-layer/run-20261107-115925-755703",
+        "checksum_entries": 238,
+        "records": 61,
+        "stage_tensors": 366,
+        "integers": 8296,
+        "mismatches": 0,
+        "programs_released": 58,
+        "maps_released": 64
+      }
+    },
+    "totals": {
+      "records": 122,
+      "stage_tensors": 732,
+      "integers": 16592,
+      "programs_released": 116,
+      "maps_released": 121
+    },
+    "mismatches": 0,
+    "cleanup": "PASS"
+  },
+  "gate6_benchmark": {
+    "status": "PASS",
+    "nonprivileged_benchmark_tests": 8,
+    "review": "benchmark_review.json",
+    "runtime": "verification-logs/layer-specific-20261107/benchmark-ready/run-20261107-121805-782575",
+    "runtime_checksums_checked": 36,
+    "prepared_source_hashes_checked": 55,
+    "measured_kernel_calls": 4608,
+    "warmup_kernel_calls": 2304,
+    "stored_records": 72,
+    "stage_tensors": 432,
+    "integers": 9792,
+    "mismatches": 0,
+    "program_ids_released": 16,
+    "map_ids_released": 17,
+    "network_attachments": "NONE",
+    "cleanup": "PASS",
+    "runtime_observation": "Layer-specific slower in all three measured workloads; no NIC/accuracy claim"
+  },
+  "tc_host_mode_regression": {
+    "static_q16": 37,
+    "layer_specific": 37,
+    "failures": 0
+  },
+  "static_q16_instruction_section_identical": true,
+  "all_gates_passed": true
+}

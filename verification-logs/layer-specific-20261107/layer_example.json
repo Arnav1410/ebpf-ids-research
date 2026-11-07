@@ -1,0 +1,47 @@
+{
+  "index": 0,
+  "raw": [
+    912,
+    1178037463,
+    32,
+    22,
+    680,
+    21
+  ],
+  "normalization_q": 22,
+  "normalized": [
+    3162003,
+    -1742632,
+    -310689,
+    -1189055,
+    -963064,
+    -962539
+  ],
+  "first_neuron_weights_q16": [
+    459,
+    25462,
+    -44400,
+    -20077,
+    -17088,
+    -21160
+  ],
+  "accumulator": 31571875100,
+  "accumulator_q": 38,
+  "right_shift": 15,
+  "rounded_output": 963497,
+  "output_q": 23,
+  "observed_host_verified_output": 963497,
+  "final_experimental_logits": [
+    -69386,
+    62754
+  ],
+  "final_static_logits": [
+    -17334,
+    15675
+  ],
+  "labels": {
+    "static": 1,
+    "experimental": 1,
+    "reference": 1
+  }
+}

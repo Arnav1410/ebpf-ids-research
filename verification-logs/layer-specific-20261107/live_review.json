@@ -1,0 +1,231 @@
+{
+  "status": "PASS",
+  "review": "Offline saved-evidence replay; no privileged rerun",
+  "modes": {
+    "static_q16": {
+      "status": "PASS",
+      "runtime": "verification-logs/layer-specific-20261107/live-static/run-20261107-115920-155573",
+      "checksum_entries": 240,
+      "records": 61,
+      "stage_tensors": 366,
+      "integers": 8296,
+      "mismatches": 0,
+      "programs_released": 58,
+      "maps_released": 57,
+      "attached": {
+        "bidirectional": {
+          "ingress_program_id": 284,
+          "egress_program_id": 285,
+          "ingress_tcp_packets": 6,
+          "egress_tcp_packets": 4,
+          "global_ingress_packets": 6,
+          "global_egress_packets": 4,
+          "predictions": 1,
+          "stages": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 5
+        },
+        "bidirectional-concurrent": {
+          "ingress_program_id": 295,
+          "egress_program_id": 296,
+          "ingress_tcp_packets": 60,
+          "egress_tcp_packets": 40,
+          "global_ingress_packets": 60,
+          "global_egress_packets": 40,
+          "predictions": 10,
+          "stages": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 50
+        },
+        "bidirectional-burst": {
+          "ingress_program_id": 306,
+          "egress_program_id": 307,
+          "ingress_tcp_packets": 31,
+          "egress_tcp_packets": 20,
+          "global_ingress_packets": 31,
+          "global_egress_packets": 20,
+          "predictions": 1,
+          "stages": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 5
+        }
+      }
+    },
+    "layer_specific": {
+      "status": "PASS",
+      "runtime": "verification-logs/layer-specific-20261107/live-layer/run-20261107-115925-755703",
+      "checksum_entries": 238,
+      "records": 61,
+      "stage_tensors": 366,
+      "integers": 8296,
+      "mismatches": 0,
+      "programs_released": 58,
+      "maps_released": 64,
+      "attached": {
+        "bidirectional": {
+          "ingress_program_id": 366,
+          "egress_program_id": 367,
+          "ingress_tcp_packets": 6,
+          "egress_tcp_packets": 4,
+          "global_ingress_packets": 6,
+          "global_egress_packets": 4,
+          "predictions": 1,
+          "stages": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 5
+        },
+        "bidirectional-concurrent": {
+          "ingress_program_id": 377,
+          "egress_program_id": 378,
+          "ingress_tcp_packets": 60,
+          "egress_tcp_packets": 40,
+          "global_ingress_packets": 60,
+          "global_egress_packets": 40,
+          "predictions": 10,
+          "stages": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 50
+        },
+        "bidirectional-burst": {
+          "ingress_program_id": 388,
+          "egress_program_id": 389,
+          "ingress_tcp_packets": 31,
+          "egress_tcp_packets": 20,
+          "global_ingress_packets": 32,
+          "global_egress_packets": 20,
+          "predictions": 1,
+          "stages": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "capture_drops": 0,
+          "non_timing_features": 5
+        }
+      }
+    }
+  },
+  "totals": {
+    "records": 122,
+    "stage_tensors": 732,
+    "integers": 16592,
+    "programs_released": 116,
+    "maps_released": 121
+  },
+  "packet_feature_samples": [
+    {
+      "origin": "static_q16",
+      "features": [
+        40,
+        86114,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "logits": [
+        -129096,
+        109857
+      ],
+      "label": 1,
+      "reconstructed_reference_label": 1,
+      "same_input_comparison": {
+        "static_q16": {
+          "logits": [
+            -129096,
+            109857
+          ],
+          "q_logits": 16,
+          "label": 1,
+          "max_logit_error": 4.568290442338587e-05
+        },
+        "layer_specific": {
+          "logits": [
+            -516392,
+            439440
+          ],
+          "q_logits": 18,
+          "label": 1,
+          "max_logit_error": 1.2990962657086086e-06
+        }
+      },
+      "scope": "Origin mode was kernel-executed; other-mode values are an offline comparison on the identical raw snapshot"
+    },
+    {
+      "origin": "layer_specific",
+      "features": [
+        40,
+        65385,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "logits": [
+        -516392,
+        439440
+      ],
+      "label": 1,
+      "reconstructed_reference_label": 1,
+      "same_input_comparison": {
+        "static_q16": {
+          "logits": [
+            -129096,
+            109857
+          ],
+          "q_logits": 16,
+          "label": 1,
+          "max_logit_error": 4.4584100060803215e-05
+        },
+        "layer_specific": {
+          "logits": [
+            -516392,
+            439440
+          ],
+          "q_logits": 18,
+          "label": 1,
+          "max_logit_error": 1.1922671266967837e-06
+        }
+      },
+      "scope": "Origin mode was kernel-executed; other-mode values are an offline comparison on the identical raw snapshot"
+    }
+  ]
+}

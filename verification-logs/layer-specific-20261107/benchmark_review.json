@@ -1,0 +1,283 @@
+{
+  "status": "PASS",
+  "execution": "Read-only saved-artifact replay; no kernel rerun",
+  "runtime": "verification-logs/layer-specific-20261107/benchmark-ready/run-20261107-121805-782575",
+  "runtime_checksums_checked": 36,
+  "prepared_source_hashes_checked": 55,
+  "prepared_sources_changed": [],
+  "stored_records": 72,
+  "stage_tensors": 432,
+  "integers": 9792,
+  "mismatches": 0,
+  "measured_kernel_calls": 4608,
+  "warmup_kernel_calls": 2304,
+  "per_call_tensor_consistency": "Checked in executing controller; 72 stored records independently replayed here",
+  "complete_inference_invocations": 6912,
+  "stage_execution_totals": [
+    6912,
+    6912,
+    6912,
+    6912,
+    6912,
+    6912
+  ],
+  "cpu": 0,
+  "identities": {
+    "static_q16": {
+      "event": "loaded",
+      "program_ids": [
+        399,
+        400,
+        401,
+        402,
+        403,
+        404,
+        405,
+        406
+      ],
+      "map_ids": [
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267
+      ]
+    },
+    "layer_specific": {
+      "event": "loaded",
+      "program_ids": [
+        410,
+        411,
+        412,
+        413,
+        414,
+        415,
+        416,
+        417
+      ],
+      "map_ids": [
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276
+      ]
+    }
+  },
+  "program_ids_released": 16,
+  "map_ids_released": 17,
+  "cleanup": "PASS",
+  "summaries": {
+    "mlp_small_tcp": {
+      "static_q16": {
+        "samples": 768,
+        "median_ns": 1560.0,
+        "p10_ns": 1483.0,
+        "p90_ns": 1814.9000000000015,
+        "minimum_ns": 1436,
+        "maximum_ns": 35657
+      },
+      "layer_specific": {
+        "samples": 768,
+        "median_ns": 2626.0,
+        "p10_ns": 2484.7,
+        "p90_ns": 2750.3,
+        "minimum_ns": 2453,
+        "maximum_ns": 71682
+      },
+      "paired": {
+        "paired_blocks": 12,
+        "median_experimental_over_static": 1.70553334259588,
+        "bootstrap_95_percentile": [
+          1.678432019338306,
+          1.7157978755816052
+        ],
+        "seed": 20261107,
+        "observation": "slower_in_this_microbenchmark",
+        "scope": "Descriptive paired block bootstrap; not proof about NIC throughput or uncontrolled WSL2 scheduling"
+      }
+    },
+    "mlp_saved_packet": {
+      "static_q16": {
+        "samples": 768,
+        "median_ns": 1538.5,
+        "p10_ns": 1482.0,
+        "p90_ns": 1746.6000000000001,
+        "minimum_ns": 1435,
+        "maximum_ns": 10452
+      },
+      "layer_specific": {
+        "samples": 768,
+        "median_ns": 2690.5,
+        "p10_ns": 2537.0,
+        "p90_ns": 3196.6000000000004,
+        "minimum_ns": 2449,
+        "maximum_ns": 61988
+      },
+      "paired": {
+        "paired_blocks": 12,
+        "median_experimental_over_static": 1.7122277039848197,
+        "bootstrap_95_percentile": [
+          1.7084696925126501,
+          1.7392277244965548
+        ],
+        "seed": 20261107,
+        "observation": "slower_in_this_microbenchmark",
+        "scope": "Descriptive paired block bootstrap; not proof about NIC throughput or uncontrolled WSL2 scheduling"
+      }
+    },
+    "entry_fin": {
+      "static_q16": {
+        "samples": 768,
+        "median_ns": 1710.5,
+        "p10_ns": 1626.0,
+        "p90_ns": 1976.5000000000005,
+        "minimum_ns": 1575,
+        "maximum_ns": 44022
+      },
+      "layer_specific": {
+        "samples": 768,
+        "median_ns": 2798.0,
+        "p10_ns": 2689.7,
+        "p90_ns": 3033.7000000000007,
+        "minimum_ns": 2655,
+        "maximum_ns": 29842
+      },
+      "paired": {
+        "paired_blocks": 12,
+        "median_experimental_over_static": 1.6516306005885055,
+        "bootstrap_95_percentile": [
+          1.646238494681159,
+          1.6543325495866261
+        ],
+        "seed": 20261107,
+        "observation": "slower_in_this_microbenchmark",
+        "scope": "Descriptive paired block bootstrap; not proof about NIC throughput or uncontrolled WSL2 scheduling"
+      }
+    }
+  },
+  "resources": {
+    "static_q16": {
+      "translated_bytecode_bytes": 41752,
+      "reported_jit_bytes": 24243,
+      "model_value_bytes_per_slot": 5216,
+      "inference_stage_ids": [
+        401,
+        402,
+        403,
+        404,
+        405,
+        406
+      ]
+    },
+    "layer_specific": {
+      "translated_bytecode_bytes": 111952,
+      "reported_jit_bytes": 68058,
+      "model_value_bytes_per_slot": 5304,
+      "inference_stage_ids": [
+        412,
+        413,
+        414,
+        415,
+        416,
+        417
+      ]
+    }
+  },
+  "kernel_comparison_samples": [
+    {
+      "workload": "mlp_small_tcp",
+      "features": [
+        20,
+        0,
+        20,
+        5001,
+        20,
+        1
+      ],
+      "modes": {
+        "static_q16": {
+          "q_logits": 16,
+          "kernel_logits": [
+            -151556,
+            129435
+          ],
+          "label": 1
+        },
+        "layer_specific": {
+          "q_logits": 18,
+          "kernel_logits": [
+            -606228,
+            517748
+          ],
+          "label": 1
+        }
+      }
+    },
+    {
+      "workload": "mlp_saved_packet",
+      "features": [
+        40,
+        65385,
+        32,
+        5001,
+        136,
+        4
+      ],
+      "modes": {
+        "static_q16": {
+          "q_logits": 16,
+          "kernel_logits": [
+            -129096,
+            109857
+          ],
+          "label": 1
+        },
+        "layer_specific": {
+          "q_logits": 18,
+          "kernel_logits": [
+            -516392,
+            439440
+          ],
+          "label": 1
+        }
+      }
+    },
+    {
+      "workload": "entry_fin",
+      "features": [
+        20,
+        0,
+        20,
+        5001,
+        20,
+        1
+      ],
+      "modes": {
+        "static_q16": {
+          "q_logits": 16,
+          "kernel_logits": [
+            -151556,
+            129435
+          ],
+          "label": 1
+        },
+        "layer_specific": {
+          "q_logits": 18,
+          "kernel_logits": [
+            -606228,
+            517748
+          ],
+          "label": 1
+        }
+      }
+    }
+  ]
+}

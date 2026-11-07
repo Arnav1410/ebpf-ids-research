@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "execution": "host C, not kernel",
+  "cases": [
+    {
+      "case": "invalid_normalization_scale",
+      "scale": 0,
+      "status": 1,
+      "expected": 1
+    },
+    {
+      "case": "invalid_normalization_scale",
+      "scale": -1,
+      "status": 1,
+      "expected": 1
+    },
+    {
+      "case": "normalization_unsigned_shift_guard",
+      "status": 3,
+      "expected": 3
+    }
+  ]
+}

@@ -116,7 +116,7 @@ class CleanupEvidence(unittest.TestCase):
 
 class HostTC(unittest.TestCase):
     def setUp(self):
-        path, root = CONTEXT
+        path, root, *mode = CONTEXT
         self.lib = C.CDLL(str(path))
         self.lib.host_packet.argtypes = [C.c_void_p, C.c_uint, C.c_uint64]
         self.lib.host_egress_packet.argtypes = [C.c_void_p, C.c_uint, C.c_uint64]
@@ -124,7 +124,10 @@ class HostTC(unittest.TestCase):
         self.lib.host_record.argtypes = [C.POINTER(C.c_int64), C.POINTER(C.c_int32), C.POINTER(C.c_int32), C.POINTER(C.c_uint64)]
         self.lib.host_stats.argtypes = [C.POINTER(C.c_uint64)]
         self.lib.host_reset()
-        self.model = Model.load(root / 'src/mlp_params.bpf.h')
+        if mode and mode[0]=='layer_specific':
+            from quantization.reference import LayerModel
+            self.model=LayerModel.load()
+        else:self.model = Model.load(root / 'src/mlp_params.bpf.h')
 
     def scan(self, mode):
         self.lib.host_scan_ids.argtypes = [C.c_int, C.c_void_p, C.c_uint]
