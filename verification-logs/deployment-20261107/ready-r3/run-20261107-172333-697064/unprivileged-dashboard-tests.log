@@ -1,0 +1,30 @@
+test_address_comparison_ignores_dad_but_detects_actual_changes (deployment.tests.test_dashboard.DeploymentPolicy) ... ok
+test_exact_identity_and_direct_action_are_required (deployment.tests.test_dashboard.DeploymentPolicy) ... ok
+test_existing_empty_clsact_is_reusable (deployment.tests.test_dashboard.DeploymentPolicy) ... ok
+test_occupied_legacy_and_shared_block_hooks_are_refused (deployment.tests.test_dashboard.DeploymentPolicy) ... ok
+test_socket_path_limit_is_checked_before_preflight_or_loading (deployment.tests.test_dashboard.DeploymentPolicy) ... ok
+test_local_assets_and_disconnected_api (deployment.tests.test_dashboard.HTTP) ... ok
+test_no_mutations_file_traversal_or_foreign_host (deployment.tests.test_dashboard.HTTP) ... ok
+test_atomic_replacement_and_no_symlink_temporary_file (deployment.tests.test_dashboard.PublishedState) ... ok
+test_disconnected_corrupt_stale_and_stopped_states (deployment.tests.test_dashboard.PublishedState) ... ok
+test_http_server_refuses_root (deployment.tests.test_dashboard.PublishedState) ... usage: server.py [-h] [--state STATE] [--bind BIND] [--port PORT]
+server.py: error: Run the HTTP dashboard without sudo; the collector is a separate privileged process
+ok
+test_both_modes_keep_kernel_logit_scales (deployment.tests.test_dashboard.Telemetry) ... ok
+test_egress_first_flow_not_mislabeled_as_classified (deployment.tests.test_dashboard.Telemetry) ... ok
+test_error_counters_and_numerical_rejections_visible (deployment.tests.test_dashboard.Telemetry) ... ok
+test_full_supported_map_is_retained_and_bounded (deployment.tests.test_dashboard.Telemetry) ... ok
+test_logging_contains_no_payload_and_rotation_is_bounded (deployment.tests.test_dashboard.Telemetry) ... ok
+test_long_running_updates_do_not_duplicate_logs (deployment.tests.test_dashboard.Telemetry) ... ok
+test_missing_incomplete_or_inconsistent_results (deployment.tests.test_dashboard.Telemetry) ... ok
+test_one_flow_has_real_directions_logits_and_roles (deployment.tests.test_dashboard.Telemetry) ... ok
+test_restart_has_new_session_identity (deployment.tests.test_dashboard.Telemetry) ... ok
+test_ten_connections_from_one_ip_not_merged (deployment.tests.test_dashboard.Telemetry) ... ok
+test_u64_values_do_not_lose_browser_precision (deployment.tests.test_dashboard.Telemetry) ... ok
+test_wrong_mode_duplicate_key_and_bad_counter_rejected (deployment.tests.test_dashboard.Telemetry) ... ok
+test_zero_flows_not_disconnected (deployment.tests.test_dashboard.Telemetry) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 1.310s
+
+OK

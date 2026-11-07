@@ -157,14 +157,16 @@ static int snapshot(struct bpf_object *obj, int minimal)
 #include "../quantization/kernel_checks.h"
 #endif
 
-static int detach_owned(struct bpf_tc_hook *hook, u32 program_id, const char *direction)
+#include "deploy_guard.h"
+
+static int detach_owned(struct bpf_tc_hook *hook, u32 program_id, const char *direction,u32 handle,u32 priority)
 {
-    LIBBPF_OPTS(bpf_tc_opts, q, .handle=1, .priority=1);
+    LIBBPF_OPTS(bpf_tc_opts, q, .handle=handle, .priority=priority);
     if (bpf_tc_query(hook,&q) || q.prog_id!=program_id) {
         fprintf(stderr,"Owned TC %s filter changed: refusing unknown detach\n",direction);
         return 1;
     }
-    LIBBPF_OPTS(bpf_tc_opts, d, .handle=1, .priority=1);
+    LIBBPF_OPTS(bpf_tc_opts, d, .handle=handle, .priority=priority);
     if (bpf_tc_detach(hook,&d)) return die("detach owned TC filter");
     /* Exact post-detach GETTFILTER may return EINVAL after a chain disappears.
      * Successful empty dumps of BOTH directions remain mandatory in the runner. */
@@ -175,6 +177,21 @@ static int detach_owned(struct bpf_tc_hook *hook, u32 program_id, const char *di
 
 int main(int argc, char **argv)
 {
+    if(argc==8 && !strcmp(argv[1],"--detach-owned")){
+        u32 index,handle,priority,in,out;
+        if(geteuid() || parse_deployment_u32(argv[3],&index,UINT32_MAX)
+           ||parse_deployment_u32(argv[4],&handle,UINT32_MAX)||parse_deployment_u32(argv[5],&priority,65535)
+           ||(strcmp(argv[6],"0")&&parse_deployment_u32(argv[6],&in,UINT32_MAX))
+           ||(strcmp(argv[7],"0")&&parse_deployment_u32(argv[7],&out,UINT32_MAX))
+           ||if_nametoindex(argv[2])!=index){fprintf(stderr,"Invalid owned-detach identity\n");return 2;}
+        if(!strcmp(argv[6],"0"))in=0;
+        if(!strcmp(argv[7],"0"))out=0;
+        LIBBPF_OPTS(bpf_tc_hook,h,.ifindex=index,.attach_point=BPF_TC_INGRESS);
+        int status=in?detach_owned(&h,in,"ingress",handle,priority):0;
+        h.attach_point=BPF_TC_EGRESS;
+        if(out&&detach_owned(&h,out,"egress",handle,priority))status=1;
+        return status;
+    }
     if (argc == 3 && !strcmp(argv[1], "--list-ids")) {
         int rc;
         if (!strcmp(argv[2], "prog")) rc = tc_scan_ids(stdout, bpf_prog_get_next_id);
@@ -192,12 +209,14 @@ int main(int argc, char **argv)
     #ifndef IDS_LAYER_SPECIFIC
     if(numerical_test){fprintf(stderr,"Numerical rejection suite requires layer_specific controller\n");return 2;}
     #endif
-    int serve=argc>=5 && !strcmp(argv[1],"--serve");
+    int deployment=argc>=5 && !strcmp(argv[1],"--deploy");
+    int serve=deployment || (argc>=5 && !strcmp(argv[1],"--serve"));
     int run=argc>=6 && !strcmp(argv[1],"--run");
     if (!inspect && !kernel_test && !run && !serve) {
         fprintf(stderr, "Usage: controller --inspect OBJECT LOGDIR | --run OBJECT tcids-s0 NETNS_INODE LOGDIR [--egress-counter|--bidirectional] [--client-ip IP|any] | --serve OBJECT INTERFACE LOGDIR [--bidirectional] [--client-ip IP|any] | --kernel-tests OBJECT LOGDIR | --bidirectional-tests OBJECT LOGDIR | --list-ids prog|map\n"); return 2;
     }
-    int egress_counter=0,bidirectional=0;
+    int egress_counter=0,bidirectional=deployment;
+    u32 attach_handle=deployment?0x4e4e:1,attach_priority=deployment?49152:1;
     struct tc_config configuration={};
     if(kernel_test){configuration.client_filter=1;configuration.client_ipv4=htonl(555819337);}
     for(int i=serve?5:6;(run||serve)&&i<argc;++i){
@@ -207,6 +226,10 @@ int main(int argc, char **argv)
             const char *address=argv[++i];
             configuration.client_filter=strcmp(address,"any")!=0;
             if(configuration.client_filter && inet_pton(AF_INET,address,&configuration.client_ipv4)!=1){fprintf(stderr,"Invalid client IPv4 address\n");return 2;}
+        }else if(deployment && i+1<argc && !strcmp(argv[i],"--handle")){
+            if(parse_deployment_u32(argv[++i],&attach_handle,UINT32_MAX))return 2;
+        }else if(deployment && i+1<argc && !strcmp(argv[i],"--priority")){
+            if(parse_deployment_u32(argv[++i],&attach_priority,65535))return 2;
         }else{fprintf(stderr,"Unknown or incomplete option: %s\n",argv[i]);return 2;}
     }
     const char *logdir = argv[(inspect || kernel_test) ? 3 : serve?4:5];
@@ -275,6 +298,7 @@ int main(int argc, char **argv)
     if (!kernel_test) {
         hook.ifindex = if_nametoindex(argv[3]);
         if (!hook.ifindex) { rc = die("test interface missing"); goto out; }
+        if(deployment && deployment_empty_hooks(hook.ifindex)){rc=1;goto out;}
     }
     if (bpf_object__load(obj)) { rc = die("TC load/verifier"); goto out; }
     loaded = 1;
@@ -356,24 +380,29 @@ int main(int argc, char **argv)
         goto out;
     }
     p = bpf_object__find_program_by_name(obj, minimal ? "tc_minimal" : "tc_entry");
-    if (bpf_tc_hook_create(&hook)) { rc = die("create private clsact (existing qdisc refused)"); goto out; }
-    printf("{\"event\":\"qdisc_created\",\"ifindex\":%d}\n",hook.ifindex);
-    LIBBPF_OPTS(bpf_tc_opts, opts, .prog_fd=bpf_program__fd(p), .handle=1, .priority=1);
+    if(deployment && deployment_empty_hooks(hook.ifindex)){rc=1;goto out;}
+    int create_status=bpf_tc_hook_create(&hook);
+    if(create_status && !(deployment && create_status==-EEXIST)) { rc = die("create private clsact (existing qdisc refused)"); goto out; }
+    printf("{\"event\":\"%s\",\"ifindex\":%d}\n",create_status?"qdisc_reused":"qdisc_created",hook.ifindex);
+    LIBBPF_OPTS(bpf_tc_opts, opts, .prog_fd=bpf_program__fd(p), .handle=attach_handle, .priority=attach_priority);
     if (bpf_tc_attach(&hook, &opts)) { rc = die("TC ingress attach"); goto out; }
     attached = 1; entry_id = opts.prog_id;
-    LIBBPF_OPTS(bpf_tc_opts, query, .handle=1, .priority=1);
+    LIBBPF_OPTS(bpf_tc_opts, query, .handle=attach_handle, .priority=attach_priority);
     if (bpf_tc_query(&hook, &query) || query.prog_id != entry_id) { rc = die("TC attachment query"); goto out; }
     if (egress_counter || bidirectional) {
         egress_hook.ifindex=hook.ifindex;
         p=bpf_object__find_program_by_name(obj,egress_counter?"tc_minimal_egress":"tc_egress");
         if (!p) { fprintf(stderr,"Egress counter program missing\n"); rc=1; goto out; }
-        LIBBPF_OPTS(bpf_tc_opts, eo, .prog_fd=bpf_program__fd(p), .handle=1, .priority=1);
+        LIBBPF_OPTS(bpf_tc_opts, eo, .prog_fd=bpf_program__fd(p), .handle=attach_handle, .priority=attach_priority);
         if (bpf_tc_attach(&egress_hook,&eo)) { rc=die("TC egress attach"); goto out; }
         egress_attached=1; egress_id=eo.prog_id;
-        LIBBPF_OPTS(bpf_tc_opts, eq, .handle=1, .priority=1);
+        LIBBPF_OPTS(bpf_tc_opts, eq, .handle=attach_handle, .priority=attach_priority);
         if (bpf_tc_query(&egress_hook,&eq) || eq.prog_id!=egress_id) { rc=die("TC egress attachment query"); goto out; }
     }
-    printf("{\"event\":\"ready\",\"ifindex\":%d,\"program_id\":%u,\"handle\":1,\"priority\":1,\"program_ids\":[", hook.ifindex, entry_id);
+    if(deployment && (deployment_filter_count(hook.ifindex,0)!=1 || deployment_filter_count(hook.ifindex,1)!=1)){
+        fprintf(stderr,"Classifier state changed during deployment; rolling back owned filters\n");rc=1;goto out;
+    }
+    printf("{\"event\":\"ready\",\"ifindex\":%d,\"program_id\":%u,\"handle\":%u,\"priority\":%u,\"program_ids\":[", hook.ifindex, entry_id,attach_handle,attach_priority);
     for (int i = 0; i < np; ++i) printf("%s%u", i ? "," : "", program_ids[i]);
     printf("],\"map_ids\":[");
     for (int i = 0; i < nm; ++i) printf("%s%u", i ? "," : "", map_ids[i]);
@@ -391,8 +420,8 @@ int main(int argc, char **argv)
         else { errno = EINVAL; rc = die("unknown control command"); break; }
     }
 out:
-    if (egress_attached && detach_owned(&egress_hook,egress_id,"egress")) rc=1;
-    if (attached && detach_owned(&hook,entry_id,"ingress")) rc=1;
+    if (egress_attached && detach_owned(&egress_hook,egress_id,"egress",attach_handle,attach_priority)) rc=1;
+    if (attached && detach_owned(&hook,entry_id,"ingress",attach_handle,attach_priority)) rc=1;
     int i = 0;
     bpf_object__for_each_program(p, obj) {
         char path[4096]; snprintf(path, sizeof(path), "%s/verifier-%s.log", logdir, bpf_program__name(p));

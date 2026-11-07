@@ -1,0 +1,4 @@
+make: Entering directory '/home/arnav/research/ebpf-ids-research/tc'
+clang-12 -O2 -g -Wall -Wextra -pthread -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include controller.c /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a -lelf -lz -o /home/arnav/research/ebpf-ids-research/tc/.output/controller
+clang-12 -O2 -g -Wall -Wextra -pthread -DIDS_LAYER_SPECIFIC -I/home/arnav/research/ebpf-ids-research/.output/libbpf/usr/include controller.c /home/arnav/research/ebpf-ids-research/.output/libbpf/libbpf.a -lelf -lz -o /home/arnav/research/ebpf-ids-research/tc/.output/controller_layer
+make: Leaving directory '/home/arnav/research/ebpf-ids-research/tc'

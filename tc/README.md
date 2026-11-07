@@ -145,57 +145,27 @@ for actual program IDs, feature vectors, expected/observed tensors and logits.
 Only completion documentation changed after that run; prepare a fresh bundle
 to repeat it rather than editing the archived manifest.
 
-## Selected-interface demonstration (manual, after integrated verification)
+## Operator-controlled native deployment and dashboard
 
-No automatic test uses this mode. Select the Linux server interface and client
-IPv4 address explicitly, obtain approval, then run from the repository root:
+Use [SERVER_DEPLOYMENT.md](../SERVER_DEPLOYMENT.md) for the native build, HTTPS
+GitHub source transfer, read-only preflight, explicit attachment and targeted
+cleanup. [DEMO_RUNBOOK.md](../DEMO_RUNBOOK.md) gives the Windows PowerShell 5.1
+traffic sequence. Neither requires SSH or remote execution.
 
-```bash
-read -r -p 'Server interface: ' IDS_IFACE
-read -r -p 'Client IPv4 (or any): ' IDS_CLIENT_IP
-IDS_LIVE_LOG=$(mktemp -d /tmp/tcids-live.XXXXXX)
-sudo tc/.output/controller --serve tc/.output/tc_ids.bpf.o "$IDS_IFACE" "$IDS_LIVE_LOG" --bidirectional --client-ip "$IDS_CLIENT_IP" | tee -i "$IDS_LIVE_LOG/events.jsonl"
-```
+`deployment/ids.py` uses this controller's dedicated `--deploy` mode. It refuses
+occupied classifier hooks/shared blocks, reuses an existing empty clsact, uses
+handle `0x4e4e` / priority `49152`, verifies actual program IDs and never destroys
+the qdisc. All IP/route/interface settings are preserved. Original isolated
+`--run` behavior and its default handle/priority remain unchanged. Legacy
+`--serve` is retained for compatibility; use the guarded deployment CLI for the
+physical demonstration. `--client-ip any` or an explicit IPv4 is supported.
 
-`tee -i` keeps the log reader alive while the controller handles Ctrl+C cleanup.
-The controller refuses an existing clsact rather than replacing another user's
-configuration. It prints actual program/map IDs (including map names), verified
-tail slots and model loading. Type `snapshot` and Enter for decoded locked flow
-statistics, immutable prediction tensors/logits and labels. In another server
-terminal, inspect `sudo tc -s filter show dev "$IDS_IFACE" ingress` and the
-corresponding `egress` command (set the variable there too). Optional
-`sudo .output/bpftool/bpftool map dump id FLOW_MAP_ID` uses the printed ID, but a
-raw live dump is not a substitute for the controller's locked read.
-
-On the server, start a TCP listener on a chosen port, for example
-`nc -l 5001`; on the client use `nc SERVER_IPV4 5001`, type a greeting, and close
-the write side/connection. The listener's terminal can send a response before
-closing. Netcat implementations differ in EOF behavior; for a deterministic
-FIN/request/response exchange with installed Python 3, run the following instead:
-
-```bash
-# Server (in a second terminal):
-python3 -c 'import socket; s=socket.socket(); s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1); s.bind(("0.0.0.0",5001)); s.listen(1); c,a=s.accept(); print(a); d=b""; b=c.recv(1024)
-while b: d+=b; b=c.recv(1024)
-print(d); c.sendall(b"demo-ok\n"); c.close(); s.close()'
-# Client: replace SERVER_IPV4 with the actual server address:
-python3 -c 'import socket; s=socket.create_connection(("SERVER_IPV4",5001)); s.sendall(b"hello\n"); s.shutdown(socket.SHUT_WR); print(s.recv(1024)); s.close()'
-```
-
-Type `stop` and Enter in the controller terminal (or Ctrl+C) to detach only its
-matching filters and close private maps. Manual serve mode leaves its clsact
-for inspection; remove it only after **both successful filter dumps are empty**:
-
-```bash
-if grep -q '"event":"qdisc_created"' "$IDS_LIVE_LOG/events.jsonl" && [ "$(sudo tc -j filter show dev "$IDS_IFACE" ingress)" = '[]' ] && [ "$(sudo tc -j filter show dev "$IDS_IFACE" egress)" = '[]' ]; then
-    sudo tc qdisc del dev "$IDS_IFACE" clsact
-fi
-```
-
-There is no packet blocking. Existing host firewall/listener configuration is
-not changed by this project. The selected-interface serve mode itself requires
-separate user-side verification; namespace tests do not prove physical-NIC or
-offload behavior.
+The privileged collector requests existing locked flow-map and immutable result
+snapshots; there is no BPF inference or map-layout change. It publishes a bounded
+public snapshot and rotating classification JSONL log. The dashboard runs
+without sudo at `127.0.0.1:8080`, reads that snapshot and provides no mutation,
+attachment or shell endpoints. No payloads are collected. Native and physical
+interface validation require actual operator-run evidence.
 
 ## Timestamp reorder interpretation
 

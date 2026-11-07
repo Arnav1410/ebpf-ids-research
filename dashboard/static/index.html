@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kernel IDS · IIT Kharagpur</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body><header><div><span class="eyebrow">IIT KHARAGPUR · SYSTEMS RESEARCH</span><h1>Kernel intrusion detection</h1>
+<p>TC bidirectional monitoring · ingress-derived neural network</p></div><span id="status" class="badge">CONNECTING</span></header>
+<main><section class="system"><div><span class="label">Interface</span><strong id="interface">—</strong></div>
+<div><span class="label">Inference mode</span><strong id="mode">—</strong></div><div><span class="label">Ingress / egress</span><strong id="hooks">—</strong></div>
+<div><span class="label">Last collected (UTC)</span><strong id="updated">—</strong></div></section>
+<div id="errors" role="status"></div><section id="metrics" class="metrics"></section>
+<section class="panel"><div class="panel-head"><div><h2>TCP connections</h2><p>One canonical address/port pair per connection. Multiple ports from one client remain separate.</p></div>
+<label>Filter <input id="filter" type="search" placeholder="IP, port or state" autocomplete="off"></label></div>
+<div class="table-wrap"><table><thead><tr><th>Client → server</th><th>Ingress<br>packets / bytes</th><th>Egress<br>packets / bytes</th><th>State</th><th>Class</th><th>Integer logits</th><th>Completed<br>kernel ns</th></tr></thead><tbody id="flows"></tbody></table></div>
+<div class="pager"><button id="previous">Previous</button><span id="page">—</span><button id="next">Next</button></div></section>
+<section class="panel"><h2>Recent completed inferences</h2><p>Raw model classes; labeled detection accuracy has not been established.</p><pre id="predictions">No completed inferences observed.</pre></section>
+<footer>LIVE map snapshots only. FIN/RST on the eligible ingress leg triggers inference; HTTP requests do not each imply a prediction.
+Counters measure observed skbs and skb bytes. Helper timestamps are monotonic, not wall time. This page has no attachment, model or networking controls.</footer>
+</main></body></html>

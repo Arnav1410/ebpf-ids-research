@@ -1,0 +1,26 @@
+{"event": "state_abi", "flow_bytes": 272, "workspace_bytes": 1160, "result_bytes": 896}
+{"event": "schema", "minimal": false, "program_type": 3, "programs": 8, "pins_disabled": true}
+{"event": "map", "name": "nn_idx", "id": 431, "key_bytes": 4, "value_bytes": 4}
+{"event": "map", "name": "workspace", "id": 432, "key_bytes": 4, "value_bytes": 1160}
+{"event": "map", "name": "nn_parameters", "id": 433, "key_bytes": 4, "value_bytes": 5304}
+{"event": "map", "name": "flow_map", "id": 434, "key_bytes": 20, "value_bytes": 272}
+{"event": "map", "name": "progs", "id": 435, "key_bytes": 4, "value_bytes": 4}
+{"event": "map", "name": "stats", "id": 436, "key_bytes": 4, "value_bytes": 184}
+{"event": "map", "name": "results", "id": 437, "key_bytes": 20, "value_bytes": 896}
+{"event": "map", "name": "tc_configuration", "id": 438, "key_bytes": 4, "value_bytes": 8}
+{"event": "map", "name": "ls_diagnostics", "id": 439, "key_bytes": 4, "value_bytes": 32}
+{"event": "loaded", "program_ids": [639, 640, 641, 642, 643, 644, 645, 646], "map_ids": [431, 432, 433, 434, 435, 436, 437, 438, 439]}
+{"event": "configuration", "client_filter": true, "client_ipv4": "33.33.33.73", "mlp_input": "first eligible ingress leg only"}
+{"event": "inference_mode", "mode": "layer_specific", "q_normalized": 22, "q_weights": [16, 16, 16], "q_outputs": [23, 21, 18], "parameter_sha256": "7238efdcabc885400037d118e99accc8a440c3fec3140be415b60d304da5347a"}
+{"event": "tail_slot", "slot": 0, "program_id": 641, "type": 3}
+{"event": "tail_slot", "slot": 1, "program_id": 642, "type": 3}
+{"event": "tail_slot", "slot": 2, "program_id": 643, "type": 3}
+{"event": "tail_slot", "slot": 3, "program_id": 644, "type": 3}
+{"event": "tail_slot", "slot": 4, "program_id": 645, "type": 3}
+{"event": "tail_slot", "slot": 5, "program_id": 646, "type": 3}
+{"event": "model", "bytes_per_slot": 5304, "slots_verified": 2, "active": 0}
+{"event": "qdisc_reused", "ifindex": 3}
+{"event": "ready", "ifindex": 3, "program_id": 639, "handle": 20046, "priority": 49152, "program_ids": [639, 640, 641, 642, 643, 644, 645, 646], "map_ids": [431, 432, 433, 434, 435, 436, 437, 438, 439], "egress_program_id": 640}
+{"event": "detach_acknowledged", "program_id": 640, "direction": "egress", "absence_verification": "pending_filter_dumps"}
+{"event": "detach_acknowledged", "program_id": 639, "direction": "ingress", "absence_verification": "pending_filter_dumps"}
+{"event": "closed", "qdisc_cleanup": "runner-owned interface only"}

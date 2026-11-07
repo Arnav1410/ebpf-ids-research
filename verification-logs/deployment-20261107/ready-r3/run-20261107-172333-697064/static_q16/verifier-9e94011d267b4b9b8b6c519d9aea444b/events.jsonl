@@ -1,0 +1,25 @@
+{"event": "state_abi", "flow_bytes": 272, "workspace_bytes": 1160, "result_bytes": 896}
+{"event": "schema", "minimal": false, "program_type": 3, "programs": 8, "pins_disabled": true}
+{"event": "map", "name": "nn_idx", "id": 423, "key_bytes": 4, "value_bytes": 4}
+{"event": "map", "name": "workspace", "id": 424, "key_bytes": 4, "value_bytes": 1160}
+{"event": "map", "name": "nn_parameters", "id": 425, "key_bytes": 4, "value_bytes": 5216}
+{"event": "map", "name": "flow_map", "id": 426, "key_bytes": 20, "value_bytes": 272}
+{"event": "map", "name": "progs", "id": 427, "key_bytes": 4, "value_bytes": 4}
+{"event": "map", "name": "stats", "id": 428, "key_bytes": 4, "value_bytes": 184}
+{"event": "map", "name": "results", "id": 429, "key_bytes": 20, "value_bytes": 896}
+{"event": "map", "name": "tc_configuration", "id": 430, "key_bytes": 4, "value_bytes": 8}
+{"event": "loaded", "program_ids": [628, 629, 630, 631, 632, 633, 634, 635], "map_ids": [423, 424, 425, 426, 427, 428, 429, 430]}
+{"event": "configuration", "client_filter": true, "client_ipv4": "33.33.33.73", "mlp_input": "first eligible ingress leg only"}
+{"event": "inference_mode", "mode": "static_q16", "tensor_exponents": [16, 16, 16, 16, 16, 16]}
+{"event": "tail_slot", "slot": 0, "program_id": 630, "type": 3}
+{"event": "tail_slot", "slot": 1, "program_id": 631, "type": 3}
+{"event": "tail_slot", "slot": 2, "program_id": 632, "type": 3}
+{"event": "tail_slot", "slot": 3, "program_id": 633, "type": 3}
+{"event": "tail_slot", "slot": 4, "program_id": 634, "type": 3}
+{"event": "tail_slot", "slot": 5, "program_id": 635, "type": 3}
+{"event": "model", "bytes_per_slot": 5216, "slots_verified": 2, "active": 0}
+{"event": "qdisc_created", "ifindex": 3}
+{"event": "ready", "ifindex": 3, "program_id": 628, "handle": 20046, "priority": 49152, "program_ids": [628, 629, 630, 631, 632, 633, 634, 635], "map_ids": [423, 424, 425, 426, 427, 428, 429, 430], "egress_program_id": 629}
+{"event": "detach_acknowledged", "program_id": 629, "direction": "egress", "absence_verification": "pending_filter_dumps"}
+{"event": "detach_acknowledged", "program_id": 628, "direction": "ingress", "absence_verification": "pending_filter_dumps"}
+{"event": "closed", "qdisc_cleanup": "runner-owned interface only"}
