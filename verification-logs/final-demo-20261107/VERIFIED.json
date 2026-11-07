@@ -1,0 +1,134 @@
+{
+  "status": "PASS",
+  "scope": "Offline replay of actual saved WSL2 evidence; no privileged rerun",
+  "runtime": "verification-logs/final-demo-20261107/ready/run-20261107-201114-136504",
+  "source_hashes": 83,
+  "modes": {
+    "static_q16": {
+      "numerical": {
+        "records": 43,
+        "stage_tensors": 258,
+        "integers": 5848
+      },
+      "batches": {
+        "1": {
+          "coverage": 1.0,
+          "benign_support": 1,
+          "unknown_truth": 0,
+          "FP": 1,
+          "TN": 0,
+          "benign_fpr": 1.0
+        },
+        "10": {
+          "coverage": 1.0,
+          "benign_support": 9,
+          "unknown_truth": 1,
+          "FP": 9,
+          "TN": 0,
+          "benign_fpr": 1.0
+        },
+        "32": {
+          "coverage": 1.0,
+          "benign_support": 28,
+          "unknown_truth": 4,
+          "FP": 28,
+          "TN": 0,
+          "benign_fpr": 1.0
+        }
+      },
+      "program_ids": [
+        655,
+        656,
+        657,
+        658,
+        659,
+        660,
+        661,
+        662
+      ],
+      "map_ids": [
+        440,
+        441,
+        442,
+        443,
+        444,
+        445,
+        446,
+        447
+      ],
+      "hook_ids": [
+        655,
+        656
+      ],
+      "cleanup": "PASS"
+    },
+    "layer_specific": {
+      "numerical": {
+        "records": 43,
+        "stage_tensors": 258,
+        "integers": 5848
+      },
+      "batches": {
+        "1": {
+          "coverage": 1.0,
+          "benign_support": 1,
+          "unknown_truth": 0,
+          "FP": 1,
+          "TN": 0,
+          "benign_fpr": 1.0
+        },
+        "10": {
+          "coverage": 1.0,
+          "benign_support": 9,
+          "unknown_truth": 1,
+          "FP": 9,
+          "TN": 0,
+          "benign_fpr": 1.0
+        },
+        "32": {
+          "coverage": 1.0,
+          "benign_support": 28,
+          "unknown_truth": 4,
+          "FP": 28,
+          "TN": 0,
+          "benign_fpr": 1.0
+        }
+      },
+      "program_ids": [
+        666,
+        667,
+        668,
+        669,
+        670,
+        671,
+        672,
+        673
+      ],
+      "map_ids": [
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456
+      ],
+      "hook_ids": [
+        666,
+        667
+      ],
+      "cleanup": "PASS"
+    }
+  },
+  "total_predictions": 86,
+  "total_stage_tensors": 516,
+  "total_integers": 11696,
+  "mismatches": 0,
+  "partial_startup_rollback": "PASS",
+  "namespace_cleanup": "PASS",
+  "Windows_native_execution": "NOT RUN",
+  "new_VM_two_machine_harness": "NOT RUN",
+  "user_reported_prior_VM_deployment": "Reported successful; no new raw VM evidence supplied"
+}

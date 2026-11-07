@@ -1,0 +1,42 @@
+{
+  "experiment_id": "932a8284442945f7a3111b45ce3574f9",
+  "collector_session": "3880dde046d748b392eab82e69a19008",
+  "mode": "static_q16",
+  "experiment_type": "LIVE socket/kernel observation; NOT offline dataset evaluation",
+  "input_connections": 10,
+  "completed_connections": 10,
+  "matched_predictions": 10,
+  "classification_coverage_all": 1.0,
+  "classification_coverage_completed": 1.0,
+  "statuses": {
+    "MATCHED": 10
+  },
+  "duplicate_identical_prediction_records": 0,
+  "ignored_foreign_session_records": 0,
+  "unmatched_prediction_flows": 33,
+  "attack_class": 1,
+  "label_mapping_provenance": "Paper IV-B3 intended coding; controlled benign demo",
+  "metrics": {
+    "input_count": 10,
+    "labeled_cases": 9,
+    "unknown_truth": 1,
+    "scored_cases": 9,
+    "missing_invalid_predictions": 0,
+    "classification_coverage": 1.0,
+    "support": {
+      "0": 9
+    },
+    "TP": 0,
+    "FP": 9,
+    "TN": 0,
+    "FN": 0,
+    "accuracy": 0.0,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "benign_false_positive_rate": 1.0,
+    "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+  },
+  "metrics_status": "PASS",
+  "scope": "Benign-only runs report conditional FPR and coverage; intrusion recall/F1 unavailable. Unknown labels remain unknown; missing predictions are abstentions."
+}

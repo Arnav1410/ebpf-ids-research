@@ -1,0 +1,43 @@
+# Isolated final harness
+
+```json
+{
+  "status": "PASS",
+  "windows_native": "NOT RUN",
+  "vm_two_machine": "NOT RUN",
+  "static_q16": {
+    "status": "PASS",
+    "tcp_batches": [
+      1,
+      10,
+      32
+    ],
+    "retained_predictions": 43,
+    "numerical": {
+      "records": 43,
+      "stage_tensors": 258,
+      "integers": 5848
+    },
+    "matching": "PASS",
+    "cleanup": "PASS"
+  },
+  "layer_specific": {
+    "status": "PASS",
+    "tcp_batches": [
+      1,
+      10,
+      32
+    ],
+    "retained_predictions": 43,
+    "numerical": {
+      "records": 43,
+      "stage_tensors": 258,
+      "integers": 5848
+    },
+    "matching": "PASS",
+    "cleanup": "PASS"
+  },
+  "partial_startup_rollback": "PASS",
+  "namespace_cleanup": "PASS"
+}
+```

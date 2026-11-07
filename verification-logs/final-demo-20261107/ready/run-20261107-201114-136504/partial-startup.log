@@ -1,0 +1,257 @@
+{
+  "status": "PASS",
+  "operation": "READ_ONLY_PREFLIGHT",
+  "boot_id": "8a78ef91-bed4-4d11-9f91-dc822fe7a271",
+  "netns_inode": 4026532225,
+  "ifindex": 3,
+  "interface": "idsdemo-s0",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "architecture": "x86_64",
+  "addresses": [
+    {
+      "ifindex": 3,
+      "link_index": 2,
+      "ifname": "idsdemo-s0",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "4a:fc:c7:ac:f1:53",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 0,
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "33.33.33.1",
+          "prefixlen": 24,
+          "scope": "global",
+          "label": "idsdemo-s0",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::48fc:c7ff:feac:f153",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "existing": {
+    "qdisc": [
+      {
+        "kind": "noqueue",
+        "handle": "0:",
+        "root": true,
+        "refcnt": 2,
+        "options": {}
+      },
+      {
+        "kind": "clsact",
+        "handle": "ffff:",
+        "parent": "ffff:fff1",
+        "options": {}
+      }
+    ],
+    "ingress": [],
+    "egress": []
+  },
+  "mode": "static_q16",
+  "controller": "/home/arnav/research/ebpf-ids-research/tc/.output/controller",
+  "object": "/home/arnav/research/ebpf-ids-research/tc/.output/tc_ids.bpf.o",
+  "schema": [
+    {
+      "event": "state_abi",
+      "flow_bytes": 272,
+      "workspace_bytes": 1160,
+      "result_bytes": 896
+    },
+    {
+      "event": "schema",
+      "minimal": false,
+      "program_type": 3,
+      "programs": 8,
+      "pins_disabled": true
+    }
+  ],
+  "kernel_btf": true,
+  "effective_capabilities": "0x1ffffffffff",
+  "attachment_capabilities": true,
+  "required": "CAP_NET_ADMIN and CAP_BPF (or CAP_SYS_ADMIN); actual load/verifier still required",
+  "planned": {
+    "ingress": "tc_entry",
+    "egress": "tc_egress",
+    "handle": 20046,
+    "priority": 49152,
+    "qdisc": "create or reuse empty clsact; never delete",
+    "client_ip": "33.33.33.73"
+  },
+  "model_bytes_per_slot": 5216,
+  "physical_verification": "NOT RUN",
+  "network_changes": "NONE"
+}
+{
+  "status": "PASS",
+  "operation": "READ_ONLY_PREFLIGHT",
+  "boot_id": "8a78ef91-bed4-4d11-9f91-dc822fe7a271",
+  "netns_inode": 4026532225,
+  "ifindex": 3,
+  "interface": "idsdemo-s0",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "architecture": "x86_64",
+  "addresses": [
+    {
+      "ifindex": 3,
+      "link_index": 2,
+      "ifname": "idsdemo-s0",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "4a:fc:c7:ac:f1:53",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 0,
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "33.33.33.1",
+          "prefixlen": 24,
+          "scope": "global",
+          "label": "idsdemo-s0",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::48fc:c7ff:feac:f153",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "existing": {
+    "qdisc": [
+      {
+        "kind": "noqueue",
+        "handle": "0:",
+        "root": true,
+        "refcnt": 2,
+        "options": {}
+      },
+      {
+        "kind": "clsact",
+        "handle": "ffff:",
+        "parent": "ffff:fff1",
+        "options": {}
+      }
+    ],
+    "ingress": [],
+    "egress": []
+  },
+  "mode": "static_q16",
+  "controller": "/home/arnav/research/ebpf-ids-research/tc/.output/controller",
+  "object": "/home/arnav/research/ebpf-ids-research/tc/.output/tc_ids.bpf.o",
+  "schema": [
+    {
+      "event": "state_abi",
+      "flow_bytes": 272,
+      "workspace_bytes": 1160,
+      "result_bytes": 896
+    },
+    {
+      "event": "schema",
+      "minimal": false,
+      "program_type": 3,
+      "programs": 8,
+      "pins_disabled": true
+    }
+  ],
+  "kernel_btf": true,
+  "effective_capabilities": "0x1ffffffffff",
+  "attachment_capabilities": true,
+  "required": "CAP_NET_ADMIN and CAP_BPF (or CAP_SYS_ADMIN); actual load/verifier still required",
+  "planned": {
+    "ingress": "tc_entry",
+    "egress": "tc_egress",
+    "handle": 20046,
+    "priority": 49152,
+    "qdisc": "create or reuse empty clsact; never delete",
+    "client_ip": "33.33.33.73"
+  },
+  "model_bytes_per_slot": 5216,
+  "physical_verification": "NOT RUN",
+  "network_changes": "NONE"
+}
+
+Child exited; inspect experiment logs
+{
+  "experiment_id": "9239fc1ef0a84cbebfe0f46d38349c62",
+  "mode": "static_q16",
+  "interface": "idsdemo-s0",
+  "server_ip": "33.33.33.1",
+  "client_ip": "33.33.33.73",
+  "port": 9000,
+  "start_unix": 1794062478.7542276,
+  "start_monotonic_ns": 76083429326845,
+  "status": "FAIL",
+  "collector_session": "75d1a1dee0264863a0d79abfeea24236",
+  "model_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "operator_uid": 1000,
+  "baseline_commit": "0ba2b2bbf9d1d24b4a98e228ff35aeb44c4e9d2d",
+  "attachments": {
+    "event": "ready",
+    "ifindex": 3,
+    "program_id": 677,
+    "handle": 20046,
+    "priority": 49152,
+    "program_ids": [
+      677,
+      678,
+      679,
+      680,
+      681,
+      682,
+      683,
+      684
+    ],
+    "map_ids": [
+      457,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464
+    ],
+    "egress_program_id": 678
+  },
+  "error": "Child exited; inspect experiment logs",
+  "end_unix": 1794062479.738701,
+  "end_monotonic_ns": 76084413797729,
+  "cleanup_errors": [],
+  "evidence_type": "Actual local TCP/kernel experiment; physical two-laptop scope depends on where operator ran it"
+}

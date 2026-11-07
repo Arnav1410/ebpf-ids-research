@@ -1,0 +1,23 @@
+test_cic_named_columns_and_nonfinite_policy (evaluation.test_audit.Audit) ... ok
+test_duplicate_cic_headers_refused (evaluation.test_audit.Audit) ... ok
+test_pickle_and_malformed_npy_rejected (evaluation.test_audit.Audit) ... ok
+test_shapes_scaler_and_class_counts (evaluation.test_audit.Audit) ... ok
+test_benign_only_has_no_intrusion_f1 (evaluation.test_metrics.Metrics) ... ok
+test_manual_confusion_matrix_and_missing (evaluation.test_metrics.Metrics) ... ok
+test_no_labels_or_predictions_not_fabricated (evaluation.test_metrics.Metrics) ... ok
+test_all_confusion_cells_and_permuted_order (demo.test_demo.Matching) ... ok
+test_conflicting_duplicates_are_ambiguous (demo.test_demo.Matching) ... ok
+test_duplicate_case_and_missing_app_record (demo.test_demo.Matching) ... ok
+test_foreign_session_wrong_experiment_and_client_error (demo.test_demo.Matching) ... ok
+test_invalid_logits_are_abstentions (demo.test_demo.Matching) ... ok
+test_missing_and_identical_duplicates_not_benign (demo.test_demo.Matching) ... ok
+test_port_reuse_does_not_use_nearest_timestamp (demo.test_demo.Matching) ... ok
+test_unknown_truth_and_benign_only_have_no_intrusion_f1 (demo.test_demo.Matching) ... ok
+test_canonical_numeric_direction_and_ports (demo.test_demo.Scenarios) ... ok
+test_prefix_bounds_and_ground_truth (demo.test_demo.Scenarios) ... ok
+test_actual_tcp_half_close_and_socket_identity (demo.test_demo.SocketProtocol) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.346s
+
+OK

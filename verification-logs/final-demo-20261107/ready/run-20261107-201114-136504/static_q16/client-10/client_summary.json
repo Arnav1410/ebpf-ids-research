@@ -1,0 +1,12 @@
+{
+  "experiment_id": "932a8284442945f7a3111b45ce3574f9",
+  "source": "Actual ordinary TCP sockets",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "input_count": 10,
+  "requested_concurrency": 10,
+  "completed": 10,
+  "failed": 0,
+  "bytes_sent": 2132,
+  "bytes_received": 1825,
+  "input_sha256": "49527cf9efbf9e7a398b4518f1a4bfcef07b4c3aedbba7c7d93a38338262cb38"
+}

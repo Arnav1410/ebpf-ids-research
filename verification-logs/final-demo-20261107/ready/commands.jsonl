@@ -1,0 +1,2 @@
+{"argv": ["make", "-C", "tc", "layer-specific"], "exit_code": 0, "log": "build.log"}
+{"argv": ["/usr/bin/python3", "-m", "unittest", "-v", "evaluation.test_audit", "evaluation.test_metrics", "demo.test_demo"], "exit_code": 0, "log": "host-tests.log"}

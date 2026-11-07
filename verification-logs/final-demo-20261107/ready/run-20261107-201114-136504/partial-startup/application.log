@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/arnav/research/ebpf-ids-research/demo/server.py", line 71, in <module>
+    serve(a)
+  File "/home/arnav/research/ebpf-ids-research/demo/server.py", line 55, in serve
+    listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);listener.bind((args.server_ip,args.port));listener.listen(64);listener.settimeout(.2)
+OSError: [Errno 98] Address already in use
