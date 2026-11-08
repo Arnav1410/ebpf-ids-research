@@ -23,3 +23,14 @@ $(OUTPUT)/tc_ids_layer.bpf.o: tc_ids.bpf.c abi.h flow_key.h $(BASE) $(LS_HEADERS
 	$(CLANG) $(BPF_FLAGS) -DIDS_LAYER_SPECIFIC -c $< -o $@
 $(OUTPUT)/controller_layer: controller.c deploy_guard.h kernel_checks.h bidirectional_checks.h abi.h flow_key.h id_scan.h $(LS_HEADERS) ../quantization/kernel_checks.h ../quantization/benchmark.h ../src/mlp_params.bpf.h | $(OUTPUT)
 	$(CLANG) -O2 -g -Wall -Wextra -pthread -DIDS_LAYER_SPECIFIC -I$(INCLUDE) $< $(LIBBPF) -lelf -lz -o $@
+
+# Separate binaries: original source parameters and existing rollback stay intact.
+FRESH_MODEL := ../deployment/models/fresh/mlp_params.bpf.h
+FRESH_CALIBRATED := ../deployment/models/fresh/calibrated.h
+FRESH_FLAGS := -DIDS_MODEL_HEADER='"../deployment/models/fresh/mlp_params.bpf.h"'
+.PHONY: demo-models
+demo-models: layer-specific $(OUTPUT)/controller_fresh $(OUTPUT)/controller_fresh_layer
+$(OUTPUT)/controller_fresh: controller.c deploy_guard.h kernel_checks.h bidirectional_checks.h abi.h flow_key.h id_scan.h ../quantization/benchmark.h ../src/params.bpf.h $(FRESH_MODEL) | $(OUTPUT)
+	$(CLANG) -O2 -g -Wall -Wextra -pthread $(FRESH_FLAGS) -I$(INCLUDE) $< $(LIBBPF) -lelf -lz -o $@
+$(OUTPUT)/controller_fresh_layer: controller.c deploy_guard.h kernel_checks.h bidirectional_checks.h abi.h flow_key.h id_scan.h $(LS_HEADERS) ../quantization/kernel_checks.h ../quantization/benchmark.h $(FRESH_MODEL) $(FRESH_CALIBRATED) | $(OUTPUT)
+	$(CLANG) -O2 -g -Wall -Wextra -pthread -DIDS_LAYER_SPECIFIC $(FRESH_FLAGS) -DIDS_CALIBRATED_HEADER='"../deployment/models/fresh/calibrated.h"' -I../quantization -I$(INCLUDE) $< $(LIBBPF) -lelf -lz -o $@

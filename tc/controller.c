@@ -24,14 +24,20 @@ typedef uint32_t u32;
 #define LIBBPF_PIN_BY_NAME 1
 #ifdef IDS_LAYER_SPECIFIC
 #include "../quantization/params.bpf.h"
-#include "../quantization/calibrated.h"
+#ifndef IDS_CALIBRATED_HEADER
+#define IDS_CALIBRATED_HEADER "../quantization/calibrated.h"
+#endif
+#include IDS_CALIBRATED_HEADER
 #define INFERENCE_MODE "layer_specific"
 #else
 #include "../src/params.bpf.h"
 #define INFERENCE_MODE "static_q16"
 #endif
 #undef PARAMS_BPF_H
-#include "../src/mlp_params.bpf.h"
+#ifndef IDS_MODEL_HEADER
+#define IDS_MODEL_HEADER "../src/mlp_params.bpf.h"
+#endif
+#include IDS_MODEL_HEADER
 #include "abi.h"
 #include "flow_key.h"
 _Static_assert(sizeof(struct tc_workspace) % 8 == 0, "per-CPU value stride must be aligned");
@@ -45,6 +51,20 @@ static int die(const char *op)
 {
     fprintf(stderr, "%s: %s (errno=%d)\n", op, strerror(errno), errno);
     return 1;
+}
+
+/* Untimed userspace evidence, read from the actual private kernel map. */
+static int save_model_readback(const char *directory, int slot, const struct Net *actual)
+{
+    char path[4096];
+    if (snprintf(path, sizeof(path), "%s/model-readback-%d.bin", directory, slot) >= (int)sizeof(path)) {
+        errno = ENAMETOOLONG; return die("model evidence path");
+    }
+    FILE *f = fopen(path, "wx");
+    if (!f) return die("create model evidence");
+    int ok = fwrite(actual, 1, sizeof(*actual), f) == sizeof(*actual);
+    if (fclose(f)) ok = 0;
+    return ok ? 0 : die("save model evidence");
 }
 
 static void print_key(const struct tc_key *key)
@@ -348,14 +368,18 @@ int main(int argc, char **argv)
         int params = bpf_object__find_map_fd_by_name(obj, "nn_parameters");
         int index_fd = bpf_object__find_map_fd_by_name(obj, "nn_idx");
         int progs_fd = bpf_object__find_map_fd_by_name(obj, "progs");
-        for (int slot = 0; slot < 2; ++slot)
+        for (int slot = 0; slot < 2; ++slot) {
             if (bpf_map_update_elem(params, &slot, &net, BPF_ANY)
                 || bpf_map_lookup_elem(params, &slot, &actual) || memcmp(&net, &actual, sizeof(net))) {
                 rc = die("model write/readback"); goto out;
             }
+            if ((serve || benchmark) && save_model_readback(logdir, slot, &actual)) { rc = 1; goto out; }
+        }
         if (bpf_map_freeze(params)) { rc = die("freeze private static model"); goto out; }
         int zero = 0;
         if (bpf_map_update_elem(index_fd, &zero, &zero, BPF_ANY)) { rc = die("select model"); goto out; }
+        int selected_slot=-1;
+        if (bpf_map_lookup_elem(index_fd, &zero, &selected_slot) || selected_slot!=0) { rc = die("model selection readback"); goto out; }
         for (uint32_t i = 0; i < 6; ++i) {
             p = bpf_object__find_program_by_name(obj, stages[i]);
             if (!p) { rc = die("stage missing"); goto out; }

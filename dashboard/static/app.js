@@ -10,6 +10,8 @@ function render() {
   el('status').className = 'badge' + (s.status === 'CONNECTED' ? ' live' : '');
   el('interface').textContent = show(s.interface);
   el('mode').textContent = show(s.mode);
+  el('model').textContent = `${show(s.model)} / ${show(s.application_port)}`;
+  el('model').title = s.model_identity ? `Kernel readback: ${s.model_identity.kernel_readback}; parameters ${s.model_identity.parameter_sha256}; scaler ${s.model_identity.scaler_sha256}` : 'No model identity reported';
   el('updated').textContent = show(s.collected_utc);
   el('hooks').textContent = ['ingress','egress'].map(h => s.hooks && s.hooks[h] ?
     `${s.hooks[h].attached && s.status === 'CONNECTED' ? 'attached' : 'not confirmed live'} #${s.hooks[h].program_id}` : 'unknown').join(' / ');

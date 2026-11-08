@@ -20,6 +20,7 @@ import uuid
 sys.dont_write_bytecode=True
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from dashboard.telemetry import Collector,RotatingLog,atomic_json
+from deployment.model_config import model_spec,verify_loaded
 
 DEFAULT_STATE=Path('/run/nn-ebpf-ids')
 HANDLE=0x4e4e;PRIORITY=49152
@@ -56,9 +57,10 @@ def check_empty(state):
         raise RuntimeError('Shared classifier block: operator review required')
 
 
-def paths(mode):
+def paths(mode,model='original'):
     suffix='_layer' if mode=='layer_specific' else ''
-    return ROOT/f'tc/.output/controller{suffix}',ROOT/f'tc/.output/tc_ids{suffix}.bpf.o'
+    selected='_fresh' if model=='fresh' else ''
+    return ROOT/f'tc/.output/controller{selected}{suffix}',ROOT/f'tc/.output/tc_ids{suffix}.bpf.o'
 
 
 def identity(interface):
@@ -73,18 +75,22 @@ def preflight(args):
     if addresses[0].get('link_type')!='ether' or 'UP' not in addresses[0].get('flags',[]):
         raise RuntimeError('Select an already UP Ethernet interface; no link settings will be changed')
     state=tc_state(interface);check_empty(state)
-    ctl,obj=paths(args.mode)
-    if not ctl.is_file() or not obj.is_file():raise RuntimeError('Build natively first: make -C tc layer-specific CLANG=clang')
+    selected=getattr(args,'model','original');model=model_spec(selected,args.mode)
+    ctl,obj=paths(args.mode,selected)
+    if not ctl.is_file() or not obj.is_file():raise RuntimeError('Build natively first: make -C tc demo-models CLANG=clang')
     with tempfile.TemporaryDirectory(prefix='tcids-inspect-') as directory:
         schema=[json.loads(v) for v in command([ctl,'--inspect',obj,directory]).splitlines()]
     status=Path('/proc/self/status').read_text();cap=int(next(s.split()[1] for s in status.splitlines() if s.startswith('CapEff:')),16)
     capable=bool(cap&(1<<12)) and bool(cap&((1<<39)|(1<<21)))
     return dict(status='PASS',operation='READ_ONLY_PREFLIGHT',**ident,kernel=platform.release(),architecture=platform.machine(),
-                addresses=addresses,existing=state,mode=args.mode,controller=str(ctl),object=str(obj),schema=schema,
+                addresses=addresses,existing=state,mode=args.mode,model=selected,model_identity=model,
+                application_port=getattr(args,'app_port',None),controller=str(ctl),object=str(obj),schema=schema,
                 kernel_btf=Path('/sys/kernel/btf/vmlinux').is_file(),effective_capabilities=hex(cap),
                 attachment_capabilities=capable,required='CAP_NET_ADMIN and CAP_BPF (or CAP_SYS_ADMIN); actual load/verifier still required',
                 planned=dict(ingress='tc_entry',egress='tc_egress',handle=HANDLE,priority=PRIORITY,
-                             qdisc='create or reuse empty clsact; never delete',client_ip=args.client_ip),
+                             qdisc='create or reuse empty clsact; never delete',client_ip=args.client_ip,
+                             application_port=getattr(args,'app_port',None),
+                             port_filter='No kernel port filter; client-IP scope unchanged; connections matched by complete TCP tuple'),
                 model_bytes_per_slot=5304 if args.mode=='layer_specific' else 5216,
                 physical_verification='NOT RUN',network_changes='NONE')
 
@@ -107,7 +113,7 @@ def control_path(directory):
 
 class Controller:
     def __init__(self,args,directory):
-        ctl,obj=paths(args.mode);self.events=[];self.pending=b'';self.directory=directory
+        ctl,obj=paths(args.mode,getattr(args,'model','original'));self.events=[];self.pending=b'';self.directory=directory
         self.stderr=(directory/'controller.log').open('w')
         self.proc=subprocess.Popen([str(ctl),'--deploy',str(obj),args.interface,str(directory),
             '--client-ip',args.client_ip],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.stderr,
@@ -173,17 +179,25 @@ def start(args):
     try:
         atomic_json(directory/'preflight.json',plan)
         controller=Controller(args,logs);ready=controller.read('ready')
+        loaded_model=verify_loaded(logs,getattr(args,'model','original'),args.mode)
+        arithmetic=next(e for e in controller.events if e['event']=='inference_mode')
+        if arithmetic['mode']!=args.mode or (args.mode=='layer_specific' and arithmetic['q_outputs'][-1]!=loaded_model['logit_q']):
+            raise RuntimeError('Loaded arithmetic metadata differs from selected model')
         current_identity=identity(args.interface)
         if ready['ifindex']!=plan['ifindex'] or any(current_identity[k]!=plan[k] for k in current_identity):
             raise RuntimeError('Interface identity changed after preflight')
-        owner=dict(**identity(args.interface),session=session,mode=args.mode,ready=ready,collector_pid=os.getpid(),active=True)
+        owner=dict(**identity(args.interface),session=session,mode=args.mode,model=getattr(args,'model','original'),
+                   model_identity=loaded_model,application_port=getattr(args,'app_port',None),
+                   experiment_id=getattr(args,'experiment_id',None),ready=ready,collector_pid=os.getpid(),active=True)
         atomic_json(directory/'owner.json',owner)
         if socket_path.exists():
             if not stat.S_ISSOCK(socket_path.lstat().st_mode):raise RuntimeError('Refusing non-socket control path')
             socket_path.unlink()
         control=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM);control.bind(str(socket_path));os.chmod(socket_path,0o600);control.listen(4)
         server_ips=[v['local'] for link in plan['addresses'] for v in link.get('addr_info',[]) if v.get('family')=='inet']
-        collector=Collector(args.interface,args.mode,session,RotatingLog(directory/'classifications.jsonl'),server_ips)
+        collector=Collector(args.interface,args.mode,session,RotatingLog(directory/'classifications.jsonl'),server_ips,
+                            model_identity=loaded_model,application_port=getattr(args,'app_port',None),
+                            experiment_id=getattr(args,'experiment_id',None))
         print(json.dumps(dict(event='deployment_ready',**owner,telemetry=str(directory/'telemetry.json'))),flush=True)
         while not stop_requested:
             hooks=hook_status(args,owner)
@@ -263,7 +277,7 @@ def stop(args):
         if any(owns_filter(f,expected) for f in state[h]):ids.append(expected)
         elif any(f.get('pref')==PRIORITY for f in state[h]):raise RuntimeError('Attachment identity changed: refusing recovery detach')
         else:ids.append(0)
-    if any(ids):print(command([paths(owner['mode'])[0],'--detach-owned',args.interface,owner['ifindex'],HANDLE,PRIORITY,*ids]))
+    if any(ids):print(command([paths(owner['mode'],owner.get('model','original'))[0],'--detach-owned',args.interface,owner['ifindex'],HANDLE,PRIORITY,*ids]))
     for kind,key in (('prog','program_ids'),('map','map_ids')):
         for _ in range(50):
             if not set(json.loads(command([paths('static_q16')[0],'--list-ids',kind])))&set(owner['ready'][key]):break
@@ -283,10 +297,14 @@ def stop(args):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=('preflight','start','status','stop','snapshot'))
     p.add_argument('--interface',required=True);p.add_argument('--mode',choices=('static_q16','layer_specific'),default='static_q16')
+    p.add_argument('--model',choices=('original','fresh'),default='original')
+    p.add_argument('--app-port',type=int,help='Application metadata; kernel still monitors client-scoped TCP on every port')
+    p.add_argument('--experiment-id',help='Experiment identity included in live telemetry and JSONL')
     p.add_argument('--client-ip',default='any');p.add_argument('--state-dir',type=Path,default=DEFAULT_STATE)
     p.add_argument('--dry-run',action='store_true');p.add_argument('--interval',type=float,default=1)
     args=p.parse_args()
     if not 0.2<=args.interval<=30:p.error('interval must be 0.2..30 seconds')
+    if args.app_port is not None and not 1<=args.app_port<=65535:p.error('app-port must be 1..65535')
     if args.client_ip!='any':ipaddress.IPv4Address(args.client_ip)
     if not args.interface or '/' in args.interface or len(args.interface)>15:p.error('Invalid interface name')
     try:

@@ -46,7 +46,7 @@ class PacketWitness(unittest.TestCase):
 
 class CleanupEvidence(unittest.TestCase):
     def test_controller_error_does_not_skip_resource_absence_checks(self):
-        import demo
+        from tc import demo
         from pathlib import Path
         from tempfile import TemporaryDirectory
         from unittest.mock import Mock, patch
@@ -62,7 +62,7 @@ class CleanupEvidence(unittest.TestCase):
             self.assertIn('controller_diagnostic',evidence)
 
     def test_cleanup_id_failure_still_checks_filters_and_reports_failure(self):
-        import demo
+        from tc import demo
         from pathlib import Path
         from tempfile import TemporaryDirectory
         from unittest.mock import Mock, patch

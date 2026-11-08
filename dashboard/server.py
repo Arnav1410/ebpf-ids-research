@@ -3,11 +3,14 @@
 import argparse
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 import json
+import ipaddress
 import os
 from pathlib import Path
 import sys
 import time
 from urllib.parse import urlsplit
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from demo.listener import inherited
 
 ASSETS=Path(__file__).resolve().parent/'static'
 LIMIT=32*1024*1024
@@ -48,7 +51,9 @@ def handler(state_path):
 
         def do_GET(self):
             host=self.headers.get('Host','').split(':',1)[0]
-            if host not in ('localhost','127.0.0.1'):self.respond(403,b'Loopback Host required\n');return
+            try:allowed=host=='localhost' or ipaddress.IPv4Address(host).is_loopback
+            except ValueError:allowed=False
+            if not allowed:self.respond(403,b'Loopback Host required\n');return
             path=urlsplit(self.path).path
             if path=='/api/state':
                 data=json.dumps(read_state(state_path),separators=(',',':')).encode()
@@ -68,10 +73,16 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state',type=Path,default=Path('/run/nn-ebpf-ids/telemetry.json'))
     p.add_argument('--bind',default='127.0.0.1');p.add_argument('--port',type=int,default=8080)
+    p.add_argument('--listen-fd',type=int,help='Internal launcher-owned loopback TCP listener')
     args=p.parse_args()
     if os.geteuid()==0:p.error('Run the HTTP dashboard without sudo; the collector is a separate privileged process')
-    if args.bind!='127.0.0.1' or not 1<=args.port<=65535:p.error('Use 127.0.0.1 and port 1..65535')
-    server=ThreadingHTTPServer((args.bind,args.port),handler(args.state))
+    try:loopback=ipaddress.IPv4Address(args.bind).is_loopback
+    except ValueError:loopback=False
+    if not loopback or not 1<=args.port<=65535:p.error('Use an IPv4 loopback address and port 1..65535')
+    server=ThreadingHTTPServer((args.bind,args.port),handler(args.state),bind_and_activate=args.listen_fd is None)
+    if args.listen_fd is not None:
+        server.socket.close();server.socket=inherited(args.listen_fd,args.bind,args.port)
+        server.server_address=server.socket.getsockname();server.server_name='localhost';server.server_port=args.port
     server.daemon_threads=True
     print(f'Read-only dashboard: http://{args.bind}:{args.port}/ ; source LIVE collector {args.state}',flush=True)
     try:server.serve_forever()

@@ -14,6 +14,7 @@ import time
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from common import token,ipv4,MAX_CASES,MAX_PAYLOAD
+from listener import inherited,reserve
 
 
 def serve(args):
@@ -51,9 +52,11 @@ def serve(args):
             with lock:
                 with args.events.open('a') as f:f.write(json.dumps(event,separators=(',',':'))+'\n')
             slots.release()
-    with socket.socket() as listener,ThreadPoolExecutor(max_workers=32) as pool:
-        listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);listener.bind((args.server_ip,args.port));listener.listen(64);listener.settimeout(.2)
-        args.ready.write_text(json.dumps(dict(experiment_id=args.experiment_id,address=listener.getsockname(),uid=os.geteuid()))+'\n')
+    listener=(inherited(args.listen_fd,args.server_ip,args.port) if getattr(args,'listen_fd',None) is not None
+              else reserve(args.server_ip,args.port,'TCP application'))
+    with listener,ThreadPoolExecutor(max_workers=32) as pool:
+        listener.settimeout(.2)
+        args.ready.write_text(json.dumps(dict(experiment_id=args.experiment_id,address=listener.getsockname(),uid=os.geteuid(),pid=os.getpid()))+'\n')
         accepted=0
         while not done.is_set() and accepted<MAX_CASES:
             if not slots.acquire(timeout=.2):continue
@@ -66,6 +69,7 @@ def serve(args):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--server-ip',type=ipv4,default='192.168.77.3');p.add_argument('--port',type=int,default=9000)
     p.add_argument('--experiment-id',type=token,required=True);p.add_argument('--events',type=Path,required=True);p.add_argument('--ready',type=Path,required=True)
+    p.add_argument('--listen-fd',type=int,help='Internal Linux launcher-owned listener, opened before dropping privileges')
     a=p.parse_args()
-    if not 1024<=a.port<=65535:p.error('Use an unprivileged TCP port')
+    if not 1<=a.port<=65535:p.error('TCP port must be 1..65535')
     serve(a)

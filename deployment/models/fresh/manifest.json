@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "model": "fresh",
+  "origin_branch": "feature/cic-external-evaluation",
+  "checkpoint_sha256": "d299f964ecaa7b918eca65529371dbfa6db8797df97ee24b73a324ab52acef1b",
+  "training_split": {
+    "train": 13187,
+    "validation": 2827,
+    "test": 2826
+  },
+  "scaler_provenance": "Training partition only; frozen, not refitted",
+  "files": {
+    "mlp_params.bpf.h": "e896b31f40fd3cfd6bf78db3c64651f882c7bd8a206438c30361e276f6da8391",
+    "calibrated.h": "3f5786fa0fb14ddf2aadd3b3619ce9df29e793714bda5221788460b5d1748fc4",
+    "calibrated.json": "658d047585a57a5b52d10d71885244bb423e0040071931c7d3452ad0b92eed2a",
+    "normalization.json": "32c01e51e8b4d4179afc7a45d828d9b8df12bcc5827c7910dea770ea73c3d9f8",
+    "pilot.jsonl": "260dae045cd7380844806889d4eed71e3e583837a96fb437bb371e27412f279e"
+  },
+  "parameter_sha256": {
+    "static_q16": "1558c438e06600d8e3a5eeb28fe23c6aed94cb693a75dea4817497add71bd8d9",
+    "layer_specific": "1db06f441987ef7eb282b5954f158fbe861a74bf59bdcbf7988c7ec5c7e2357f"
+  },
+  "pilot_selection": "Same 100 deterministic held-out rows as verified fresh-model kernel pilot; no new selection or prediction filtering"
+}

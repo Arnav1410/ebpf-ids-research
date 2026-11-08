@@ -51,8 +51,12 @@ class RotatingLog:
 
 
 class Collector:
-    def __init__(self,interface,mode,session,log,server_ips=()):
+    def __init__(self,interface,mode,session,log,server_ips=(),model_identity=None,application_port=None,experiment_id=None):
         self.interface=interface;self.mode=mode;self.session=session;self.log=log
+        self.model_identity=model_identity
+        self.model=model_identity['model'] if model_identity else 'original'
+        self.logit_q=model_identity['logit_q'] if model_identity else (18 if mode=='layer_specific' else 16)
+        self.application_port=application_port;self.experiment_id=experiment_id
         self.server_ips=set(server_ips);self.seen=set();self.recent=deque(maxlen=50)
 
     def update(self,snapshot,hooks,now=None):
@@ -92,7 +96,7 @@ class Collector:
                      server_port=key[dst+'_port'] if dst else None,role_basis=basis,
                      hooks=f['hooks'],state=state,failures=f['failures'],duplicates=f['duplicates'],
                      label=r['label'] if r else None,logits=r['tensors'][-1] if r else None,
-                     logit_q=18 if self.mode=='layer_specific' else 16,
+                     logit_q=self.logit_q,
                      completed_ns=r['completed_ns'] if r else None,features=r['features'] if r else None,
                      sequence=f['sequence'])
             rows.append(row)
@@ -105,8 +109,10 @@ class Collector:
             if len(self.seen)>=CAPACITY:raise ValueError('Result retention capacity exhausted')
             f=by_id.get(identity)
             record=dict(session=self.session,flow_id=identity,key=r['key'],mode=self.mode,
+                        model=self.model,model_identity=self.model_identity,experiment_id=self.experiment_id,
+                        application_port=self.application_port,
                         inference_monotonic_ns=r['completed_ns'],collected_unix=now,
-                        label=r['label'],logits=r['tensors'][-1],logit_q=18 if self.mode=='layer_specific' else 16,
+                        label=r['label'],logits=r['tensors'][-1],logit_q=self.logit_q,
                         features=r['features'],sequence=r['sequence'],
                         error='Earlier inference attempts failed; reason unavailable' if f and f['failures'] else None,
                         client_ip=f['client_ip'] if f else None,client_port=f['client_port'] if f else None,
@@ -119,6 +125,7 @@ class Collector:
         diagnostics=snapshot.get('numerical_diagnostics',{})
         if any(diagnostics.values()):errors.append('Experimental arithmetic rejections recorded')
         return json_safe(dict(schema=1,source='LIVE',status='CONNECTED',session=self.session,
+            model=self.model,model_identity=self.model_identity,application_port=self.application_port,experiment_id=self.experiment_id,
             interface=self.interface,mode=self.mode,hooks=hooks,collected_unix=now,
             collected_utc=datetime.fromtimestamp(now,timezone.utc).isoformat(),
             aggregate={**{k:snapshot[k] for k in COUNTERS},'tracked_flows':len(flows),'completed_results':len(results)},
