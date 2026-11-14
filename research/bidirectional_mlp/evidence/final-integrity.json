@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "original_hashed_files_unchanged": 5067,
+  "original_metadata_only_unchanged": 5,
+  "experimental_tracked_diff": "EMPTY",
+  "copied_dependencies_verified": 7,
+  "evidence_and_source_hashes": 30,
+  "tests": 39,
+  "packet_records": 5050,
+  "pilot_flows": 126,
+  "training": "NOT RUN",
+  "kernel": "NOT RUN",
+  "physical_network": "NOT RUN",
+  "gate_3": "FAIL",
+  "report": "BIDIRECTIONAL_MLP_EXPERIMENT.md"
+}

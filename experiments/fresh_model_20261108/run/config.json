@@ -1,0 +1,34 @@
+{
+  "seed": 20261108,
+  "fractions": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "epochs": 32,
+  "batch_size": 512,
+  "learning_rate": 0.001,
+  "optimizer": "Adam; PyTorch defaults",
+  "loss": "CrossEntropyLoss",
+  "architecture": [
+    6,
+    32,
+    32,
+    2
+  ],
+  "biases": false,
+  "activations": [
+    "ReLU",
+    "ReLU"
+  ],
+  "checkpoint": "Minimum validation cross-entropy; earliest epoch on exact tie",
+  "fp32_ties": "argmax: class 0, as authors training code",
+  "integer_ties": "class 1, as original kernel code",
+  "device": "cpu",
+  "threads": 1,
+  "calibration": "ALL training rows ONLY; existing conservative bound selector",
+  "labels": {
+    "0": "supplied benign",
+    "1": "supplied intrusion"
+  }
+}

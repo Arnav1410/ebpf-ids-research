@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "baseline_commit": "711b909",
+  "experiment": "bidirectional-mlp-feasibility-v1",
+  "predictions_consulted": false,
+  "training_authorized_only_after_dataset_gate": true,
+  "architecture_if_gate_passes": {
+    "layers": [
+      6,
+      32,
+      32,
+      2
+    ],
+    "bias": false,
+    "hidden_activation": "ReLU"
+  },
+  "pilot": "Reuse the previously frozen 126 source IDs (100 BENIGN, all 26 strict eligible attack annotations); verify packet references and source labels again, without loading any model.",
+  "feature_order": [
+    "segment_len_max",
+    "iat_max",
+    "segment_len_min",
+    "destination_port",
+    "tcp_header_total",
+    "packet_count"
+  ],
+  "length_unit": "TCP segment bytes = IPv4 total length minus IPv4 header bytes, including TCP options",
+  "time_unit": "integer nanoseconds; capture clock is an approximation of live helper time",
+  "input_direction": "SYN initiator to responder; service port is responder port, never canonical endpoint B by assumption",
+  "directional_iat": "max of separate direction maxima; first packet contributes zero; never subtract timestamps across directions",
+  "legacy_window": "through and including first ingress FIN/RST; subsequent reverse traffic is unavailable to that decision",
+  "candidate_window": "first RST, or the packet completing observation of FIN in both directions; closing grace 5000000000 ns from first FIN; late packets cause unscored expiration, never a backdated classification",
+  "candidate_timeout": "No asynchronous timer is asserted; an expired connection with no further packet has no prediction. A future implementation needs bounded map retention and explicit expiration telemetry.",
+  "candidate_direction_start": "Require observed client SYN; missing or ambiguous start remains unscored. Egress-first server identification is not guessed.",
+  "packet_policy": "Existing strict CIC reconstruction subset: untagged Ethernet IPv4 IHL=20, unfragmented TCP, valid lengths. Count observed retransmissions, SYN/ACK/FIN/RST; do not deduplicate or sort timestamps.",
+  "arithmetic": "Nonnegative signed-int64 feature domain, checked additions; invalid time/length/overflow rejects the offline window. Future kernel counters require checked u64 additions and a <=INT64_MAX snapshot.",
+  "label_gate": "Original tuple/time/duration plus both directional packet/payload counters must cover the entire modeled window uniquely. Never extend an earlier FIN label interval by convenience.",
+  "split_gate": "Training, validation and test must be disjoint in identifiable capture/attack campaign groups, with both binary classes represented. Use union groups for duplicate A or B vectors and known correlated campaigns; same partitions for both models. Do not split a known campaign into arbitrary rows/minutes to manufacture independence.",
+  "group_audit": "Report capture-day groups, (day, attack category, source IP, destination IP) campaign proxies, endpoint-pair proxies, and exact source duplicates separately. Proxies do not establish truly independent sessions.",
+  "csv_cleaning": "Inventory only: TCP; identity present; finite nonnegative integral selected numeric fields within int64; >=1 forward packet; port 0..65535; extrema valid for observed directions; duplicate Fwd Header Length columns must agree; exact duplicate source rows excluded deterministically. This never establishes CSV-to-kernel equivalence.",
+  "stop": "If feature/label window or leakage-controlled dataset gate fails, do not train, quantize or integrate into TC. Report feasible work and missing sources instead.",
+  "future_training": {
+    "seed": 20261109,
+    "partitions_target": [
+      0.7,
+      0.15,
+      0.15
+    ],
+    "scalers": "fit separately on identical training IDs only",
+    "checkpoint_selection": "validation loss only",
+    "test": "untouched until both checkpoints frozen"
+  }
+}

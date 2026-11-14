@@ -1,0 +1,232 @@
+{
+  "status": "PASS",
+  "execution": "Host-compiled original XDP and actual TC C arithmetic; NO kernel execution or live packet evaluation",
+  "dataset": "Checked-in reproduction numeric arrays",
+  "split": "scaling-heldout",
+  "input_count": 13844,
+  "encoded_support": {
+    "0": 4152,
+    "1": 9692
+  },
+  "common_eligible_cases": 13844,
+  "excluded_from_common": 0,
+  "checkpoint_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+  "preprocessing": "Unchanged rounded header scaler; no fitting or retraining",
+  "q16_tensor_differences": 0,
+  "layer_specific_prediction_changes": 0,
+  "numerical_reference": "Exact rational reconstruction of Q16 header; not original FP32",
+  "configurations": {
+    "xdp_q16": {
+      "valid": 13844,
+      "invalid": 0,
+      "errors": {
+        "normalized": {
+          "max_abs": 1.5258540968698436e-05,
+          "values": 83064,
+          "mean_abs": 9.206903684710858e-06
+        },
+        "linear0": {
+          "max_abs": 3.9481031844682805e-05,
+          "values": 443008,
+          "mean_abs": 1.1787113598722823e-05
+        },
+        "relu0": {
+          "max_abs": 3.9481031844682805e-05,
+          "values": 443008,
+          "mean_abs": 9.398941646220844e-06
+        },
+        "linear1": {
+          "max_abs": 9.892215450448553e-05,
+          "values": 443008,
+          "mean_abs": 2.934324708686626e-05
+        },
+        "relu1": {
+          "max_abs": 9.892215450448553e-05,
+          "values": 443008,
+          "mean_abs": 2.5485078534813764e-05
+        },
+        "logits": {
+          "max_abs": 0.00029674139579875607,
+          "values": 27688,
+          "mean_abs": 0.0001775953468331884
+        }
+      },
+      "coverage": 1.0,
+      "class_counts": {
+        "1": 10456,
+        "0": 3388
+      },
+      "supplied_code_label_diagnostics": {
+        "input_count": 13844,
+        "labeled_cases": 13844,
+        "unknown_truth": 0,
+        "scored_cases": 13844,
+        "missing_invalid_predictions": 0,
+        "classification_coverage": 1.0,
+        "support": {
+          "0": 4152,
+          "1": 9692
+        },
+        "TP": 9685,
+        "FP": 771,
+        "TN": 3381,
+        "FN": 7,
+        "accuracy": 0.9438023692574401,
+        "precision": 0.9262624330527927,
+        "recall": 0.9992777548493603,
+        "f1": 0.9613857454834227,
+        "benign_false_positive_rate": 0.1856936416184971,
+        "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+      },
+      "diagnostic_scope": "Scores supplied numeric labels under paper coding; collection labels and model training overlap unverified. NOT independent detection effectiveness."
+    },
+    "tc_q16": {
+      "valid": 13844,
+      "invalid": 0,
+      "errors": {
+        "normalized": {
+          "max_abs": 1.5258540968698436e-05,
+          "values": 83064,
+          "mean_abs": 9.206903684710858e-06
+        },
+        "linear0": {
+          "max_abs": 3.9481031844682805e-05,
+          "values": 443008,
+          "mean_abs": 1.1787113598722823e-05
+        },
+        "relu0": {
+          "max_abs": 3.9481031844682805e-05,
+          "values": 443008,
+          "mean_abs": 9.398941646220844e-06
+        },
+        "linear1": {
+          "max_abs": 9.892215450448553e-05,
+          "values": 443008,
+          "mean_abs": 2.934324708686626e-05
+        },
+        "relu1": {
+          "max_abs": 9.892215450448553e-05,
+          "values": 443008,
+          "mean_abs": 2.5485078534813764e-05
+        },
+        "logits": {
+          "max_abs": 0.00029674139579875607,
+          "values": 27688,
+          "mean_abs": 0.0001775953468331884
+        }
+      },
+      "coverage": 1.0,
+      "class_counts": {
+        "1": 10456,
+        "0": 3388
+      },
+      "supplied_code_label_diagnostics": {
+        "input_count": 13844,
+        "labeled_cases": 13844,
+        "unknown_truth": 0,
+        "scored_cases": 13844,
+        "missing_invalid_predictions": 0,
+        "classification_coverage": 1.0,
+        "support": {
+          "0": 4152,
+          "1": 9692
+        },
+        "TP": 9685,
+        "FP": 771,
+        "TN": 3381,
+        "FN": 7,
+        "accuracy": 0.9438023692574401,
+        "precision": 0.9262624330527927,
+        "recall": 0.9992777548493603,
+        "f1": 0.9613857454834227,
+        "benign_false_positive_rate": 0.1856936416184971,
+        "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+      },
+      "diagnostic_scope": "Scores supplied numeric labels under paper coding; collection labels and model training overlap unverified. NOT independent detection effectiveness."
+    },
+    "tc_layer_specific": {
+      "valid": 13844,
+      "invalid": 0,
+      "errors": {
+        "normalized": {
+          "max_abs": 1.1919152269438631e-07,
+          "values": 83064,
+          "mean_abs": 5.061524474733053e-08
+        },
+        "linear0": {
+          "max_abs": 2.4820535961665647e-07,
+          "values": 443008,
+          "mean_abs": 4.383736010501964e-08
+        },
+        "relu0": {
+          "max_abs": 2.008207532636149e-07,
+          "values": 443008,
+          "mean_abs": 2.7017531891614816e-08
+        },
+        "linear1": {
+          "max_abs": 6.193294722047046e-07,
+          "values": 443008,
+          "mean_abs": 1.294955748565743e-07
+        },
+        "relu1": {
+          "max_abs": 6.193294722047046e-07,
+          "values": 443008,
+          "mean_abs": 8.579891275455938e-08
+        },
+        "logits": {
+          "max_abs": 3.4770068044030657e-06,
+          "values": 27688,
+          "mean_abs": 9.91370080459385e-07
+        }
+      },
+      "coverage": 1.0,
+      "class_counts": {
+        "1": 10456,
+        "0": 3388
+      },
+      "supplied_code_label_diagnostics": {
+        "input_count": 13844,
+        "labeled_cases": 13844,
+        "unknown_truth": 0,
+        "scored_cases": 13844,
+        "missing_invalid_predictions": 0,
+        "classification_coverage": 1.0,
+        "support": {
+          "0": 4152,
+          "1": 9692
+        },
+        "TP": 9685,
+        "FP": 771,
+        "TN": 3381,
+        "FN": 7,
+        "accuracy": 0.9438023692574401,
+        "precision": 0.9262624330527927,
+        "recall": 0.9992777548493603,
+        "f1": 0.9613857454834227,
+        "benign_false_positive_rate": 0.1856936416184971,
+        "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+      },
+      "diagnostic_scope": "Scores supplied numeric labels under paper coding; collection labels and model training overlap unverified. NOT independent detection effectiveness."
+    }
+  },
+  "independently_labeled_intrusion_metrics": {
+    "status": "NOT RUN",
+    "accuracy": null,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "reason": "No independently verified collection/split provenance; CIC feature/checkpoint compatibility not established"
+  },
+  "split_warning": "Scaling-heldout excludes offline scale-calibration vectors, NOT necessarily original model training rows",
+  "paper_reference": {
+    "cic_offline": {
+      "accuracy": 0.974,
+      "f1": 0.933
+    },
+    "reproduction_realtime": {
+      "accuracy": 0.994,
+      "f1": 0.992
+    },
+    "scope": "Published Table V values; unequal protocol, not our results"
+  }
+}

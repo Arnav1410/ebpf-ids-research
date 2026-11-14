@@ -1,0 +1,406 @@
+{
+  "status": "PASS",
+  "scope": "Offline FP32 CICFlowMeter CSV held-out classification; not kernel or live IDS performance",
+  "base_commit": "711b909261e352cfb87ce3c34d598f5615e04661",
+  "branch": "feature/bidirectional-mlp",
+  "csv_sha256": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815",
+  "protocol_sha256": "5eba16140f65cb369dbac09d59bd13aa2e03c96ef2b32524dba73d18ec2ce86c",
+  "split_sha256": "fc70a08f076b6e85f2887861785d5c30e0791f76433af7e18fb7e9f9f309fb72",
+  "raw_source_rows": 445909,
+  "source_tcp_rows": 245781,
+  "eligible_tcp_rows": 244610,
+  "eligible_support": {
+    "0": 230775,
+    "1": 13835
+  },
+  "split": {
+    "train": {
+      "rows": 172715,
+      "binary_support": {
+        "0": 161402,
+        "1": 11313
+      },
+      "categories": {
+        "BENIGN": 161402,
+        "FTP-Patator": 5537,
+        "SSH-Patator": 5776
+      },
+      "groups": 28268
+    },
+    "validation": {
+      "rows": 35947,
+      "binary_support": {
+        "0": 34687,
+        "1": 1260
+      },
+      "categories": {
+        "BENIGN": 34687,
+        "FTP-Patator": 1200,
+        "SSH-Patator": 60
+      },
+      "groups": 10807
+    },
+    "test": {
+      "rows": 35948,
+      "binary_support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "categories": {
+        "BENIGN": 34686,
+        "FTP-Patator": 1201,
+        "SSH-Patator": 61
+      },
+      "groups": 10806
+    }
+  },
+  "grouping": "If first scheme cannot achieve each target within 5 percentage points with each source category represented, omit endpoint/minute unions; retain exact vectors and canonical tuples",
+  "campaign_independent": false,
+  "models": {
+    "forward": {
+      "TN": 34678,
+      "FP": 8,
+      "FN": 65,
+      "TP": 1197,
+      "confusion_matrix": [
+        [
+          34678,
+          8
+        ],
+        [
+          65,
+          1197
+        ]
+      ],
+      "accuracy": 0.9979692889729609,
+      "precision": 0.9933609958506224,
+      "recall": 0.9484944532488114,
+      "f1": 0.9704094041345764,
+      "specificity": 0.9997693593957216,
+      "false_positive_rate": 0.00023064060427838322,
+      "balanced_accuracy": 0.9741319063222665,
+      "mcc": 0.9696361157747866,
+      "input_count": 35948,
+      "valid_predictions": 35948,
+      "missing_invalid": 0,
+      "coverage": 1.0,
+      "support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "scored_support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "missing_by_class": {
+        "0": 0,
+        "1": 0
+      },
+      "average_precision": 0.982828204491718,
+      "pr_auc_trapezoidal": 0.9827866927631118
+    },
+    "bidirectional": {
+      "TN": 34682,
+      "FP": 4,
+      "FN": 652,
+      "TP": 610,
+      "confusion_matrix": [
+        [
+          34682,
+          4
+        ],
+        [
+          652,
+          610
+        ]
+      ],
+      "accuracy": 0.981751418715923,
+      "precision": 0.993485342019544,
+      "recall": 0.48335974643423135,
+      "f1": 0.650319829424307,
+      "specificity": 0.9998846796978608,
+      "false_positive_rate": 0.00011532030213919161,
+      "balanced_accuracy": 0.741622213066046,
+      "mcc": 0.6864249375468788,
+      "input_count": 35948,
+      "valid_predictions": 35948,
+      "missing_invalid": 0,
+      "coverage": 1.0,
+      "support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "scored_support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "missing_by_class": {
+        "0": 0,
+        "1": 0
+      },
+      "average_precision": 0.9775984519030684,
+      "pr_auc_trapezoidal": 0.977360044206713
+    }
+  },
+  "paired": {
+    "disagreements": 599,
+    "corrected": 8,
+    "made_incorrect": 591,
+    "by_class": {
+      "0": {
+        "support": 34686,
+        "changed": 12,
+        "corrected": 8,
+        "made_incorrect": 4
+      },
+      "1": {
+        "support": 1262,
+        "changed": 587,
+        "corrected": 0,
+        "made_incorrect": 587
+      }
+    },
+    "f1_difference": -0.32008957471026944,
+    "f1_difference_percentage_points": -32.008957471026946,
+    "bootstrap": {
+      "method": "Paired test union-component percentile bootstrap",
+      "groups": 10806,
+      "draws": 2000,
+      "valid_draws": 2000,
+      "seed": 20261110,
+      "f1_difference_95_percentile": [
+        -0.32780648602290935,
+        -0.3038060501054299
+      ],
+      "percentage_point_95_percentile": [
+        -32.78064860229094,
+        -30.38060501054299
+      ],
+      "limitation": "Conditional on frozen models and imperfect proxy groups; residual campaign correlation and training-seed variability are not covered."
+    }
+  },
+  "baselines": {
+    "majority": {
+      "TN": 34686,
+      "FP": 0,
+      "FN": 1262,
+      "TP": 0,
+      "confusion_matrix": [
+        [
+          34686,
+          0
+        ],
+        [
+          1262,
+          0
+        ]
+      ],
+      "accuracy": 0.9648937353955713,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0,
+      "specificity": 1.0,
+      "false_positive_rate": 0.0,
+      "balanced_accuracy": 0.5,
+      "mcc": null,
+      "input_count": 35948,
+      "valid_predictions": 35948,
+      "missing_invalid": 0,
+      "coverage": 1.0,
+      "support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "scored_support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "missing_by_class": {
+        "0": 0,
+        "1": 0
+      },
+      "average_precision": null,
+      "pr_auc_trapezoidal": null
+    },
+    "destination_port_only": {
+      "TN": 34645,
+      "FP": 41,
+      "FN": 0,
+      "TP": 1262,
+      "confusion_matrix": [
+        [
+          34645,
+          41
+        ],
+        [
+          0,
+          1262
+        ]
+      ],
+      "accuracy": 0.9988594636697452,
+      "precision": 0.9685341519570223,
+      "recall": 1.0,
+      "f1": 0.9840155945419103,
+      "specificity": 0.9988179669030733,
+      "false_positive_rate": 0.001182033096926714,
+      "balanced_accuracy": 0.9994089834515367,
+      "mcc": 0.9835595114348217,
+      "input_count": 35948,
+      "valid_predictions": 35948,
+      "missing_invalid": 0,
+      "coverage": 1.0,
+      "support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "scored_support": {
+        "0": 34686,
+        "1": 1262
+      },
+      "missing_by_class": {
+        "0": 0,
+        "1": 0
+      },
+      "average_precision": null,
+      "pr_auc_trapezoidal": null
+    }
+  },
+  "per_category": {
+    "forward": {
+      "BENIGN": {
+        "support": 34686,
+        "predicted_intrusion": 8,
+        "intrusion_detection_recall": null,
+        "benign_false_positive_rate": 0.00023064060427838322,
+        "confusion_matrix": [
+          [
+            34678,
+            8
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "FTP-Patator": {
+        "support": 1201,
+        "predicted_intrusion": 1168,
+        "intrusion_detection_recall": 0.9725228975853455,
+        "benign_false_positive_rate": null,
+        "confusion_matrix": [
+          [
+            0,
+            0
+          ],
+          [
+            33,
+            1168
+          ]
+        ]
+      },
+      "SSH-Patator": {
+        "support": 61,
+        "predicted_intrusion": 29,
+        "intrusion_detection_recall": 0.47540983606557374,
+        "benign_false_positive_rate": null,
+        "confusion_matrix": [
+          [
+            0,
+            0
+          ],
+          [
+            32,
+            29
+          ]
+        ]
+      }
+    },
+    "bidirectional": {
+      "BENIGN": {
+        "support": 34686,
+        "predicted_intrusion": 4,
+        "intrusion_detection_recall": null,
+        "benign_false_positive_rate": 0.00011532030213919161,
+        "confusion_matrix": [
+          [
+            34682,
+            4
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "FTP-Patator": {
+        "support": 1201,
+        "predicted_intrusion": 583,
+        "intrusion_detection_recall": 0.48542880932556204,
+        "benign_false_positive_rate": null,
+        "confusion_matrix": [
+          [
+            0,
+            0
+          ],
+          [
+            618,
+            583
+          ]
+        ]
+      },
+      "SSH-Patator": {
+        "support": 61,
+        "predicted_intrusion": 27,
+        "intrusion_detection_recall": 0.4426229508196721,
+        "benign_false_positive_rate": null,
+        "confusion_matrix": [
+          [
+            0,
+            0
+          ],
+          [
+            34,
+            27
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "status": "PASS",
+    "host_tests": 19,
+    "command": [
+      "/tmp/nn-ebpf-cic-bidir-20261109/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "research.cic_csv_mlp.test_study"
+    ],
+    "kernel_tests": "NOT RUN",
+    "live_network_tests": "NOT RUN"
+  },
+  "saved_record_audit": {
+    "status": "PASS",
+    "records_recomputed": 35948,
+    "checkpoint_reload_logits_bitwise_equal": {
+      "forward_validation": 35947,
+      "forward_test": 35948,
+      "bidirectional_validation": 35947,
+      "bidirectional_test": 35948
+    },
+    "training_only_scaler_recalculation": "PASS",
+    "checkpoint_selection_from_validation_only": "PASS",
+    "metrics_and_prediction_csv_recomputed": "PASS",
+    "row_and_component_and_both_feature_overlap": 0,
+    "original_main_checkout_files_preserved": 5067,
+    "prior_worktree_study_files_preserved": 25,
+    "scope": "Host offline checks only; no BPF/kernel or live-network execution"
+  },
+  "kernel_execution": "NOT RUN",
+  "live_network_detection": "NOT RUN",
+  "production_changes": [],
+  "commit_performed": false,
+  "push_performed": false
+}

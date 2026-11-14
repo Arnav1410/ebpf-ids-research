@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "host_tests": 19,
+  "command": [
+    "/tmp/nn-ebpf-cic-bidir-20261109/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "research.cic_csv_mlp.test_study"
+  ],
+  "kernel_tests": "NOT RUN",
+  "live_network_tests": "NOT RUN"
+}

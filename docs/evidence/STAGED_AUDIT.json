@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "scan": "Entire selected committed candidate tree; no secret contents printed",
+  "files_scanned": 649,
+  "bytes": 20677407,
+  "patterns": [
+    "github_token",
+    "aws_access",
+    "private_key"
+  ],
+  "findings": [],
+  "candidate_history_payload_paths": 0,
+  "maximum_file_size_bytes": 3841147,
+  "limitations": "Signature-based scan cannot prove absence of all secrets. Historical feature branches remain untouched and may contain payloads."
+}

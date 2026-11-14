@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "duplicate_group_overlap": 0,
+  "row_overlap": 0,
+  "total": 18840,
+  "split_sha256": "da9d644b2f8d03bedba68fb626ab98fca6e1f52782b018ef0b3ea99006420638",
+  "frozen_inputs": {
+    "train.npz": "a6e3635b339b93534f2db736a21f03738a80fa4209ea116ea7e0ed6a17b87d71",
+    "validation.npz": "aba49c4f31834f6c1d37a20c18b54a970bd3ffd50ffb8092e2ff132f48bb2a10",
+    "test.npz": "89b7020a753bb9ea036f17d78a0f4f6407fdbe36e38adb049d5ddac7262c7ff7",
+    "config.json": "cf3db03843efb674581c5617fa5cf6abc126791f40efa2ec90e3910c4d44ba71"
+  }
+}

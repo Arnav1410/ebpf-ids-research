@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "validation_thresholds_frozen_before_test": true,
+  "selected_test_applications_per_model": 1,
+  "test_decisions_audited": 35948,
+  "host_tests": 11,
+  "randomized_selector_crosschecks": 100,
+  "old_study_files_unchanged": 84,
+  "main_checkout_files_unchanged": 5067,
+  "read_protected_metadata_files_unchanged": 5,
+  "no_retraining_or_new_neural_inference": true,
+  "original_tracked_diff": "EMPTY",
+  "source_and_artifact_hash_entries": 35,
+  "figure_links": "PASS"
+}

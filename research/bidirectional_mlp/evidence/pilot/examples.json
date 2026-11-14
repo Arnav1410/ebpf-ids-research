@@ -1,0 +1,264 @@
+{
+  "scope": "OFFLINE historical packet reconstructions; not kernel or MLP executions",
+  "sample_count": 126,
+  "samples": [
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:94699",
+      "csv_line": 94699,
+      "category": "BENIGN",
+      "label": 0,
+      "client": [
+        "192.168.10.5",
+        54860
+      ],
+      "server": [
+        "40.80.145.38",
+        80
+      ],
+      "forward": [
+        2076,
+        76108057000,
+        20,
+        80,
+        552,
+        27
+      ],
+      "bidirectional_at_legacy_trigger": [
+        2076,
+        76108057000,
+        20,
+        80,
+        1004,
+        49
+      ],
+      "directions": [
+        {
+          "count": 27,
+          "header_total": 552,
+          "minimum": 20,
+          "maximum": 2076,
+          "last_ns": 1499177246465490000,
+          "iat_max": 76108057000,
+          "fin_seen": true
+        },
+        {
+          "count": 22,
+          "header_total": 452,
+          "minimum": 20,
+          "maximum": 1975,
+          "last_ns": 1499177170357368000,
+          "iat_max": 2060577000,
+          "fin_seen": false
+        }
+      ],
+      "trigger": {
+        "packet_index": 7555203,
+        "block_index": 7555205,
+        "file_offset": 8636449356,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499177246465490000,
+        "captured_length": 60,
+        "wire_length": 60
+      },
+      "trigger_flags": 17,
+      "candidate_trigger_index_within_available_prefix": null,
+      "candidate_window_label_validated": false,
+      "candidate_prefix_status": "NO_CANDIDATE_TRIGGER_IN_PREFIX"
+    },
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:11362",
+      "csv_line": 11362,
+      "category": "FTP-Patator",
+      "label": 1,
+      "client": [
+        "172.16.0.1",
+        60138
+      ],
+      "server": [
+        "192.168.10.50",
+        21
+      ],
+      "forward": [
+        54,
+        3314868000,
+        32,
+        21,
+        264,
+        8
+      ],
+      "bidirectional_at_legacy_trigger": [
+        66,
+        3314868000,
+        32,
+        21,
+        592,
+        18
+      ],
+      "directions": [
+        {
+          "count": 8,
+          "header_total": 264,
+          "minimum": 32,
+          "maximum": 54,
+          "last_ns": 1499174417086305000,
+          "iat_max": 3314868000,
+          "fin_seen": true
+        },
+        {
+          "count": 10,
+          "header_total": 328,
+          "minimum": 32,
+          "maximum": 66,
+          "last_ns": 1499174417083376000,
+          "iat_max": 3270044000,
+          "fin_seen": false
+        }
+      ],
+      "trigger": {
+        "packet_index": 6803850,
+        "block_index": 6803852,
+        "file_offset": 8100501908,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499174417086305000,
+        "captured_length": 66,
+        "wire_length": 66
+      },
+      "trigger_flags": 17,
+      "candidate_trigger_index_within_available_prefix": null,
+      "candidate_window_label_validated": false,
+      "candidate_prefix_status": "NO_CANDIDATE_TRIGGER_IN_PREFIX"
+    },
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:178331",
+      "csv_line": 178331,
+      "category": "SSH-Patator",
+      "label": 1,
+      "client": [
+        "172.16.0.1",
+        51408
+      ],
+      "server": [
+        "192.168.10.50",
+        22
+      ],
+      "forward": [
+        672,
+        2609673000,
+        32,
+        22,
+        744,
+        23
+      ],
+      "bidirectional_at_legacy_trigger": [
+        1008,
+        2609673000,
+        32,
+        22,
+        1616,
+        50
+      ],
+      "directions": [
+        {
+          "count": 23,
+          "header_total": 744,
+          "minimum": 32,
+          "maximum": 672,
+          "last_ns": 1499191300120803000,
+          "iat_max": 2609673000,
+          "fin_seen": true
+        },
+        {
+          "count": 27,
+          "header_total": 872,
+          "minimum": 32,
+          "maximum": 1008,
+          "last_ns": 1499191300020091000,
+          "iat_max": 2564321000,
+          "fin_seen": false
+        }
+      ],
+      "trigger": {
+        "packet_index": 10127705,
+        "block_index": 10127707,
+        "file_offset": 10226612268,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499191300120803000,
+        "captured_length": 66,
+        "wire_length": 66
+      },
+      "trigger_flags": 17,
+      "candidate_trigger_index_within_available_prefix": null,
+      "candidate_window_label_validated": false,
+      "candidate_prefix_status": "NO_CANDIDATE_TRIGGER_IN_PREFIX"
+    }
+  ],
+  "candidate_matching_rows": [
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:381383",
+      "category": "BENIGN",
+      "trigger_flags": 20,
+      "trigger": {
+        "packet_index": 8029440,
+        "block_index": 8029442,
+        "file_offset": 8913046028,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499179845972972000,
+        "captured_length": 60,
+        "wire_length": 60
+      },
+      "candidate_trigger_index_within_available_prefix": 8029440
+    },
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:313570",
+      "category": "BENIGN",
+      "trigger_flags": 20,
+      "trigger": {
+        "packet_index": 7761838,
+        "block_index": 7761840,
+        "file_offset": 8746830048,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499178576636355000,
+        "captured_length": 60,
+        "wire_length": 60
+      },
+      "candidate_trigger_index_within_available_prefix": 7761838
+    },
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:323784",
+      "category": "BENIGN",
+      "trigger_flags": 20,
+      "trigger": {
+        "packet_index": 10609757,
+        "block_index": 10609759,
+        "file_offset": 10513558824,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499193727159891000,
+        "captured_length": 60,
+        "wire_length": 60
+      },
+      "candidate_trigger_index_within_available_prefix": 10609757
+    },
+    {
+      "source_record_id": "ae9c88e10c41a8eb1ff454ae98bc513454925097d0b0b57180f94e79de445815:426521",
+      "category": "BENIGN",
+      "trigger_flags": 20,
+      "trigger": {
+        "packet_index": 9890383,
+        "block_index": 9890385,
+        "file_offset": 10102894056,
+        "section": 0,
+        "interface": 0,
+        "timestamp_ns": 1499190324275973000,
+        "captured_length": 60,
+        "wire_length": 60
+      },
+      "candidate_trigger_index_within_available_prefix": 9890383
+    }
+  ]
+}

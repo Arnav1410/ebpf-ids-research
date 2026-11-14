@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "execution": "FP32 PyTorch CPU HOST; no kernel execution",
+  "metrics": {
+    "TP": 1984,
+    "FP": 9,
+    "TN": 829,
+    "FN": 4,
+    "confusion_matrix": [
+      [
+        829,
+        9
+      ],
+      [
+        4,
+        1984
+      ]
+    ],
+    "accuracy": 0.9953998584571833,
+    "precision": 0.9954841946813848,
+    "recall": 0.9979879275653923,
+    "f1": 0.9967344888219041,
+    "specificity": 0.9892601431980907,
+    "false_positive_rate": 0.010739856801909307,
+    "balanced_accuracy": 0.9936240353817416,
+    "mcc": 0.9889636816689813,
+    "per_class": {
+      "0": {
+        "precision": 0.9951980792316927,
+        "recall": 0.9892601431980907,
+        "f1": 0.9922202274087373,
+        "support": 838
+      },
+      "1": {
+        "precision": 0.9954841946813848,
+        "recall": 0.9979879275653923,
+        "f1": 0.9967344888219041,
+        "support": 1988
+      }
+    },
+    "macro_f1": 0.9944773581153207,
+    "weighted_f1": 0.9953958649492098,
+    "input_count": 2826,
+    "valid_predictions": 2826,
+    "invalid_missing": 0,
+    "coverage": 1.0,
+    "support": {
+      "0": 838,
+      "1": 1988
+    }
+  },
+  "ties": 0,
+  "prediction_sha256": "e3c3aed5cc915daf4db035077f7884bf04c2968cf2b87e890cfdd0ff51c4970a",
+  "model_sha256": "d299f964ecaa7b918eca65529371dbfa6db8797df97ee24b73a324ab52acef1b",
+  "scaler_sha256": "398d55164614ecc6c5307b27bada51fe435f81e4dd27cfddb1c2e3489ebd8fed",
+  "preservation": {
+    "status": "PASS",
+    "unchanged_files": 1262
+  }
+}

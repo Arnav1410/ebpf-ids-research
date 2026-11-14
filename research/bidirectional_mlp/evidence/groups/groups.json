@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "scope": "Predictions-blind grouping audit, NOT a train/test split",
+  "eligible": 62615,
+  "categories": {
+    "BENIGN": 62589,
+    "FTP-Patator": 5,
+    "SSH-Patator": 21
+  },
+  "capture_days": {
+    "2017-07-04": 62615
+  },
+  "zero_reverse": 0,
+  "campaign_proxies": [
+    {
+      "group": [
+        "2017-07-04",
+        "FTP-Patator",
+        "172.16.0.1",
+        "192.168.10.50"
+      ],
+      "count": 5,
+      "source_minutes": {
+        "4/7/2017 10:20": 4,
+        "4/7/2017 10:30": 1
+      }
+    },
+    {
+      "group": [
+        "2017-07-04",
+        "SSH-Patator",
+        "172.16.0.1",
+        "192.168.10.50"
+      ],
+      "count": 21,
+      "source_minutes": {
+        "4/7/2017 3:01": 10,
+        "4/7/2017 3:11": 10,
+        "4/7/2017 3:07": 1
+      }
+    }
+  ],
+  "attack_endpoint_pairs": [
+    {
+      "pair": [
+        "172.16.0.1",
+        "192.168.10.50"
+      ],
+      "count": 26
+    }
+  ],
+  "viable_three_partition_campaign_split": false,
+  "policy_sha256": "cd9a4ea29cd76ccbd5ad20552fbe416e7c94c745c337932cdd0aead21cc9e8bb",
+  "eligible_archive_sha256": "5615c157b61629f3a5e9bc541618c19c835cd7c2b4c38c98ccb64a82ec457985",
+  "gate": "FAIL",
+  "reason": "At least three disjoint positive campaign groups are necessary to represent intrusion in train/validation/test without splitting these correlated groups. Only proxies, not independently verified session IDs, are recoverable.",
+  "training": "NOT RUN",
+  "kernel_integration": "NOT RUN"
+}

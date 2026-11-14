@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-09",
+  "experiment": "bidirectional-mlp-feasibility-v1",
+  "result": "STOPPED_AT_REQUIRED_DATASET_GATE",
+  "base_commit": "711b909261e352cfb87ce3c34d598f5615e04661",
+  "experimental_branch": "feature/bidirectional-mlp",
+  "new_commit": null,
+  "gates": {
+    "0_preservation": "PASS",
+    "1_source_audit": "PASS",
+    "2_offline_specification_reference": "PASS",
+    "3_training_dataset": "FAIL",
+    "4_training": "NOT RUN",
+    "5_classification_evaluation": "NOT RUN",
+    "6_new_bpf_verifier": "NOT RUN",
+    "7_quantized_kernel_inference": "NOT RUN",
+    "8_live_network_control": "NOT RUN"
+  },
+  "blockers": [
+    "Only four benign pilot label windows coincide with the candidate termination; 122 other windows, including all attack samples, need revalidation.",
+    "Only two positive campaign proxies in the strict eligible pool; no agreed three-way campaign-disjoint split with intrusion in every partition."
+  ],
+  "new_models": {
+    "forward_only_control": {
+      "status": "NOT RUN",
+      "checkpoint": null,
+      "metrics": {
+        "accuracy": null,
+        "precision": null,
+        "recall": null,
+        "f1": null,
+        "TP": null,
+        "FP": null,
+        "TN": null,
+        "FN": null,
+        "specificity": null,
+        "false_positive_rate": null,
+        "balanced_accuracy": null,
+        "MCC": null,
+        "confusion_matrix": null,
+        "class_support": null,
+        "classification_coverage": null
+      }
+    },
+    "bidirectional_experiment": {
+      "status": "NOT RUN",
+      "checkpoint": null,
+      "metrics": {
+        "accuracy": null,
+        "precision": null,
+        "recall": null,
+        "f1": null,
+        "TP": null,
+        "FP": null,
+        "TN": null,
+        "FN": null,
+        "specificity": null,
+        "false_positive_rate": null,
+        "balanced_accuracy": null,
+        "MCC": null,
+        "confusion_matrix": null,
+        "class_support": null,
+        "classification_coverage": null
+      }
+    }
+  },
+  "prediction_disagreements": null,
+  "per_attack_metrics": null,
+  "per_capture_metrics": null,
+  "confusion_matrix_figures": [],
+  "pilot": {
+    "records": 126,
+    "packets": 5050,
+    "scope": "OFFLINE feature extraction; not Linux kernel execution",
+    "features_changed_by_reverse_packets": [
+      92,
+      49,
+      0,
+      0,
+      126,
+      126
+    ]
+  },
+  "tests": {
+    "host": "PASS",
+    "count": 39,
+    "kernel": "NOT RUN",
+    "network": "NOT RUN"
+  },
+  "production_changes": [],
+  "downloaded_files": [],
+  "privileged_tests": [],
+  "push_performed": false
+}

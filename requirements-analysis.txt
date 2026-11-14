@@ -1,0 +1,4 @@
+# Python 3.10; CPU torch is installed separately from the official CPU wheel index.
+numpy==2.2.6
+scikit-learn==1.7.2
+matplotlib==3.10.3

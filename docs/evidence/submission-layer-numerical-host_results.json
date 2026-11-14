@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "gate": 3,
+  "execution": "Host compiled C only; not kernel",
+  "records": 19004,
+  "dataset_rows": 18840,
+  "stage_tensors": 114024,
+  "integers": 2584544,
+  "boundary_checks": 121,
+  "parameter_bytes": 5304,
+  "parameter_sha256": "7238efdcabc885400037d118e99accc8a440c3fec3140be415b60d304da5347a",
+  "tensor_sha256": "ec22cf1ccf4fd63163715a414f6fc01f62c1720599a8d962aebcfe933d8b9bce",
+  "mismatches": 0,
+  "ubsan": "PASS",
+  "ubsan_output": "UBSan: 19004 supported network fixtures; boundary guards passed"
+}

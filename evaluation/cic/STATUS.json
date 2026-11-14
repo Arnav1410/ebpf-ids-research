@@ -1,0 +1,755 @@
+{
+  "status": "PASS: qualified smaller external offline evaluation; 30000-flow balanced target NOT ACHIEVED",
+  "date": "2026-11-08",
+  "branch": "feature/cic-external-evaluation",
+  "baseline_commit": "73868b101d1c1f5e27c6f71eceaa78a645368445",
+  "source_changes": "Uncommitted new offline framework/documents; existing production sources unchanged",
+  "milestones": {
+    "1_provenance": "PASS with unknown checkpoint training membership",
+    "2_sources": "PASS operator-supplied original-style Tuesday artifacts; source authentication not independently established",
+    "3_pilot": "PASS 126 flows",
+    "4_resource_batch": "PASS 2500 flows; validation-only, not balanced scoring",
+    "5_frozen_final": "PASS 15026 flows; target 30000 NOT ACHIEVED",
+    "6_three_arithmetic_modes": "PASS host C/reference comparisons; layer-specific domain rejections retained",
+    "7_metrics_audit": "PASS raw predictions recomputed and sklearn cross-checked"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "sklearn": "1.7.2",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3"
+  },
+  "source_binding": "verification-logs/cic-external-20261108/source-binding.json",
+  "source_binding_sha256": "ea2f5c0b01fe1e653ea8cb09bf31563be8f504a560d046b805d64f79267915fa",
+  "cohort_sha256": "c675d42cb3b3dc30ca70a534081d3cfdec33cd787c0059306cc2b9e656da93f7",
+  "source_rows": 445909,
+  "tcp_source_rows": 245781,
+  "eligible_pool": 62615,
+  "selected": 15026,
+  "selected_support": {
+    "0": 15000,
+    "1": 26
+  },
+  "selected_categories": {
+    "BENIGN": 15000,
+    "FTP-Patator": 5,
+    "SSH-Patator": 21
+  },
+  "modes": {
+    "xdp_q16": {
+      "input_count": 15026,
+      "valid_predictions": 15026,
+      "missing_predictions": 0,
+      "missing_by_class": {},
+      "class_support": {
+        "0": 15000,
+        "1": 26
+      },
+      "scored_class_support": {
+        "0": 15000,
+        "1": 26
+      },
+      "classification_coverage": 1.0,
+      "TP": 25,
+      "FP": 12969,
+      "TN": 2031,
+      "FN": 1,
+      "confusion_matrix": [
+        [
+          2031,
+          12969
+        ],
+        [
+          1,
+          25
+        ]
+      ],
+      "accuracy": 0.13682949554106216,
+      "precision": 0.0019239649068800986,
+      "recall": 0.9615384615384616,
+      "specificity": 0.1354,
+      "false_positive_rate": 0.8646,
+      "f1": 0.0038402457757296467,
+      "balanced_accuracy": 0.5484692307692308,
+      "mcc": 0.011781352313315275,
+      "mcc_zero_denominator": false,
+      "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+      "sklearn_crosscheck": {
+        "status": "PASS",
+        "version": "1.7.2",
+        "values": {
+          "accuracy": 0.13682949554106216,
+          "precision": 0.0019239649068800986,
+          "recall": 0.9615384615384616,
+          "f1": 0.0038402457757296467,
+          "mcc": 0.011781352313315275,
+          "balanced_accuracy": 0.5484692307692308
+        },
+        "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+      },
+      "arithmetic_errors": {},
+      "intermediate_tensors_compared": 90156,
+      "equal_logit_predictions": 0,
+      "numerical_error": {
+        "normalized": {
+          "max_abs": 1.5257360031229437e-05,
+          "values": 90156,
+          "mean_abs": 7.870113006211276e-06
+        },
+        "linear0": {
+          "max_abs": 3.7521586169523295e-05,
+          "values": 480832,
+          "mean_abs": 1.0839674081321425e-05
+        },
+        "relu0": {
+          "max_abs": 3.7521586169523295e-05,
+          "values": 480832,
+          "mean_abs": 8.331017266541541e-06
+        },
+        "linear1": {
+          "max_abs": 8.824710759412455e-05,
+          "values": 480832,
+          "mean_abs": 2.4316323747178614e-05
+        },
+        "relu1": {
+          "max_abs": 8.824710759412455e-05,
+          "values": 480832,
+          "mean_abs": 2.0846182257613234e-05
+        },
+        "logits": {
+          "max_abs": 0.00028995244701206783,
+          "values": 30052,
+          "mean_abs": 0.00014166799074241486
+        }
+      },
+      "paired_common_success_metrics": {
+        "input_count": 14828,
+        "valid_predictions": 14828,
+        "missing_predictions": 0,
+        "missing_by_class": {},
+        "class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "scored_class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "classification_coverage": 1.0,
+        "TP": 25,
+        "FP": 12859,
+        "TN": 1943,
+        "FN": 1,
+        "confusion_matrix": [
+          [
+            1943,
+            12859
+          ],
+          [
+            1,
+            25
+          ]
+        ],
+        "accuracy": 0.1327218775289992,
+        "precision": 0.001940391182862465,
+        "recall": 0.9615384615384616,
+        "specificity": 0.1312660451290366,
+        "false_positive_rate": 0.8687339548709634,
+        "f1": 0.0038729666924864447,
+        "balanced_accuracy": 0.5464022533337491,
+        "mcc": 0.011503829914794168,
+        "mcc_zero_denominator": false,
+        "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+        "sklearn_crosscheck": {
+          "status": "PASS",
+          "version": "1.7.2",
+          "values": {
+            "accuracy": 0.1327218775289992,
+            "precision": 0.001940391182862465,
+            "recall": 0.9615384615384616,
+            "f1": 0.0038729666924864447,
+            "mcc": 0.011503829914794168,
+            "balanced_accuracy": 0.5464022533337491
+          },
+          "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+        }
+      },
+      "per_category": {
+        "BENIGN": {
+          "support": 15000,
+          "scored": 15000,
+          "missing": 0,
+          "predicted_intrusion": 12969,
+          "recall": null,
+          "benign_false_positive_rate": 0.8646,
+          "coverage": 1.0
+        },
+        "FTP-Patator": {
+          "support": 5,
+          "scored": 5,
+          "missing": 0,
+          "predicted_intrusion": 5,
+          "recall": 1.0,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        },
+        "SSH-Patator": {
+          "support": 21,
+          "scored": 21,
+          "missing": 0,
+          "predicted_intrusion": 20,
+          "recall": 0.9523809523809523,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        }
+      },
+      "per_capture_day": {
+        "2017-07-04": {
+          "input_count": 15026,
+          "valid_predictions": 15026,
+          "missing_predictions": 0,
+          "missing_by_class": {},
+          "class_support": {
+            "0": 15000,
+            "1": 26
+          },
+          "scored_class_support": {
+            "0": 15000,
+            "1": 26
+          },
+          "classification_coverage": 1.0,
+          "TP": 25,
+          "FP": 12969,
+          "TN": 2031,
+          "FN": 1,
+          "confusion_matrix": [
+            [
+              2031,
+              12969
+            ],
+            [
+              1,
+              25
+            ]
+          ],
+          "accuracy": 0.13682949554106216,
+          "precision": 0.0019239649068800986,
+          "recall": 0.9615384615384616,
+          "specificity": 0.1354,
+          "false_positive_rate": 0.8646,
+          "f1": 0.0038402457757296467,
+          "balanced_accuracy": 0.5484692307692308,
+          "mcc": 0.011781352313315275,
+          "mcc_zero_denominator": false,
+          "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+          "sklearn_crosscheck": {
+            "status": "PASS",
+            "version": "1.7.2",
+            "values": {
+              "accuracy": 0.13682949554106216,
+              "precision": 0.0019239649068800986,
+              "recall": 0.9615384615384616,
+              "f1": 0.0038402457757296467,
+              "mcc": 0.011781352313315275,
+              "balanced_accuracy": 0.5484692307692308
+            },
+            "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+          }
+        }
+      }
+    },
+    "tc_q16": {
+      "input_count": 15026,
+      "valid_predictions": 15026,
+      "missing_predictions": 0,
+      "missing_by_class": {},
+      "class_support": {
+        "0": 15000,
+        "1": 26
+      },
+      "scored_class_support": {
+        "0": 15000,
+        "1": 26
+      },
+      "classification_coverage": 1.0,
+      "TP": 25,
+      "FP": 12969,
+      "TN": 2031,
+      "FN": 1,
+      "confusion_matrix": [
+        [
+          2031,
+          12969
+        ],
+        [
+          1,
+          25
+        ]
+      ],
+      "accuracy": 0.13682949554106216,
+      "precision": 0.0019239649068800986,
+      "recall": 0.9615384615384616,
+      "specificity": 0.1354,
+      "false_positive_rate": 0.8646,
+      "f1": 0.0038402457757296467,
+      "balanced_accuracy": 0.5484692307692308,
+      "mcc": 0.011781352313315275,
+      "mcc_zero_denominator": false,
+      "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+      "sklearn_crosscheck": {
+        "status": "PASS",
+        "version": "1.7.2",
+        "values": {
+          "accuracy": 0.13682949554106216,
+          "precision": 0.0019239649068800986,
+          "recall": 0.9615384615384616,
+          "f1": 0.0038402457757296467,
+          "mcc": 0.011781352313315275,
+          "balanced_accuracy": 0.5484692307692308
+        },
+        "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+      },
+      "arithmetic_errors": {},
+      "intermediate_tensors_compared": 90156,
+      "equal_logit_predictions": 0,
+      "numerical_error": {
+        "normalized": {
+          "max_abs": 1.5257360031229437e-05,
+          "values": 90156,
+          "mean_abs": 7.870113006211276e-06
+        },
+        "linear0": {
+          "max_abs": 3.7521586169523295e-05,
+          "values": 480832,
+          "mean_abs": 1.0839674081321425e-05
+        },
+        "relu0": {
+          "max_abs": 3.7521586169523295e-05,
+          "values": 480832,
+          "mean_abs": 8.331017266541541e-06
+        },
+        "linear1": {
+          "max_abs": 8.824710759412455e-05,
+          "values": 480832,
+          "mean_abs": 2.4316323747178614e-05
+        },
+        "relu1": {
+          "max_abs": 8.824710759412455e-05,
+          "values": 480832,
+          "mean_abs": 2.0846182257613234e-05
+        },
+        "logits": {
+          "max_abs": 0.00028995244701206783,
+          "values": 30052,
+          "mean_abs": 0.00014166799074241486
+        }
+      },
+      "paired_common_success_metrics": {
+        "input_count": 14828,
+        "valid_predictions": 14828,
+        "missing_predictions": 0,
+        "missing_by_class": {},
+        "class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "scored_class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "classification_coverage": 1.0,
+        "TP": 25,
+        "FP": 12859,
+        "TN": 1943,
+        "FN": 1,
+        "confusion_matrix": [
+          [
+            1943,
+            12859
+          ],
+          [
+            1,
+            25
+          ]
+        ],
+        "accuracy": 0.1327218775289992,
+        "precision": 0.001940391182862465,
+        "recall": 0.9615384615384616,
+        "specificity": 0.1312660451290366,
+        "false_positive_rate": 0.8687339548709634,
+        "f1": 0.0038729666924864447,
+        "balanced_accuracy": 0.5464022533337491,
+        "mcc": 0.011503829914794168,
+        "mcc_zero_denominator": false,
+        "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+        "sklearn_crosscheck": {
+          "status": "PASS",
+          "version": "1.7.2",
+          "values": {
+            "accuracy": 0.1327218775289992,
+            "precision": 0.001940391182862465,
+            "recall": 0.9615384615384616,
+            "f1": 0.0038729666924864447,
+            "mcc": 0.011503829914794168,
+            "balanced_accuracy": 0.5464022533337491
+          },
+          "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+        }
+      },
+      "per_category": {
+        "BENIGN": {
+          "support": 15000,
+          "scored": 15000,
+          "missing": 0,
+          "predicted_intrusion": 12969,
+          "recall": null,
+          "benign_false_positive_rate": 0.8646,
+          "coverage": 1.0
+        },
+        "FTP-Patator": {
+          "support": 5,
+          "scored": 5,
+          "missing": 0,
+          "predicted_intrusion": 5,
+          "recall": 1.0,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        },
+        "SSH-Patator": {
+          "support": 21,
+          "scored": 21,
+          "missing": 0,
+          "predicted_intrusion": 20,
+          "recall": 0.9523809523809523,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        }
+      },
+      "per_capture_day": {
+        "2017-07-04": {
+          "input_count": 15026,
+          "valid_predictions": 15026,
+          "missing_predictions": 0,
+          "missing_by_class": {},
+          "class_support": {
+            "0": 15000,
+            "1": 26
+          },
+          "scored_class_support": {
+            "0": 15000,
+            "1": 26
+          },
+          "classification_coverage": 1.0,
+          "TP": 25,
+          "FP": 12969,
+          "TN": 2031,
+          "FN": 1,
+          "confusion_matrix": [
+            [
+              2031,
+              12969
+            ],
+            [
+              1,
+              25
+            ]
+          ],
+          "accuracy": 0.13682949554106216,
+          "precision": 0.0019239649068800986,
+          "recall": 0.9615384615384616,
+          "specificity": 0.1354,
+          "false_positive_rate": 0.8646,
+          "f1": 0.0038402457757296467,
+          "balanced_accuracy": 0.5484692307692308,
+          "mcc": 0.011781352313315275,
+          "mcc_zero_denominator": false,
+          "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+          "sklearn_crosscheck": {
+            "status": "PASS",
+            "version": "1.7.2",
+            "values": {
+              "accuracy": 0.13682949554106216,
+              "precision": 0.0019239649068800986,
+              "recall": 0.9615384615384616,
+              "f1": 0.0038402457757296467,
+              "mcc": 0.011781352313315275,
+              "balanced_accuracy": 0.5484692307692308
+            },
+            "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+          }
+        }
+      }
+    },
+    "tc_layer_specific": {
+      "input_count": 15026,
+      "valid_predictions": 14828,
+      "missing_predictions": 198,
+      "missing_by_class": {
+        "0": 198
+      },
+      "class_support": {
+        "0": 15000,
+        "1": 26
+      },
+      "scored_class_support": {
+        "0": 14802,
+        "1": 26
+      },
+      "classification_coverage": 0.986822840409956,
+      "TP": 25,
+      "FP": 12859,
+      "TN": 1943,
+      "FN": 1,
+      "confusion_matrix": [
+        [
+          1943,
+          12859
+        ],
+        [
+          1,
+          25
+        ]
+      ],
+      "accuracy": 0.1327218775289992,
+      "precision": 0.001940391182862465,
+      "recall": 0.9615384615384616,
+      "specificity": 0.1312660451290366,
+      "false_positive_rate": 0.8687339548709634,
+      "f1": 0.0038729666924864447,
+      "balanced_accuracy": 0.5464022533337491,
+      "mcc": 0.011503829914794168,
+      "mcc_zero_denominator": false,
+      "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+      "sklearn_crosscheck": {
+        "status": "PASS",
+        "version": "1.7.2",
+        "values": {
+          "accuracy": 0.1327218775289992,
+          "precision": 0.001940391182862465,
+          "recall": 0.9615384615384616,
+          "f1": 0.0038729666924864447,
+          "mcc": 0.011503829914794168,
+          "balanced_accuracy": 0.5464022533337491
+        },
+        "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+      },
+      "arithmetic_errors": {
+        "range": 198
+      },
+      "intermediate_tensors_compared": 88968,
+      "equal_logit_predictions": 0,
+      "numerical_error": {
+        "normalized": {
+          "max_abs": 1.1920515835321821e-07,
+          "values": 88968,
+          "mean_abs": 5.929601127721461e-08
+        },
+        "linear0": {
+          "max_abs": 2.612068978498836e-07,
+          "values": 474496,
+          "mean_abs": 4.893557668328721e-08
+        },
+        "relu0": {
+          "max_abs": 2.227811072166309e-07,
+          "values": 474496,
+          "mean_abs": 3.113162468327841e-08
+        },
+        "linear1": {
+          "max_abs": 6.366200771253192e-07,
+          "values": 474496,
+          "mean_abs": 1.3512028669962167e-07
+        },
+        "relu1": {
+          "max_abs": 6.366200771253192e-07,
+          "values": 474496,
+          "mean_abs": 8.719494815906967e-08
+        },
+        "logits": {
+          "max_abs": 3.2740045954942126e-06,
+          "values": 29656,
+          "mean_abs": 1.0116916589086082e-06
+        }
+      },
+      "paired_common_success_metrics": {
+        "input_count": 14828,
+        "valid_predictions": 14828,
+        "missing_predictions": 0,
+        "missing_by_class": {},
+        "class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "scored_class_support": {
+          "0": 14802,
+          "1": 26
+        },
+        "classification_coverage": 1.0,
+        "TP": 25,
+        "FP": 12859,
+        "TN": 1943,
+        "FN": 1,
+        "confusion_matrix": [
+          [
+            1943,
+            12859
+          ],
+          [
+            1,
+            25
+          ]
+        ],
+        "accuracy": 0.1327218775289992,
+        "precision": 0.001940391182862465,
+        "recall": 0.9615384615384616,
+        "specificity": 0.1312660451290366,
+        "false_positive_rate": 0.8687339548709634,
+        "f1": 0.0038729666924864447,
+        "balanced_accuracy": 0.5464022533337491,
+        "mcc": 0.011503829914794168,
+        "mcc_zero_denominator": false,
+        "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+        "sklearn_crosscheck": {
+          "status": "PASS",
+          "version": "1.7.2",
+          "values": {
+            "accuracy": 0.1327218775289992,
+            "precision": 0.001940391182862465,
+            "recall": 0.9615384615384616,
+            "f1": 0.0038729666924864447,
+            "mcc": 0.011503829914794168,
+            "balanced_accuracy": 0.5464022533337491
+          },
+          "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+        }
+      },
+      "per_category": {
+        "BENIGN": {
+          "support": 15000,
+          "scored": 14802,
+          "missing": 198,
+          "predicted_intrusion": 12859,
+          "recall": null,
+          "benign_false_positive_rate": 0.8687339548709634,
+          "coverage": 0.9868
+        },
+        "FTP-Patator": {
+          "support": 5,
+          "scored": 5,
+          "missing": 0,
+          "predicted_intrusion": 5,
+          "recall": 1.0,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        },
+        "SSH-Patator": {
+          "support": 21,
+          "scored": 21,
+          "missing": 0,
+          "predicted_intrusion": 20,
+          "recall": 0.9523809523809523,
+          "benign_false_positive_rate": null,
+          "coverage": 1.0
+        }
+      },
+      "per_capture_day": {
+        "2017-07-04": {
+          "input_count": 15026,
+          "valid_predictions": 14828,
+          "missing_predictions": 198,
+          "missing_by_class": {
+            "0": 198
+          },
+          "class_support": {
+            "0": 15000,
+            "1": 26
+          },
+          "scored_class_support": {
+            "0": 14802,
+            "1": 26
+          },
+          "classification_coverage": 0.986822840409956,
+          "TP": 25,
+          "FP": 12859,
+          "TN": 1943,
+          "FN": 1,
+          "confusion_matrix": [
+            [
+              1943,
+              12859
+            ],
+            [
+              1,
+              25
+            ]
+          ],
+          "accuracy": 0.1327218775289992,
+          "precision": 0.001940391182862465,
+          "recall": 0.9615384615384616,
+          "specificity": 0.1312660451290366,
+          "false_positive_rate": 0.8687339548709634,
+          "f1": 0.0038729666924864447,
+          "balanced_accuracy": 0.5464022533337491,
+          "mcc": 0.011503829914794168,
+          "mcc_zero_denominator": false,
+          "denominator_policy": "Metrics conditional on valid predictions; missing predictions remain abstentions. Undefined denominators are null.",
+          "sklearn_crosscheck": {
+            "status": "PASS",
+            "version": "1.7.2",
+            "values": {
+              "accuracy": 0.1327218775289992,
+              "precision": 0.001940391182862465,
+              "recall": 0.9615384615384616,
+              "f1": 0.0038729666924864447,
+              "mcc": 0.011503829914794168,
+              "balanced_accuracy": 0.5464022533337491
+            },
+            "undefined_convention": "sklearn zeros may correspond to explicitly null undefined ratios"
+          }
+        }
+      }
+    }
+  },
+  "overlap": {
+    "status": "PASS",
+    "eligible_pool_records": 62615,
+    "unique_eligible_vectors": 62072,
+    "repeated_eligible_vectors": 543,
+    "eligible_rows_with_reproduction_vector_collision": 0,
+    "unique_collisions": 0,
+    "selected": {
+      "selected_vector_duplicates": 42,
+      "selected_vectors_colliding_with_reproduction": 0,
+      "unique_vector_collisions": 0,
+      "interpretation": "Six-vector equality is not flow identity; zero collisions cannot establish unseen checkpoint history; none excluded for numerical collision"
+    },
+    "source_duplicate_CSV_records": 4,
+    "interpretation": "Exact six-vector collisions are not evidence of flow identity. Zero cannot establish unseen checkpoint history. Numeric repeats were not excluded."
+  },
+  "frozen_hashes": {
+    "src/mlp_params.bpf.h": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+    "quantization/calibrated.json": "f7fc2b92670d7eeb8cc9f84dcb4598392d059f407f5b0a7dd9f22878f4439856",
+    "dataset/reproduction-xdp-data.npy": "787a3bf845a5714f79c27aafceaa6feeb59ec53a405035d2ebe64775a3dcb96e",
+    "dataset/reproduction-xdp-label.npy": "edbbc05ed553442139c0ddd7b8211aa8aa98347c7b8d3d2e3e7a0f72463d1924"
+  },
+  "selection_policy_sha256": "9aa537d42ba297e94cc09da80a8719dd5255dede978ccc6330b362bebbdcd39e",
+  "preserved_runtime_hashes_checked": 83,
+  "preserved_runtime_hashes_result": "PASS",
+  "new_tests": {
+    "status": "PASS",
+    "tests": 26,
+    "log": "verification-logs/cic-external-20261108/all-tests-final.log"
+  },
+  "numerical_integer_comparisons": 6103680,
+  "numerical_tensor_comparisons": 269280,
+  "numerical_mismatches": 0,
+  "kernel_execution": "NOT RUN for this external cohort",
+  "live_network_processing": "NOT RUN for this external cohort",
+  "packet_replay": "NOT RUN",
+  "retraining": "NOT RUN; prohibited",
+  "download_bytes_by_agent": 0,
+  "networking_changes": "NONE",
+  "git_commit": "NOT CREATED; baseline commit and source-file manifest identify this work",
+  "git_push": "NOT RUN"
+}
