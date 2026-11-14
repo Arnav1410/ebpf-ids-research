@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "scope": "WSL2 isolated runtime verification complete; Ubuntu VM and physical two-laptop execution pending",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "branch": "feature/final-demo-evaluation",
+  "baseline_commit": "73868b101d1c1f5e27c6f71eceaa78a645368445",
+  "source_committed": false,
+  "pushed": false,
+  "fresh_header_sha256": "e896b31f40fd3cfd6bf78db3c64651f882c7bd8a206438c30361e276f6da8391",
+  "fresh_parameter_sha256": "1558c438e06600d8e3a5eeb28fe23c6aed94cb693a75dea4817497add71bd8d9",
+  "fresh_scaler_sha256": "f900a854d88a1eb6a346da7e102c97f70a2481e4332345b2a28b2d5ce91ef650",
+  "model_pilot": {
+    "status": "PASS",
+    "vectors_per_mode": 100,
+    "complete_chains": 206,
+    "numerical_mismatches": 0,
+    "verifier_programs": 16,
+    "cleanup": "PASS"
+  },
+  "network": {
+    "status": "PASS",
+    "source_run": "/home/arnav/research/ebpf-ids-research/verification-logs/fresh-live-demo-20261108/network-ready-r2/network-20261108-222936-086955",
+    "manifest_sha256": "e6e46fd719f93ac0ec7fbbfb5859e8c5b3755fb6248c8f4b5b74903edeb5154a",
+    "direct_connections": 55,
+    "fresh_connections": 44,
+    "rollback_connections": 11,
+    "stage_tensors": 330,
+    "tensor_integers": 7480,
+    "numerical_mismatches": 0,
+    "actual_ordinary_user_tests": 44,
+    "skipped": 0,
+    "occupied_port_refusal": "PASS",
+    "foreign_filter_preservation": "PASS",
+    "address_and_route_preservation": "PASS",
+    "namespace_cleanup": "PASS"
+  },
+  "original_regressions": {
+    "static_q16": "PASS",
+    "layer_specific": "PASS"
+  },
+  "live_runs": {
+    "fresh-static_q16-80": {
+      "model": "fresh",
+      "mode": "static_q16",
+      "port": 80,
+      "connections": 11,
+      "matched_ingress_packets": 169,
+      "egress_packets": 146,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "benign_false_positives": 3,
+      "benign_count": 11
+    },
+    "fresh-static_q16-9000": {
+      "model": "fresh",
+      "mode": "static_q16",
+      "port": 9000,
+      "connections": 11,
+      "matched_ingress_packets": 169,
+      "egress_packets": 146,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "benign_false_positives": 5,
+      "benign_count": 11
+    },
+    "fresh-layer_specific-80": {
+      "model": "fresh",
+      "mode": "layer_specific",
+      "port": 80,
+      "connections": 11,
+      "matched_ingress_packets": 169,
+      "egress_packets": 146,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "benign_false_positives": 3,
+      "benign_count": 11
+    },
+    "fresh-layer_specific-9000": {
+      "model": "fresh",
+      "mode": "layer_specific",
+      "port": 9000,
+      "connections": 11,
+      "matched_ingress_packets": 169,
+      "egress_packets": 146,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "benign_false_positives": 5,
+      "benign_count": 11
+    },
+    "original-static_q16-9000": {
+      "model": "original",
+      "mode": "static_q16",
+      "port": 9000,
+      "connections": 11,
+      "matched_ingress_packets": 169,
+      "egress_packets": 147,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "benign_false_positives": 10,
+      "benign_count": 11
+    }
+  },
+  "protected_files": 584,
+  "native_vm": "NOT RUN",
+  "windows_python_313": "NOT RUN",
+  "physical_two_laptop": "NOT RUN"
+}

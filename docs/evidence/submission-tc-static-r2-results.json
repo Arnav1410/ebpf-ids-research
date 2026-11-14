@@ -1,0 +1,20 @@
+{
+  "preparation": "PASS",
+  "runtime": "NOT RUN",
+  "optional_egress": "NOT RUN",
+  "inference_mode": "static_q16",
+  "kernel_only": false,
+  "branch": "submission/reproducibility-20261114",
+  "commit": "7dbee55f2d21c7f710c22a2305c3394ac727ba5d",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "nonprivileged_tests": {
+    "static_q16": {
+      "run": 37,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "protected_files": "UNCHANGED",
+  "approval_command": "sudo -n /usr/bin/python3 /home/arnav/research/ebpf-ids-research/experiments/submission_20261114/worktree/tc/demo.py --run /home/arnav/research/ebpf-ids-research/experiments/submission_20261114/worktree/artifacts/submission/tc-static-r2 --mode static_q16 --phase2",
+  "phase2_gate": "PENDING: attached bidirectional traffic and all regressions required"
+}

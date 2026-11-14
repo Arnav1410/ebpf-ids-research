@@ -1,0 +1,655 @@
+{
+  "status": "PASS",
+  "scope": "Independent saved actual-kernel/socket/HTTP evidence audit; no new execution",
+  "source_run": "/home/arnav/research/ebpf-ids-research/verification-logs/fresh-live-demo-20261108/network-ready-r2/network-20261108-222936-086955",
+  "network_manifest_sha256": "e6e46fd719f93ac0ec7fbbfb5859e8c5b3755fb6248c8f4b5b74903edeb5154a",
+  "results_sha256": "5086030760599ee8106da43830c048112c3b20b4966ef51c6bc2f3ae79c5fc73",
+  "host_tests": 44,
+  "host_skips": 0,
+  "pilot_compatibility": {
+    "status": "PASS",
+    "pilot": "/home/arnav/research/ebpf-ids-research/verification-logs/fresh-live-demo-20261108/ready/pilot-20261108-221759-464762",
+    "pilot_manifest_sha256": "ba4ffae58901c27317ac6adb1052d564bf11f73968036ed8e5a5692af44332af",
+    "current_manifest_sha256": "e6e46fd719f93ac0ec7fbbfb5859e8c5b3755fb6248c8f4b5b74903edeb5154a",
+    "test_driver_changes_only": [
+      "demo/validate_server.py",
+      "tc/tests/test_tc.py"
+    ],
+    "unchanged_files": 98
+  },
+  "runs": {
+    "fresh-static_q16-80": {
+      "status": "PASS",
+      "model": "fresh",
+      "mode": "static_q16",
+      "port": 80,
+      "connections": 11,
+      "ingress_packets": 169,
+      "matched_ingress_packets": 169,
+      "ingress_bytes": 133708,
+      "egress_packets": 146,
+      "matched_egress_packets": 146,
+      "egress_bytes": 11785,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "classification_coverage": 1.0,
+      "benign_false_positives": 3,
+      "benign_count": 11,
+      "stage_tensors": 66,
+      "tensor_integers": 1496,
+      "numerical_mismatches": 0,
+      "application_uid": 1000,
+      "program_ids": [
+        438,
+        439,
+        440,
+        441,
+        442,
+        443,
+        444,
+        445
+      ],
+      "map_ids": [
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289
+      ],
+      "ingress_id": 438,
+      "egress_id": 439,
+      "false_positive_batches": {
+        "1": {
+          "input_count": 1,
+          "labeled_cases": 1,
+          "unknown_truth": 0,
+          "scored_cases": 1,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 1
+          },
+          "TP": 0,
+          "FP": 0,
+          "TN": 1,
+          "FN": 0,
+          "accuracy": 1.0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.0,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        },
+        "10": {
+          "input_count": 10,
+          "labeled_cases": 10,
+          "unknown_truth": 0,
+          "scored_cases": 10,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 10
+          },
+          "TP": 0,
+          "FP": 3,
+          "TN": 7,
+          "FN": 0,
+          "accuracy": 0.7,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.3,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        }
+      },
+      "sample": {
+        "key": {
+          "a_ip": "33.33.33.1",
+          "a_port": 80,
+          "b_ip": "33.33.33.73",
+          "b_port": 46113,
+          "protocol": 6
+        },
+        "features": [
+          118,
+          76370,
+          32,
+          80,
+          136,
+          4
+        ],
+        "logits": [
+          97234,
+          -134491
+        ],
+        "label": 0
+      },
+      "kernel_snapshot_sha256": "09f7e532dfb4c7ad41a84dee28425907a72e4fe66d4a365aa2608aa16af152ca",
+      "classifications_sha256": "a206dc4addf2dd9b2c40fc13760d00343ff3146fb592beeaf2c3a21b7246915f",
+      "cleanup": "PASS; captured stop/cleanup evidence, not a new registry scan"
+    },
+    "fresh-static_q16-9000": {
+      "status": "PASS",
+      "model": "fresh",
+      "mode": "static_q16",
+      "port": 9000,
+      "connections": 11,
+      "ingress_packets": 170,
+      "matched_ingress_packets": 169,
+      "ingress_bytes": 133778,
+      "egress_packets": 146,
+      "matched_egress_packets": 146,
+      "egress_bytes": 11785,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "classification_coverage": 1.0,
+      "benign_false_positives": 5,
+      "benign_count": 11,
+      "stage_tensors": 66,
+      "tensor_integers": 1496,
+      "numerical_mismatches": 0,
+      "application_uid": 1000,
+      "program_ids": [
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456
+      ],
+      "map_ids": [
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297
+      ],
+      "ingress_id": 449,
+      "egress_id": 450,
+      "false_positive_batches": {
+        "1": {
+          "input_count": 1,
+          "labeled_cases": 1,
+          "unknown_truth": 0,
+          "scored_cases": 1,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 1
+          },
+          "TP": 0,
+          "FP": 1,
+          "TN": 0,
+          "FN": 0,
+          "accuracy": 0.0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 1.0,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        },
+        "10": {
+          "input_count": 10,
+          "labeled_cases": 10,
+          "unknown_truth": 0,
+          "scored_cases": 10,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 10
+          },
+          "TP": 0,
+          "FP": 4,
+          "TN": 6,
+          "FN": 0,
+          "accuracy": 0.6,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.4,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        }
+      },
+      "sample": {
+        "key": {
+          "a_ip": "33.33.33.1",
+          "a_port": 9000,
+          "b_ip": "33.33.33.73",
+          "b_port": 42931,
+          "protocol": 6
+        },
+        "features": [
+          118,
+          84246,
+          32,
+          9000,
+          136,
+          4
+        ],
+        "logits": [
+          -167809,
+          90666
+        ],
+        "label": 1
+      },
+      "kernel_snapshot_sha256": "6ef2b2de91463e388e9e9be1c0a7506b0abbf4b512214291fc85bccd24c195f9",
+      "classifications_sha256": "440168f333eb16dec2729e89dd6e97ef2b43f9d02348ca3a8754c604c82b234a",
+      "cleanup": "PASS; captured stop/cleanup evidence, not a new registry scan"
+    },
+    "fresh-layer_specific-80": {
+      "status": "PASS",
+      "model": "fresh",
+      "mode": "layer_specific",
+      "port": 80,
+      "connections": 11,
+      "ingress_packets": 169,
+      "matched_ingress_packets": 169,
+      "ingress_bytes": 133708,
+      "egress_packets": 146,
+      "matched_egress_packets": 146,
+      "egress_bytes": 11785,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "classification_coverage": 1.0,
+      "benign_false_positives": 3,
+      "benign_count": 11,
+      "stage_tensors": 66,
+      "tensor_integers": 1496,
+      "numerical_mismatches": 0,
+      "application_uid": 1000,
+      "program_ids": [
+        460,
+        461,
+        462,
+        463,
+        464,
+        465,
+        466,
+        467
+      ],
+      "map_ids": [
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306
+      ],
+      "ingress_id": 460,
+      "egress_id": 461,
+      "false_positive_batches": {
+        "1": {
+          "input_count": 1,
+          "labeled_cases": 1,
+          "unknown_truth": 0,
+          "scored_cases": 1,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 1
+          },
+          "TP": 0,
+          "FP": 0,
+          "TN": 1,
+          "FN": 0,
+          "accuracy": 1.0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.0,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        },
+        "10": {
+          "input_count": 10,
+          "labeled_cases": 10,
+          "unknown_truth": 0,
+          "scored_cases": 10,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 10
+          },
+          "TP": 0,
+          "FP": 3,
+          "TN": 7,
+          "FN": 0,
+          "accuracy": 0.7,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.3,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        }
+      },
+      "sample": {
+        "key": {
+          "a_ip": "33.33.33.1",
+          "a_port": 80,
+          "b_ip": "33.33.33.73",
+          "b_port": 55435,
+          "protocol": 6
+        },
+        "features": [
+          118,
+          82751,
+          32,
+          80,
+          136,
+          4
+        ],
+        "logits": [
+          97200,
+          -134458
+        ],
+        "label": 0
+      },
+      "kernel_snapshot_sha256": "9e4b5e050f87861e7cef2fbe28c6910d243b09b7e38f4f2b7c1335d4d39cbe12",
+      "classifications_sha256": "b9d648497baa1f81eae1c7ebd7212c74efc03360faa6b0ad8e4c909f6fec4913",
+      "cleanup": "PASS; captured stop/cleanup evidence, not a new registry scan"
+    },
+    "fresh-layer_specific-9000": {
+      "status": "PASS",
+      "model": "fresh",
+      "mode": "layer_specific",
+      "port": 9000,
+      "connections": 11,
+      "ingress_packets": 169,
+      "matched_ingress_packets": 169,
+      "ingress_bytes": 133708,
+      "egress_packets": 146,
+      "matched_egress_packets": 146,
+      "egress_bytes": 11785,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "classification_coverage": 1.0,
+      "benign_false_positives": 5,
+      "benign_count": 11,
+      "stage_tensors": 66,
+      "tensor_integers": 1496,
+      "numerical_mismatches": 0,
+      "application_uid": 1000,
+      "program_ids": [
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478
+      ],
+      "map_ids": [
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315
+      ],
+      "ingress_id": 471,
+      "egress_id": 472,
+      "false_positive_batches": {
+        "1": {
+          "input_count": 1,
+          "labeled_cases": 1,
+          "unknown_truth": 0,
+          "scored_cases": 1,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 1
+          },
+          "TP": 0,
+          "FP": 1,
+          "TN": 0,
+          "FN": 0,
+          "accuracy": 0.0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 1.0,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        },
+        "10": {
+          "input_count": 10,
+          "labeled_cases": 10,
+          "unknown_truth": 0,
+          "scored_cases": 10,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 10
+          },
+          "TP": 0,
+          "FP": 4,
+          "TN": 6,
+          "FN": 0,
+          "accuracy": 0.6,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.4,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        }
+      },
+      "sample": {
+        "key": {
+          "a_ip": "33.33.33.1",
+          "a_port": 9000,
+          "b_ip": "33.33.33.73",
+          "b_port": 52667,
+          "protocol": 6
+        },
+        "features": [
+          118,
+          78022,
+          32,
+          9000,
+          136,
+          4
+        ],
+        "logits": [
+          -167820,
+          90677
+        ],
+        "label": 1
+      },
+      "kernel_snapshot_sha256": "04940328dd34758b8310adc5da426c4150132ff2a28357d28f95e6fc2e730ba6",
+      "classifications_sha256": "51c89e1a58834fd5de35e812d88d92ae08837ee21dcb043bf23d18adb85c6635",
+      "cleanup": "PASS; captured stop/cleanup evidence, not a new registry scan"
+    },
+    "original-static_q16-9000": {
+      "status": "PASS",
+      "model": "original",
+      "mode": "static_q16",
+      "port": 9000,
+      "connections": 11,
+      "ingress_packets": 170,
+      "matched_ingress_packets": 169,
+      "ingress_bytes": 133778,
+      "egress_packets": 147,
+      "matched_egress_packets": 147,
+      "egress_bytes": 11851,
+      "predictions": 11,
+      "stages": [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ],
+      "classification_coverage": 1.0,
+      "benign_false_positives": 10,
+      "benign_count": 11,
+      "stage_tensors": 66,
+      "tensor_integers": 1496,
+      "numerical_mismatches": 0,
+      "application_uid": 1000,
+      "program_ids": [
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489
+      ],
+      "map_ids": [
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323
+      ],
+      "ingress_id": 482,
+      "egress_id": 483,
+      "false_positive_batches": {
+        "1": {
+          "input_count": 1,
+          "labeled_cases": 1,
+          "unknown_truth": 0,
+          "scored_cases": 1,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 1
+          },
+          "TP": 0,
+          "FP": 1,
+          "TN": 0,
+          "FN": 0,
+          "accuracy": 0.0,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 1.0,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        },
+        "10": {
+          "input_count": 10,
+          "labeled_cases": 10,
+          "unknown_truth": 0,
+          "scored_cases": 10,
+          "missing_invalid_predictions": 0,
+          "classification_coverage": 1.0,
+          "support": {
+            "0": 10
+          },
+          "TP": 0,
+          "FP": 9,
+          "TN": 1,
+          "FN": 0,
+          "accuracy": 0.1,
+          "precision": null,
+          "recall": null,
+          "f1": null,
+          "benign_false_positive_rate": 0.9,
+          "metric_basis": "Conditional on valid predictions; abstentions reported separately. Intrusion precision/recall/F1 withheld for single-class truth."
+        }
+      },
+      "sample": {
+        "key": {
+          "a_ip": "33.33.33.1",
+          "a_port": 9000,
+          "b_ip": "33.33.33.73",
+          "b_port": 39397,
+          "protocol": 6
+        },
+        "features": [
+          118,
+          68945,
+          32,
+          9000,
+          136,
+          4
+        ],
+        "logits": [
+          -215307,
+          186401
+        ],
+        "label": 1
+      },
+      "kernel_snapshot_sha256": "da5e3174e44580d2d9c77ca949973b6922118aa38830b071b197bf418cfa1988",
+      "classifications_sha256": "1ca825a62de083c97d5bb36764d8893c2da7bb63ddd22759ca5b3f037bcf03d6",
+      "cleanup": "PASS; captured stop/cleanup evidence, not a new registry scan"
+    }
+  },
+  "live_connections": 55,
+  "stage_tensors": 330,
+  "tensor_integers": 7480,
+  "numerical_mismatches": 0,
+  "original_regressions": {
+    "static_q16": {
+      "status": "PASS",
+      "path": "/home/arnav/research/ebpf-ids-research/verification-logs/fresh-live-demo-20261108/network-ready-r2/original-regression-static_q16/run-20261108-222936-165359/results.json",
+      "reference_comparisons": 138,
+      "same_flow_packets": 1033,
+      "two_hook_same_flow_ingress": 514,
+      "two_hook_same_flow_egress": 514,
+      "cleanup": "PASS"
+    },
+    "layer_specific": {
+      "status": "PASS",
+      "path": "/home/arnav/research/ebpf-ids-research/verification-logs/fresh-live-demo-20261108/network-ready-r2/original-regression-layer_specific/run-20261108-222941-267288/results.json",
+      "reference_comparisons": 138,
+      "same_flow_packets": 1033,
+      "two_hook_same_flow_ingress": 514,
+      "two_hook_same_flow_egress": 514,
+      "cleanup": "PASS"
+    }
+  },
+  "occupied_port_refusal": "PASS",
+  "address_and_route_preservation": "PASS",
+  "namespace_cleanup": "PASS",
+  "protected_files": 584,
+  "live_verifier_readback_retention": "Per-run raw dumps/logs removed with owned runtime; identity/owner/snapshot/cleanup retained. Pilot raw verifier and readbacks preserved.",
+  "physical_two_laptop": "NOT RUN",
+  "windows_python_313": "NOT RUN"
+}

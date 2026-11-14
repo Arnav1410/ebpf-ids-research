@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-14",
+  "candidate": "submission/reproducibility-20261114",
+  "publication": "NOT PUSHED; HTTPS authentication unavailable",
+  "kernel_current": "PENDING USER EXECUTION; sudo requires a password",
+  "builds": [
+    "make",
+    "make -C src",
+    "make -C tc demo-models"
+  ],
+  "core_units": {
+    "run": 117,
+    "passed": 113,
+    "skipped": 4,
+    "errors": 0,
+    "failures": 0
+  },
+  "previously_skipped_socket_classes": {
+    "run": 5,
+    "passed": 5,
+    "skipped": 0
+  },
+  "tc_host_static": {
+    "run": 37,
+    "passed": 37
+  },
+  "tc_host_layer_specific": {
+    "run": 37,
+    "passed": 37
+  },
+  "original_numerical": {
+    "run": 34,
+    "passed": 32,
+    "skipped": 2
+  },
+  "fresh_model_units": {
+    "run": 20,
+    "passed": 20
+  },
+  "research_units": {
+    "run": 30,
+    "passed": 30
+  },
+  "xdp_witness_units": {
+    "run": 12,
+    "passed": 12
+  },
+  "layer_host": {
+    "fixtures": 19004,
+    "boundary_checks": 121,
+    "mismatches": 0,
+    "ubsan": "PASS"
+  },
+  "fresh_host": {
+    "rows": 2826,
+    "records": 8478,
+    "stage_tensors": 50868,
+    "integers": 1153008,
+    "q16_tensor_mismatch_rows": 0,
+    "prediction_changes": 0
+  },
+  "no_retraining": true,
+  "physical_interfaces_touched": false,
+  "source_model_behavior_changed": false,
+  "scope": "Counts from actual command tool results and selected new output files. Synthetic tests are not kernel evidence."
+}

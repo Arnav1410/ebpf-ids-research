@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "files_scanned": 486,
+  "bytes": 11461516,
+  "patterns": [
+    "github_token",
+    "aws_access",
+    "private_key"
+  ],
+  "findings": [],
+  "limitations": "Signature-based audit, not proof of absence of every possible secret; local credential/config trees were not opened or copied."
+}

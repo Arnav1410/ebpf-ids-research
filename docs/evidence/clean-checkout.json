@@ -1,0 +1,4 @@
+{
+  "status": "PENDING",
+  "reason": "Will record only after a committed clean checkout is tested."
+}

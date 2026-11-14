@@ -1,0 +1,485 @@
+{
+  "status": "PASS",
+  "phase": "full",
+  "bundle": "/home/arnav/research/ebpf-ids-research/experiments/xdp_final_20261108/run/ready-r3",
+  "input_count": 2826,
+  "trials": 5,
+  "network_attachments": false,
+  "manifest_sha256": "9b2b863e347cd7d4f964a64c032e5f8f7e165ede20111987f8a30544f2050847",
+  "model_sha256": "1558c438e06600d8e3a5eeb28fe23c6aed94cb693a75dea4817497add71bd8d9",
+  "checkpoint_sha256": "d299f964ecaa7b918eca65529371dbfa6db8797df97ee24b73a324ab52acef1b",
+  "environment": {
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "python": "3.10.12",
+    "machine": "x86_64",
+    "cpu": 0,
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "cpu_model": "12th Gen Intel(R) Core(TM) i7-1255U"
+  },
+  "modes": {
+    "xdp_q16": {
+      "samples": 14130,
+      "mean_ns": 5141.143524416136,
+      "median_ns": 4426.0,
+      "p95_ns": 7415.549999999999,
+      "p99_ns": 16871.84999999997,
+      "minimum_ns": 2691,
+      "maximum_ns": 1004471,
+      "population_stddev_ns": 9980.569820507917,
+      "per_trial": [
+        {
+          "samples": 2826,
+          "mean_ns": 5153.6344656758665,
+          "median_ns": 4471.0,
+          "p95_ns": 8117.0,
+          "p99_ns": 17430.5,
+          "minimum_ns": 3055,
+          "maximum_ns": 156291,
+          "population_stddev_ns": 4056.4867046232534
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 4739.2271762208065,
+          "median_ns": 4393.5,
+          "p95_ns": 6573.5,
+          "p99_ns": 11412.0,
+          "minimum_ns": 2962,
+          "maximum_ns": 43368,
+          "population_stddev_ns": 1660.6105090044498
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 4999.739207360227,
+          "median_ns": 4369.5,
+          "p95_ns": 6689.5,
+          "p99_ns": 14468.5,
+          "minimum_ns": 3156,
+          "maximum_ns": 347720,
+          "population_stddev_ns": 8629.238034343482
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 5659.206652512385,
+          "median_ns": 4501.5,
+          "p95_ns": 8435.75,
+          "p99_ns": 18493.25,
+          "minimum_ns": 2691,
+          "maximum_ns": 1004471,
+          "population_stddev_ns": 19203.372507657077
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 5153.910120311394,
+          "median_ns": 4401.5,
+          "p95_ns": 7588.0,
+          "p99_ns": 17450.75,
+          "minimum_ns": 3035,
+          "maximum_ns": 222905,
+          "population_stddev_ns": 5929.810536219536
+        }
+      ],
+      "measured_calls": 14130,
+      "warmup_calls": 2826,
+      "failures": 0,
+      "kernel_time_normalized_inferences_per_second": 194509.25562588082
+    },
+    "static_q16": {
+      "samples": 14130,
+      "mean_ns": 3635.6767162066526,
+      "median_ns": 2945.0,
+      "p95_ns": 5318.0999999999985,
+      "p99_ns": 13204.549999999996,
+      "minimum_ns": 2144,
+      "maximum_ns": 2522204,
+      "population_stddev_ns": 21330.19362692931,
+      "per_trial": [
+        {
+          "samples": 2826,
+          "mean_ns": 4441.211960368011,
+          "median_ns": 2963.0,
+          "p95_ns": 5552.75,
+          "p99_ns": 15647.75,
+          "minimum_ns": 2144,
+          "maximum_ns": 2522204,
+          "population_stddev_ns": 47439.69445833398
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 3324.7883934890306,
+          "median_ns": 2925.0,
+          "p95_ns": 4878.25,
+          "p99_ns": 11661.0,
+          "minimum_ns": 2212,
+          "maximum_ns": 33038,
+          "population_stddev_ns": 1768.4310609577014
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 3282.864118895966,
+          "median_ns": 2926.0,
+          "p95_ns": 4690.5,
+          "p99_ns": 8946.25,
+          "minimum_ns": 2154,
+          "maximum_ns": 48715,
+          "population_stddev_ns": 1815.4720876006108
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 3611.4115357395613,
+          "median_ns": 2976.0,
+          "p95_ns": 5551.25,
+          "p99_ns": 13608.0,
+          "minimum_ns": 2184,
+          "maximum_ns": 89482,
+          "population_stddev_ns": 2643.7956384817603
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 3518.1075725406936,
+          "median_ns": 2943.0,
+          "p95_ns": 5683.0,
+          "p99_ns": 12672.0,
+          "minimum_ns": 2201,
+          "maximum_ns": 88475,
+          "population_stddev_ns": 3172.352629357061
+        }
+      ],
+      "measured_calls": 14130,
+      "warmup_calls": 2826,
+      "failures": 0,
+      "kernel_time_normalized_inferences_per_second": 275051.95815192495
+    },
+    "layer_specific": {
+      "samples": 14130,
+      "mean_ns": 12846.346213729654,
+      "median_ns": 11694.0,
+      "p95_ns": 17272.1,
+      "p99_ns": 32201.839999999997,
+      "minimum_ns": 6580,
+      "maximum_ns": 647363,
+      "population_stddev_ns": 11114.538991089694,
+      "per_trial": [
+        {
+          "samples": 2826,
+          "mean_ns": 12930.037862703468,
+          "median_ns": 11794.0,
+          "p95_ns": 18069.75,
+          "p99_ns": 31426.75,
+          "minimum_ns": 7277,
+          "maximum_ns": 232476,
+          "population_stddev_ns": 6726.87890113332
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 12540.73991507431,
+          "median_ns": 11533.0,
+          "p95_ns": 15867.0,
+          "p99_ns": 29573.25,
+          "minimum_ns": 7001,
+          "maximum_ns": 209057,
+          "population_stddev_ns": 8728.079493854275
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 12346.986553432413,
+          "median_ns": 11551.0,
+          "p95_ns": 15803.0,
+          "p99_ns": 26456.75,
+          "minimum_ns": 7610,
+          "maximum_ns": 430374,
+          "population_stddev_ns": 9059.927908908017
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 13570.288039631989,
+          "median_ns": 11954.5,
+          "p95_ns": 18590.0,
+          "p99_ns": 35659.25,
+          "minimum_ns": 6580,
+          "maximum_ns": 647363,
+          "population_stddev_ns": 17022.981690944303
+        },
+        {
+          "samples": 2826,
+          "mean_ns": 12843.678697806086,
+          "median_ns": 11672.5,
+          "p95_ns": 17693.0,
+          "p99_ns": 31502.75,
+          "minimum_ns": 6819,
+          "maximum_ns": 385593,
+          "population_stddev_ns": 11112.900418015457
+        }
+      ],
+      "measured_calls": 14130,
+      "warmup_calls": 2826,
+      "failures": 0,
+      "kernel_time_normalized_inferences_per_second": 77843.14569782034
+    }
+  },
+  "cleanup": "PASS",
+  "resources": {
+    "xdp_q16": [
+      {
+        "event": "schema",
+        "programs": 7,
+        "maps": 5,
+        "flow_key_bytes": 16,
+        "flow_value_bytes": 344,
+        "model_bytes": 5216,
+        "all_pin_paths_disabled": true
+      },
+      {
+        "event": "loaded",
+        "program_ids": [
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          174
+        ],
+        "map_ids": [
+          95,
+          96,
+          97,
+          98,
+          100
+        ]
+      },
+      {
+        "event": "model",
+        "bytes_per_slot": 5216,
+        "slots_verified": 2,
+        "active": 0
+      },
+      {
+        "event": "tail_slot",
+        "slot": 0,
+        "program_id": 176,
+        "type": 6
+      },
+      {
+        "event": "tail_slot",
+        "slot": 1,
+        "program_id": 177,
+        "type": 6
+      },
+      {
+        "event": "tail_slot",
+        "slot": 2,
+        "program_id": 178,
+        "type": 6
+      },
+      {
+        "event": "tail_slot",
+        "slot": 3,
+        "program_id": 179,
+        "type": 6
+      },
+      {
+        "event": "tail_slot",
+        "slot": 4,
+        "program_id": 180,
+        "type": 6
+      },
+      {
+        "event": "tail_slot",
+        "slot": 5,
+        "program_id": 181,
+        "type": 6
+      }
+    ],
+    "static_q16": [
+      {
+        "event": "schema",
+        "minimal": false,
+        "program_type": 3,
+        "programs": 8,
+        "pins_disabled": true
+      },
+      {
+        "event": "loaded",
+        "program_ids": [
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192
+        ],
+        "map_ids": [
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ]
+      },
+      {
+        "event": "inference_mode",
+        "mode": "static_q16",
+        "tensor_exponents": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ]
+      },
+      {
+        "event": "tail_slot",
+        "slot": 0,
+        "program_id": 187,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 1,
+        "program_id": 188,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 2,
+        "program_id": 189,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 3,
+        "program_id": 190,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 4,
+        "program_id": 191,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 5,
+        "program_id": 192,
+        "type": 3
+      },
+      {
+        "event": "model",
+        "bytes_per_slot": 5216,
+        "slots_verified": 2,
+        "active": 0
+      }
+    ],
+    "layer_specific": [
+      {
+        "event": "schema",
+        "minimal": false,
+        "program_type": 3,
+        "programs": 8,
+        "pins_disabled": true
+      },
+      {
+        "event": "loaded",
+        "program_ids": [
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203
+        ],
+        "map_ids": [
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118
+        ]
+      },
+      {
+        "event": "inference_mode",
+        "mode": "layer_specific",
+        "q_normalized": 22,
+        "q_weights": [
+          16,
+          16,
+          16
+        ],
+        "q_outputs": [
+          22,
+          19,
+          16
+        ],
+        "parameter_sha256": "1db06f441987ef7eb282b5954f158fbe861a74bf59bdcbf7988c7ec5c7e2357f"
+      },
+      {
+        "event": "tail_slot",
+        "slot": 0,
+        "program_id": 198,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 1,
+        "program_id": 199,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 2,
+        "program_id": 200,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 3,
+        "program_id": 201,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 4,
+        "program_id": 202,
+        "type": 3
+      },
+      {
+        "event": "tail_slot",
+        "slot": 5,
+        "program_id": 203,
+        "type": 3
+      },
+      {
+        "event": "model",
+        "bytes_per_slot": 5304,
+        "slots_verified": 2,
+        "active": 0
+      }
+    ]
+  },
+  "wall_elapsed_seconds": 15.016411894001067
+}
