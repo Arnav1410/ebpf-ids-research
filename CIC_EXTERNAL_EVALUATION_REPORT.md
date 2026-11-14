@@ -330,7 +330,7 @@ scores are **not an equal-protocol reproduction** of Table V. The earlier
 it is not pooled with this external test. The separate known-benign live
 harness result is also a different experiment.
 
-**Professor-ready explanation:** “We kept the original weights, scaler and
+We kept the original weights, scaler and
 arithmetic configuration frozen. We reconstructed the six ingress features from
 Tuesday CIC packet traces at the first incoming FIN or RST and accepted only
 uniquely matched original label records. That conservative protocol yielded
@@ -339,7 +339,7 @@ implementations match numerically, while layer-specific scaling reduces
 quantization error without changing valid predictions. The high false-positive
 rate shows that numerical parity does not establish useful external intrusion
 detection. Unknown checkpoint history, source-label issues and narrow selection
-prevent claiming an identical reproduction of the paper's F1.”
+prevent claiming an identical reproduction of the paper's F1.
 
 ## Recommended next research step
 
