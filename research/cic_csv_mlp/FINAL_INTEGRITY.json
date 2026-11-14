@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_artifact_hash_entries": 82,
+  "test_rows_audited": 35948,
+  "host_tests": 19,
+  "png_figures": 4,
+  "pdf_figures": 4,
+  "main_checkout_files_unchanged": 5067,
+  "unreadable_metadata_only_unchanged": 5,
+  "previous_worktree_study_files_unchanged": 25,
+  "main_report_links": "PASS",
+  "models_retrained_for_test_results": false,
+  "kernel_or_network_operations": "NONE",
+  "original_tracked_source_diff": "EMPTY",
+  "report": "CIC_FORWARD_VS_BIDIRECTIONAL_MLP.md"
+}

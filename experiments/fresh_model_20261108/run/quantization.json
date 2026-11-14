@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "execution": "Host builds only; kernel NOT RUN",
+  "mean": [
+    572,
+    11043024376,
+    36,
+    484,
+    11935,
+    373
+  ],
+  "scale": [
+    452,
+    24483430907,
+    58,
+    1649,
+    49489,
+    1547
+  ],
+  "weight_shapes": [
+    [
+      32,
+      6
+    ],
+    [
+      32,
+      32
+    ],
+    [
+      2,
+      32
+    ]
+  ],
+  "weight_max": [
+    56080,
+    68800,
+    64608
+  ],
+  "header_sha256": "e896b31f40fd3cfd6bf78db3c64651f882c7bd8a206438c30361e276f6da8391",
+  "calibration_sha256": "658d047585a57a5b52d10d71885244bb423e0040071931c7d3452ad0b92eed2a",
+  "model_parameter_sha256": "1558c438e06600d8e3a5eeb28fe23c6aed94cb693a75dea4817497add71bd8d9",
+  "layer_parameter_sha256": "1db06f441987ef7eb282b5954f158fbe861a74bf59bdcbf7988c7ec5c7e2357f",
+  "training_range_checks": 13187,
+  "calibration_exponents": [
+    22,
+    22,
+    22,
+    19,
+    19,
+    16
+  ],
+  "training_and_scale_data_only": true,
+  "new_checkpoint_sha256": "d299f964ecaa7b918eca65529371dbfa6db8797df97ee24b73a324ab52acef1b",
+  "parameter_bytes": {
+    "q16": 5216,
+    "layer_specific": 5304
+  },
+  "preservation": {
+    "status": "PASS",
+    "unchanged_files": 1262
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "selected_epoch": 32,
+  "criterion": "Minimum validation cross-entropy; earliest epoch on exact tie",
+  "validation_loss": 0.02657433971762657,
+  "checkpoint_sha256": "d299f964ecaa7b918eca65529371dbfa6db8797df97ee24b73a324ab52acef1b",
+  "scaler_sha256": "398d55164614ecc6c5307b27bada51fe435f81e4dd27cfddb1c2e3489ebd8fed",
+  "split_sha256": "da9d644b2f8d03bedba68fb626ab98fca6e1f52782b018ef0b3ea99006420638",
+  "config_sha256": "cf3db03843efb674581c5617fa5cf6abc126791f40efa2ec90e3910c4d44ba71",
+  "history_sha256": "fe065066a20261e109ea3acc2ca20c0e1bc0897410126d202531dbc86ef6cd37",
+  "architecture": [
+    6,
+    32,
+    32,
+    2
+  ],
+  "parameters": 1280,
+  "train_read_archives": [
+    "train.npz",
+    "validation.npz"
+  ],
+  "test_used": false,
+  "packages": {
+    "torch": "2.5.1+cpu",
+    "numpy": "2.2.6",
+    "sklearn": "1.7.2"
+  },
+  "python": "3.10.12",
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "machine": "x86_64",
+  "device": "cpu",
+  "threads": 1,
+  "git_head": "73868b101d1c1f5e27c6f71eceaa78a645368445",
+  "preservation": {
+    "status": "PASS",
+    "unchanged_files": 1262
+  }
+}

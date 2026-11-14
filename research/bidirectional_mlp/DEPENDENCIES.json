@@ -1,0 +1,22 @@
+{
+  "source_checkout": "/home/arnav/research/ebpf-ids-research",
+  "source_head": "711b909261e352cfb87ce3c34d598f5615e04661",
+  "copied_untracked_source": {
+    "evaluation/cic/__init__.py": "b98486edfb30f0652eff6a0a02f175dab31d6d89ba800046b0670366b6ab0fe7",
+    "evaluation/cic/capture.py": "a8079b75ca2cfb5d868d3540e54ea2b40232ae85bea4e93d9253e1eb0b97c051",
+    "evaluation/cic/labels.py": "054d38fc1817b68b3994964f024c5685b35c497d64e26e8b1176fa72a9b0f164",
+    "evaluation/cic/test_capture.py": "a78478b227f88039a094e0aa3f9e5f183a89d60b8b36f1e036e067521ee20e74",
+    "evaluation/cic/test_labels.py": "684acbadd0e5f3a106017de254bd1a8238922afee18b69245e3b27af20fc8ad2",
+    "evaluation/cic/feature_probe.c": "50290668477d247d02c12cbf08508d0a082bc4d1f463af24f7e7ec5aa4807987",
+    "evaluation/cic/reconstruct.py": "9bf0bf3300a2a35d3e1355fc07cc4e488c8615387388ff57f9677925abec1e71"
+  },
+  "reason": "Bounded read-only CIC reader/label provenance helpers and tests; no training runs, binaries or previous metrics copied into experimental implementation.",
+  "inspected_not_copied": [
+    "experiments/fresh_model_20261108/pipeline.py",
+    "experiments/fresh_model_20261108/integer.py",
+    "experiments/fresh_model_20261108/run/checkpoint.npz",
+    "verification-logs/cic-external-20261108/source-binding.json",
+    "verification-logs/cic-external-20261108/reconstructed/pilot.jsonl",
+    "verification-logs/cic-external-20261108/reconstructed/eligible.jsonl.gz"
+  ]
+}

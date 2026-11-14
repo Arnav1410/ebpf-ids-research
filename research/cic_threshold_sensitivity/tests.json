@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "tests": 11,
+  "command": [
+    "/tmp/nn-ebpf-cic-bidir-20261109/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "research.cic_threshold_sensitivity.test_sensitivity"
+  ],
+  "validation_only_IO_guard": "PASS",
+  "randomized_exact_fraction_checks": 100,
+  "models_trained": 0,
+  "kernel_execution": false
+}

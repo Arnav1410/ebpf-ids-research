@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "scope": "Offline packet feature/reference audit only; NO kernel execution or MLP inference",
+  "records": 126,
+  "categories": {
+    "BENIGN": 100,
+    "FTP-Patator": 5,
+    "SSH-Patator": 21
+  },
+  "counts": {
+    "candidate_unvalidated_label_window": 122,
+    "reverse_fin_observed_before_or_at_ingress_trigger": 0,
+    "reverse_payload_present": 110,
+    "packets": 5050,
+    "candidate_same_label_window": 4
+  },
+  "candidate_unvalidated_by_category": {
+    "BENIGN": 96,
+    "FTP-Patator": 5,
+    "SSH-Patator": 21
+  },
+  "changed_features_vs_forward": [
+    92,
+    49,
+    0,
+    0,
+    126,
+    126
+  ],
+  "source_pcap_sha256": "080c2250154c5a174c03660ed0f75a3858d41a27511ba716e780d7bcb1ec4c57",
+  "labels_zip_sha256": "7bdbef286f8893f31c6db12105fa097fa5c2dcc6733179037a08129d150ea27a",
+  "cohort_sha256": "8e473793862c044e51f2bcba5d9d0488d1d4f7a9c7930170b144344f1a4b3aa0",
+  "output_sha256": "392da91951dc5acc31bad5a494127dd3d8c50921b8834c9434b83be8065b4041",
+  "policy_sha256": "cd9a4ea29cd76ccbd5ad20552fbe416e7c94c745c337932cdd0aead21cc9e8bb",
+  "interpretation": "Bidirectional prefix extraction validated. A changed trigger requires a newly validated label interval; current prefix labels must not be extended."
+}

@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "execution": "Host C under UBSan; not kernel execution",
+  "modes": {
+    "xdp_q16": {
+      "status": "PASS",
+      "records": 2826,
+      "returncode": 0,
+      "diagnostics": ""
+    },
+    "tc_q16": {
+      "status": "PASS",
+      "records": 2826,
+      "returncode": 0,
+      "diagnostics": ""
+    },
+    "tc_layer_specific": {
+      "status": "PASS",
+      "records": 2826,
+      "returncode": 0,
+      "diagnostics": ""
+    }
+  },
+  "preservation": {
+    "status": "PASS",
+    "unchanged_files": 1262
+  }
+}
