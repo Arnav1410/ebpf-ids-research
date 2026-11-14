@@ -1,38 +1,46 @@
 {
   "experiments/fresh_model_20261108/preservation-before.json": {
-    "scope": "Submission-only existing source and selected portable evidence; excludes build products/omitted historical files. Not the original pre-experiment manifest.",
-    "kept_files": 132,
+    "scope": "Submission-only included-source/artifact preservation; no historical preservation assertion for omitted files",
+    "included": 132,
+    "historical_count": 1262,
     "rebased_paths": [
       "demo/launch.py",
       "demo/server.py",
       "deployment/ids.py",
       "tc/Makefile",
       "tc/controller.c",
+      "tc/demo.py",
       "tc/tests/test_tc.py"
     ],
-    "original_files": 1262
+    "generated_paths_included": false
   },
   "experiments/xdp_final_20261108/preservation-before.json": {
-    "scope": "Submission-only existing source and selected portable evidence; excludes build products/omitted historical files. Not the original pre-experiment manifest.",
-    "kept_files": 172,
+    "scope": "Submission-only included-source/artifact preservation; no historical preservation assertion for omitted files",
+    "included": 172,
+    "historical_count": 547,
     "rebased_paths": [
       "demo/launch.py",
       "demo/server.py",
       "deployment/ids.py",
+      "experiments/fresh_model_20261108/README.md",
       "experiments/fresh_model_20261108/preservation-before.json",
       "tc/Makefile",
       "tc/controller.c",
+      "tc/demo.py",
       "tc/tests/test_tc.py"
     ],
-    "original_files": 547
+    "generated_paths_included": false
   },
   "verification-logs/fresh-live-demo-20261108/protected.json": {
-    "scope": "Submission-only existing source and selected portable evidence; excludes build products/omitted historical files. Not the original pre-experiment manifest.",
-    "kept_files": 95,
+    "scope": "Submission-only included-source/artifact preservation; no historical preservation assertion for omitted files",
+    "included": 95,
+    "historical_count": 584,
     "rebased_paths": [
+      "experiments/fresh_model_20261108/README.md",
       "experiments/fresh_model_20261108/preservation-before.json",
+      "experiments/xdp_final_20261108/README.md",
       "experiments/xdp_final_20261108/preservation-before.json"
     ],
-    "original_files": 584
+    "generated_paths_included": false
   }
 }

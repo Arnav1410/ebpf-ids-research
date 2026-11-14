@@ -2,7 +2,7 @@
 
 **Local candidate validated for build/host reproduction. GitHub publication and new privileged kernel/network execution remain pending.** No remote-main update is claimed.
 
-Candidate: `submission/reproducibility-20261114`, isolated from both existing worktrees. Base is cached `origin/main` `7dbee55`; runtime source provenance is `711b909261e352cfb87ce3c34d598f5615e04661`. Final local commits are recorded in the audit response and Git log; this document is versioned with them. A clean checkout check is recorded separately below.
+Candidate: `submission/reproducibility-20261114`, isolated from both existing worktrees. Base is cached `origin/main` `7dbee55`; runtime source provenance is `711b909261e352cfb87ce3c34d598f5615e04661`. Final local commits are recorded in the audit response and Git log; this document is versioned with them. A clean detached checkout of commit `dbe5f7b` passed eleven command groups; the following audit-only commit records those outcomes without changing runtime, experiment code or frozen model data.
 
 ## Executed checks (E)
 
@@ -94,5 +94,7 @@ git show origin/main:README.md
 The ancestry check assumes a normal merge; for a squash merge inspect the resulting tree/diff instead. Confirm GitHub's default branch is main in repository settings and open the repository root in the browser. Only then report main/README as published. Original developer branches/worktrees remain available for raw evidence and rollback; none has been reset or deleted.
 
 ## Clean-checkout evidence
+
+Clean checkout: **PASS**, eleven command groups, clean Git status. Rebuilt both vendored dependencies, original XDP, TC objects and controllers from scratch; passed model identity, original numerical suite, both 37-test TC preparations, 20 fresh-model tests and 30 research tests. No development build artifact was copied into it.
 
 See [machine-readable audit](evidence/submission-checks.json) for the exact completed checks, and [clean-checkout results](evidence/clean-checkout.json) for validation after committing the selected files. Missing external raw archives and licensing ambiguity are disclosed in the entry guides. The candidate is not represented as a new physical or privileged end-to-end verification.

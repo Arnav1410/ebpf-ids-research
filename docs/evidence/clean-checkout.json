@@ -1,4 +1,139 @@
 {
-  "status": "PENDING",
-  "reason": "Will record only after a committed clean checkout is tested."
+  "status": "PASS",
+  "tested_commit": "dbe5f7ba9bcd60c43850e9247a458890fae5a989",
+  "checkout": "Clean detached checkout; no untracked development dependencies copied",
+  "commands": [
+    {
+      "argv": [
+        "make"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 14.228950485000041,
+      "log": "artifacts/clean-validation/00.log"
+    },
+    {
+      "argv": [
+        "make",
+        "-C",
+        "src"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.843311194999842,
+      "log": "artifacts/clean-validation/01.log"
+    },
+    {
+      "argv": [
+        "make",
+        "-C",
+        "tc",
+        "demo-models"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 3.6068048659999477,
+      "log": "artifacts/clean-validation/02.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_submission.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.03514468399998805,
+      "log": "artifacts/clean-validation/03.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "deployment.model_config",
+        "--model",
+        "fresh",
+        "--mode",
+        "static_q16"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.03737996299992119,
+      "log": "artifacts/clean-validation/04.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "deployment.model_config",
+        "--model",
+        "fresh",
+        "--mode",
+        "layer_specific"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.03626275800002077,
+      "log": "artifacts/clean-validation/05.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "validation/run.py",
+        "--output",
+        "artifacts/clean-original-numerical"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 6.042245386000104,
+      "log": "artifacts/clean-validation/06.log"
+    },
+    {
+      "argv": [
+        "./run-tc-smoke.sh",
+        "--prepare",
+        "--phase2",
+        "--mode",
+        "static_q16",
+        "--output",
+        "artifacts/clean-static"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.3322069920000104,
+      "log": "artifacts/clean-validation/07.log"
+    },
+    {
+      "argv": [
+        "./run-tc-smoke.sh",
+        "--prepare",
+        "--phase2",
+        "--mode",
+        "layer_specific",
+        "--output",
+        "artifacts/clean-layer"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.7840850469999623,
+      "log": "artifacts/clean-validation/08.log"
+    },
+    {
+      "argv": [
+        "/tmp/ebpf-submission-20261114-venv/bin/python",
+        "-B",
+        "experiments/fresh_model_20261108/test_experiment.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.706940508000116,
+      "log": "artifacts/clean-validation/09.log"
+    },
+    {
+      "argv": [
+        "/tmp/ebpf-submission-20261114-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "research.cic_csv_mlp.test_study",
+        "research.cic_threshold_sensitivity.test_sensitivity"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.7565571889999774,
+      "log": "artifacts/clean-validation/10.log"
+    }
+  ],
+  "kernel_execution": "NOT RUN",
+  "network_attachments": "NONE",
+  "git_status": ""
 }

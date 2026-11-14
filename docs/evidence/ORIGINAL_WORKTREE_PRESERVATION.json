@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "original_development_HEAD": "711b909261e352cfb87ce3c34d598f5615e04661",
+  "original_selected_uncommitted_files_verified_unchanged": 156,
+  "original_tracked_diff": "Only the pre-existing dataset deletion remains; path content not opened or staged",
+  "research_worktree_tracked_diff": "",
+  "main_branch_unchanged": "7dbee55f2d21c7f710c22a2305c3394ac727ba5d",
+  "publication": "NOT PUSHED; remote main NOT VERIFIED OR UPDATED"
+}
