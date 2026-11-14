@@ -1,6 +1,6 @@
 # NN-eBPF: reproduction and TC extensions
 
-IIT Kharagpur CS term project based on [Zhang et al., DSN 2024](https://dsn2024uq.github.io/Proceedings/pdfs/DSN2024-6rvE3SSpzFYmysif75Dkid/410500a416/410500a416.pdf) and [IntelligentDDS/NN-eBPF](https://github.com/IntelligentDDS/NN-eBPF).
+Project based on [Zhang et al., DSN 2024](https://dsn2024uq.github.io/Proceedings/pdfs/DSN2024-6rvE3SSpzFYmysif75Dkid/410500a416/410500a416.pdf) and [IntelligentDDS/NN-eBPF](https://github.com/IntelligentDDS/NN-eBPF).
 
 We reproduce an integer neural network inside Linux eBPF and extend receive-side XDP processing to TC ingress, with TC egress monitoring and canonical bidirectional flow statistics. The bias-free **6 → 32 → 32 → 2** classifier runs normalization, three linear stages and two ReLUs across six BPF programs connected by tail calls. Our TC implementation monitors and logs; it returns `TC_ACT_OK` and **does not block attacks**.
 
