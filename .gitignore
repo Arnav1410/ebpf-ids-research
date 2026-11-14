@@ -1,0 +1,24 @@
+# Local build products and test output
+**/.output/
+__pycache__/
+*.py[cod]
+*.o
+*.so
+*.log
+/artifacts/
+.venv/
+venv/
+.env
+.env.*
+*.pem
+*.key
+# Historical attack tooling is intentionally excluded from the submission.
+/dataset-instance/
+# Large/raw execution outputs; small explicit evidence files are staged separately.
+/verification-logs/
+/experiments/*/run/kernel-*/
+/experiments/*/run/ready*/
+/experiments/*/run/*reviewed/
+/experiments/*/run/full-final/
+/research/*/run*/
+/experiments/*/worktree/

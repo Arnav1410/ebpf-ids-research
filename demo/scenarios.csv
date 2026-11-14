@@ -1,0 +1,65 @@
+case_id,ground_truth,ground_truth_provenance,payload_length,chunks,delay_ms,response_expectation,notes
+demo001,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo002,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo003,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo004,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo005,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo006,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo007,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo008,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo009,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo010,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo011,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo012,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo013,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo014,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo015,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo016,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo017,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo018,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo019,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo020,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo021,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo022,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo023,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo024,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo025,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo026,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo027,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo028,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo029,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo030,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo031,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo032,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo033,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo034,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo035,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo036,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo037,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo038,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo039,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo040,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo041,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo042,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo043,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo044,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo045,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo046,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo047,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo048,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo049,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo050,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo051,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo052,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo053,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo054,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo055,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo056,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction
+demo057,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,64,2,2,ack,Not a CIC feature-vector reproduction
+demo058,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,96,3,2,ack,Not a CIC feature-vector reproduction
+demo059,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,128,4,2,ack,Not a CIC feature-vector reproduction
+demo060,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,160,1,0,ack,Not a CIC feature-vector reproduction
+demo061,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,192,2,2,ack,Not a CIC feature-vector reproduction
+demo062,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,224,3,2,ack,Not a CIC feature-vector reproduction
+demo063,benign,Controlled ordinary ASCII TCP demo; no exploit or attack intent,256,4,2,ack,Not a CIC feature-vector reproduction
+demo064,unknown,,32,1,0,ack,Not a CIC feature-vector reproduction

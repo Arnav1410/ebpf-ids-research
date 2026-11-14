@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "policy_id": "cic-frozen-model-external-v1-20261107",
+  "status": "PRE_REGISTERED_PROTOCOL; SOURCE_BINDING_AND_PILOT_PENDING",
+  "created_local_date": "2026-11-07",
+  "timezone": "Asia/Calcutta",
+  "baseline_commit": "73868b101d1c1f5e27c6f71eceaa78a645368445",
+  "predictions_consulted_for_this_cohort": false,
+  "seed": 20261107,
+  "target_counts": {"pilot": {"0": 100, "1": 100}, "moderate": {"0": 1250, "1": 1250}, "final": {"0": 15000, "1": 15000}},
+  "label_contract": {"0": "benign", "1": "intrusion", "positive_class": 1, "unknown_or_conflicting": "exclude_with_explicit_reason"},
+  "sources": {
+    "preferred_release": "original official CIC-IDS-2017 PCAP and identity-bearing GeneratedLabelledFlows labels",
+    "initial_capture_day": "2017-07-04",
+    "additional_days_require_separate_acquisition_approval": true,
+    "source_files": [],
+    "source_manifest_sha256": null,
+    "corrected_release_substitution": "not automatic; explicit version binding and separately documented protocol required",
+    "source_binding_before_predictions": ["actual filenames and SHA256", "CSV schema", "capture days", "PCAP link type and timestamp precision", "label timestamp format and timezone", "duration units and timestamp quantization", "direction policy and any justified NAT mapping", "raw candidate class/day/category counts"]
+  },
+  "observation_contract": {
+    "scope": "offline reconstruction on the common supported XDP/TC packet subset, not live hook timing",
+    "feature_order": ["max_tcp_segment_bytes", "max_forward_iat_ns", "min_tcp_segment_bytes", "destination_port", "cumulative_forward_tcp_header_bytes", "forward_packet_count"],
+    "length": "IPv4 total_length minus IPv4 IHL; TCP header/options included",
+    "direction": "destination is justified monitored-server endpoint; verify against label tuple and packet session; never infer maliciousness from port or model output",
+    "trigger": "first eligible incoming FIN or RST, included in the snapshot",
+    "after_trigger": "not part of model inputs; later packets inspected only for identity, ambiguity and audit",
+    "timing": "integer PCAP timestamp deltas in ns; approximation of helper-clock deltas; no floating timestamp arithmetic",
+    "packet_order": "preserve source packet order; do not silently repair or sort captures",
+    "initial_strict_subset": "complete untagged Ethernet, IPv4 IHL=20, unfragmented TCP, valid lengths; complete session start before first incoming termination",
+    "timestamp_reordering": "exclude affected sessions with an explicit reason in the common cohort rather than hiding XDP unsigned-underflow divergence",
+    "retransmissions": "count as observed; do not silently deduplicate packets",
+    "flow_reuse": "separate traceable TCP sessions using handshake/sequence and time evidence; reject unresolved reuse or overlapping label windows",
+    "missing_start": "exclude truncated or unobservable connection starts; report scope restriction",
+    "label_interval": "accept only unique matching source-record/session correspondence containing the full modeled observation window; reject timeout segments or appendices when correspondence is unresolved"
+  },
+  "source_duplicates_and_overlap": {
+    "source_record_id": "file SHA256 plus original CSV physical row; retain original flow ID and endpoints/times",
+    "duplicate_source_records": "identify exact row and normalized identity/interval/category duplicates; keep deterministic representative and list excluded records; conflicting labels rejected",
+    "numerical_collisions": "report repeated CIC vectors and exact collisions with reproduction vectors; do not automatically exclude them",
+    "training_overlap": "unknown without checkpoint provenance; confirmed overlaps require evidence and explicit exclusions, never assumed from six-vector equality"
+  },
+  "selection_algorithm": {
+    "eligibility_before_inference": true,
+    "rank": "ascending SHA256(UTF-8 decimal seed + newline + stable source_record_id); lexical source_record_id breaks hash ties",
+    "strata": "binary label, then attack category (label 1) or capture day (label 0)",
+    "allocation": "deterministic equal water-filling across sorted nonempty strata; repeatedly take the next ranked record from each stratum until target or exhaustion",
+    "shortfall": "report actual valid count; never duplicate rows, borrow the other class to disguise balance, or select by predictions",
+    "pilot_and_moderate": "same deterministic ranking and allocation on the source set bound for each milestone; persist each distinct manifest",
+    "final_freeze": "persist all selected IDs, labels, categories, direction, packet references, trigger metadata and six-vectors; hash before model loading",
+    "later_source_changes": "version and re-freeze using predictions-blind rules; never adjust the cohort based on an observed score"
+  },
+  "model_contract": {
+    "header_sha256": "f8fbc19b2aaf2e18d2163f378722ce336217eb9299a51a12218369333d473f11",
+    "calibration_sha256": "f7fc2b92670d7eeb8cc9f84dcb4598392d059f407f5b0a7dd9f22878f4439856",
+    "modes": ["xdp_q16_host_c", "tc_q16_host_c", "tc_layer_specific_host_c"],
+    "same_frozen_ids_and_vectors_for_all_modes": true,
+    "retraining_refitting_recalibration": "prohibited",
+    "mode_specific_arithmetic_failure": "retain selected ID with missing prediction and error; do not resample to improve coverage",
+    "tie_rule": "0 if logit0 > logit1 else 1, matching actual code"
+  },
+  "metrics_contract": {
+    "confusion_matrix": "[[TN, FP], [FN, TP]]",
+    "coverage_denominator": "all selected eligible labeled records",
+    "missing_predictions": "abstentions, never benign",
+    "conditional_metrics": "valid predictions with explicit coverage and per-class missing counts; paired common-success subset reported separately with IDs/counts",
+    "required": ["TP", "FP", "TN", "FN", "accuracy", "precision", "recall", "specificity", "false_positive_rate", "f1", "balanced_accuracy", "mcc", "coverage", "class_support", "arithmetic_failures", "per_category_recall", "per_capture_day", "prediction_disagreements"],
+    "crosscheck": "independent confusion-count formulas and scikit-learn; zero denominators explicitly undefined",
+    "prevalence": "balanced-sample precision/F1 are not natural deployment precision/F1",
+    "uncertainty": "no naive independent-flow confidence claim when sessions are correlated or grouping metadata are insufficient"
+  },
+  "actual_cohort_manifest": null,
+  "actual_cohort_sha256": null,
+  "actual_selected_records": 0
+}
