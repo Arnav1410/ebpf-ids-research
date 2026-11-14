@@ -392,15 +392,14 @@ including original model/normalization/calibration, source/objects/dashboard,
 previous reports and raw benchmark measurements. No commit, push or physical
 network operation occurred.
 
-## Explanation for the presentation
 
-“We trained a fresh bias-free 6→32→32→2 MLP on 13,187 reproduction samples and
+We trained a fresh bias-free 6→32→32→2 MLP on 13,187 reproduction samples and
 selected its checkpoint using 2,827 validation samples. The scaler used only
 training data. We grouped identical six-feature vectors before splitting, so
 none crosses into the 2,826-row test partition. The fresh model's held-out F1
 against supplied labels is 0.996734. This is a controlled within-dataset
 result; unknown capture/session provenance limits claims about new-day attacks.
-The original deployed model and its previous kernel measurements were preserved.”
+The original deployed model and its previous kernel measurements were preserved.
 
 ## Final verification status and comparison limits
 
